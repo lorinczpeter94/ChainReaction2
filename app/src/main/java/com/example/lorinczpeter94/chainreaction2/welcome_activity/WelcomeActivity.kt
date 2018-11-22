@@ -54,6 +54,7 @@ class WelcomeActivity : AppCompatActivity(), IWelcomeView {
             mapSizeSpn.adapter = adapter
         }
 
+
     }
 
     override fun playerNumberSpinnerInitializer() {
