@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        tools:context=".welcome_activity.WelcomeActivity">
+
+
+    <Button
+
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:text="PLAY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_play"
+            android:background="@color/lightGrey"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/spn_playerNumber"
+            android:layout_marginEnd="16dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"/>
+    <TextView
+            android:text="CHAIN REACTION 2"
+            android:textColor="@color/lightGrey"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent"
+            android:textSize="10pt"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent" android:id="@+id/textView"/>
+    <Spinner
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/spn_mapSize" android:layout_marginStart="16dp" app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/spn_playerNumber" android:popupBackground="@color/colorPrimary"
+            android:layout_marginTop="80dp" app:layout_constraintTop_toBottomOf="@+id/textView"
+            android:visibility="visible"/>
+    <Spinner
+            android:layout_width="219dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/spn_playerNumber" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
+            app:layout_constraintStart_toEndOf="@+id/spn_mapSize" android:layout_marginStart="16dp"
+            app:layout_constraintHorizontal_bias="0.5" android:popupBackground="@color/colorPrimary"
+            android:layout_marginTop="80dp" app:layout_constraintTop_toBottomOf="@+id/textView"
+            android:visibility="visible"/>
+</android.support.constraint.ConstraintLayout>
