@@ -1,11 +1,22 @@
 package com.example.lorinczpeter94.chainreaction2.welcome_activity.presenter
 
-class WelcomePresenter : IWelcomePresenter {
-    override fun onMapSizeSpnClicked() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+import com.example.lorinczpeter94.chainreaction2.welcome_activity.model.WelcomeActivitySettings
+import com.example.lorinczpeter94.chainreaction2.welcome_activity.view.IWelcomeView
+
+class WelcomePresenter(internal var iWelcomeView: IWelcomeView) : IWelcomePresenter {
+    override fun settingsSpinner(mapSize: String, playerNumber: String) {
+        //val playerNum: Int = playerNumber[1].toInt()
+        val playerNum:Int = playerNumber.take(1).toInt()
+        val welcomeActivitySettings = WelcomeActivitySettings(playerNum, mapSize)
+
+
+        when(welcomeActivitySettings.mapSizeSelected){
+            "small" -> iWelcomeView.openSmallMapActivity(welcomeActivitySettings.playersSelected)
+            "medium" -> iWelcomeView.openMediumMapActivity(welcomeActivitySettings.playersSelected)
+            "large" -> iWelcomeView.openLargeMapActivity(welcomeActivitySettings.playersSelected)
+            else -> iWelcomeView.openMediumMapActivity(welcomeActivitySettings.playersSelected)
+        }
     }
 
-    override fun onPlayerNumberSpnClicked() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+
 }

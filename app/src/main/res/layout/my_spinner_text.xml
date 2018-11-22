@@ -4,5 +4,5 @@
           android:layout_height="wrap_content"
           android:layout_centerHorizontal="true"
           android:textColor="@color/lightGrey"
-          android:textSize="12pt"
+          android:textSize="10pt"
           xmlns:android="http://schemas.android.com/apk/res/android"/>
