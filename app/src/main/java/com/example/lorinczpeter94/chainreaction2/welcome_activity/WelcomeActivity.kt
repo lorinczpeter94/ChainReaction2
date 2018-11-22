@@ -14,6 +14,7 @@ class WelcomeActivity : AppCompatActivity(), IWelcomeView {
 
 
     //var playerNumberSpn: Spinner = findViewById(R.id.spn_mapSize)
+    //tesztelem
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
