@@ -19,6 +19,7 @@ import com.example.lorinczpeter94.chainreaction2.welcome_activity.PLAYERNUM
 
 class MediumGameActivity : AppCompatActivity(), IGameView {
 
+
     internal lateinit var iGamePresenter:IGamePresenter
     var associatedMatrix:Array<Array<Int>> = Array(8) {Array(6){0} }
 
@@ -67,6 +68,9 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
         // Sets the circle3 drawable as background
         imageView.background = ContextCompat.getDrawable(this, R.drawable.circle3)
 
+    }
+    override fun setNoCircle(imageView: ImageView) {
+        imageView.background = ContextCompat.getDrawable(this, R.drawable.no_circle)
     }
 
 
