@@ -4,4 +4,10 @@
     <color name="colorPrimaryDark">#212121</color>
     <color name="colorAccent">#AFB42B</color>
     <color name="lightGrey">#eeeeee</color>
+    <color name="redCircleLight">#ff5131</color>
+    <color name="redCircleDark">#9b0000</color>
+
+    <color name="greenCircleLight">#b0ff57</color>
+    <color name="greenCircleDark">#32cb00</color>
+    <color name="gridColor">#eeeeee</color>
 </resources>
