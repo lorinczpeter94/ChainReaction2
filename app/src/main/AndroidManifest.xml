@@ -16,11 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".game_activity.SmallGameActivity">
+        <activity android:name=".gameActivity.SmallGameActivity">
         </activity>
-        <activity android:name=".game_activity.MediumGameActivity">
+        <activity android:name=".gameActivity.MediumGameActivity">
         </activity>
-        <activity android:name=".game_activity.LargeGameActivity">
+        <activity android:name=".gameActivity.LargeGameActivity">
         </activity>
     </application>
 
