@@ -9,8 +9,48 @@ class GamePresenter(internal var iGameView: IGameView,
                     internal var playerNumber: Int): IGamePresenter {
     //var gameObject:GameObject()
 
-    fun getIndexes(imageView: ImageView):ArrayList<Int>?{
-        var indexes = ArrayList<Int>()
+
+
+    override fun elementClicked(imageView: ImageView) {
+        // Triggered when an element is clicked in a cell
+        val index1:Int
+        val index2:Int
+        val indexes:ArrayList<Int> = getIndexes(imageView)
+
+
+        index1 = indexes[0]
+        index2 = indexes[1]
+
+
+
+        if(associatedMatrix[index1][index2] == 0) {
+            iGameView.setOnecircle(imageView)
+            associatedMatrix[index1][index2]++
+        } else {
+            if (associatedMatrix[index1][index2] == 1) {
+                 if(index1 == 0 && index2 == 0 || index1 == 0 && index2 == 5 ||
+                        index1 == 7 && index2 == 0 || index1 == 7 && index2 == 5) {
+                     // TODO robbanas
+                 }else {
+                     iGameView.setNoCircle(imageView)
+                     iGameView.setTwoCircles(imageView)
+                     associatedMatrix[index1][index2]++
+                 }
+            } else {
+                if(index1 == 0 || index2 == 0 || index1 == 7 || index2 == 5){
+                    // TODO robbanas
+                } else {
+                    iGameView.setNoCircle(imageView)
+                    iGameView.setThreeCircles(imageView)
+                    associatedMatrix[index1][index2]++
+                }
+            }
+        }
+    }
+
+    private fun getIndexes(imageView: ImageView):ArrayList<Int>{
+        // Returns indexes of the imageView
+        val indexes = ArrayList<Int>()
         when(imageView.id){
             R.id.gameObject00->{
                 indexes.add(0)
@@ -208,47 +248,6 @@ class GamePresenter(internal var iGameView: IGameView,
 
 
         return indexes
-    }
-
-    override fun elementClicked(imageView: ImageView) {
-        // Triggered when an element is clicked in a cell
-        var index1:Int
-        var index2:Int
-        var indexes:ArrayList<Int>?
-
-        indexes = getIndexes(imageView)
-        if(indexes != null){
-            index1 = indexes.get(0)
-            index2 = indexes.get(1)
-        } else throw NullPointerException()
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
-
-        if(associatedMatrix[index1][index2] == 0) {
-            iGameView.setOnecircle(imageView)
-            associatedMatrix[index1][index2]++
-        } else {
-            if (associatedMatrix[index1][index2] == 1) {
-                 if(index1 == 0 && index2 == 0 || index1 == 0 && index2 == 5 ||
-                        index1 == 7 && index2 == 0 || index1 == 7 && index2 == 5) {
-                     // TODO robbanas
-                 }else {
-                     iGameView.setNoCircle(imageView)
-                     iGameView.setTwoCircles(imageView)
-                     associatedMatrix[index1][index2]++
-                 }
-            } else {
-                if(index1 == 0 || index2 == 0 || index1 == 7 || index2 == 5){
-                    // TODO robbanas
-                } else {
-                    iGameView.setNoCircle(imageView)
-                    iGameView.setThreeCircles(imageView)
-                    associatedMatrix[index1][index2]++
-                }
-            }
-        }
     }
 
 }
