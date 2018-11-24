@@ -207,7 +207,7 @@ class GamePresenter(internal var iGameView: IGameView,
         }
 
 
-        return indexes;
+        return indexes
     }
 
     override fun elementClicked(imageView: ImageView) {
@@ -221,6 +221,10 @@ class GamePresenter(internal var iGameView: IGameView,
             index1 = indexes.get(0)
             index2 = indexes.get(1)
         } else throw NullPointerException()
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
         if(associatedMatrix[index1][index2] == 0) {
             iGameView.setOnecircle(imageView)
