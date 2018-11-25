@@ -47,6 +47,8 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
     fun onGameObjectClicked(view: View){
         // Triggered when a cell is pushed in the game
         val playerNumber = intent.getIntExtra(PLAYERNUM, 2)
+
+
         iGamePresenter = GamePresenter(this, associatedMatrix, playerNumber)
         val objectClicked = view as ImageView
         iGamePresenter.elementClicked(objectClicked)

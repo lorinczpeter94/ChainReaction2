@@ -11,6 +11,8 @@ class LargeGameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_large_game)
+
+
         val playerNumber = intent.getIntExtra(PLAYERNUM, 2)
         Toast.makeText(this, "Player number selected: $playerNumber", Toast.LENGTH_LONG).show()
     }

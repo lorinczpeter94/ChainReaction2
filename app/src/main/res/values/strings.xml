@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">ChainReaction2</string>
+
     <string-array name="map_size">
         <item>medium</item>
         <item>small</item>
         <item>large</item>
     </string-array>
+
     <string-array name="player_number">
         <item>2 Player Game</item>
         <item>3 Player Game</item>
