@@ -25,48 +25,55 @@ class GamePresenter(
         val column:Int
         val indexes:ArrayList<Int> = getIndexes(imageView)
 
-
         row = indexes[0]
         column = indexes[1]
 
-        playerPut(activePlayer.getCurrentPlayer(), row, column,imageView)
-        activePlayer.nextPlayer()
-
-
-
+        if(playerPut(activePlayer.getCurrentPlayer(), row, column, imageView) == true) {
+            activePlayer.nextPlayer()
+        }
 
     }
 
-    private fun playerPut(currentPlayer: Int, row: Int, column: Int, imageView: ImageView){
+    private fun  playerPut(currentPlayer: Int, row: Int, column: Int, imageView: ImageView):Boolean{
         //current players puts a circle
-        //TODO: don't let next player to put, if current player tried to put but h did not succeed
-        //TODO:(he pushed the other player's color)
-        //TODO:(hisCircle() function implemented below this / not used)
 
-        if (circlesNumber(row,column) == 0){
+
+        if (circlesNumber(row,column) == 0){    // 1st put in the corner
             associatedMatrix[row][column].color = currentPlayer
             iGameView.setOnecircle(imageView, chooseColor(1,currentPlayer))
             associatedMatrix[row][column].circles++
+            return true //put succeeded
 
         } else if (circlesNumber(row, column) == 1){
             if (isInCorner(row,column) ){
-                //TODO robbanas
+                // TODO robbanas
+                return false    // TODO return true
 
             }else{
-                associatedMatrix[row][column].color = currentPlayer
-                iGameView.setTwoCircles(imageView, chooseColor(2,currentPlayer))
-                associatedMatrix[row][column].circles++
+                if(hisCircle(row, column, currentPlayer)) { //if it's the current player's square
+                    associatedMatrix[row][column].color = currentPlayer
+                    iGameView.setTwoCircles(imageView, chooseColor(2, currentPlayer))
+                    associatedMatrix[row][column].circles++
+                    return true //put succeeded
+                } else
+                    return false
             }
         } else if (circlesNumber(row,column) == 2){
             if (isOnSide(row, column)){
-                //TODO robbanas
+                // TODO robbanas
+                return false // TODO return true
+
             } else{
-                associatedMatrix[row][column].color = currentPlayer
-                iGameView.setThreeCircles(imageView, chooseColor(3,currentPlayer))
-                associatedMatrix[row][column].circles++
+                if(hisCircle(row, column, currentPlayer)) { //if it's the current player's square
+                    associatedMatrix[row][column].color = currentPlayer
+                    iGameView.setThreeCircles(imageView, chooseColor(3, currentPlayer))
+                    associatedMatrix[row][column].circles++
+                    return true //put succeeded
+                } else
+                    return false
             }
         }
-
+        return false
     }
 
     private fun hisCircle(row: Int, column: Int, currentPlayer: Int): Boolean{
@@ -104,12 +111,11 @@ class GamePresenter(
         }
     }
 
-
-
     private fun isInCorner(row:Int, column:Int):Boolean{
         return (row == 0 && column == 0 || row == 0 && column == 5 ||
                 row == 7 && column == 0 || row == 7 && column == 5)
     }
+
     private fun isOnSide(row:Int, column:Int):Boolean{
         return (row in 1..6 && column == 0 || row in 1..6 && column == 5 ||
                 column in 1..4 && row == 0 || column in 1..4 && row == 7)
