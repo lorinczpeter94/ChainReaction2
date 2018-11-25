@@ -25,6 +25,9 @@ class WelcomeActivity : AppCompatActivity(), IWelcomeView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
 
+
+
+
         mapSizeSpinnerInitializer()
         playerNumberSpinnerInitializer()
 
