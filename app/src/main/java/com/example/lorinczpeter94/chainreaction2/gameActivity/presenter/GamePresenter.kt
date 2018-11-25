@@ -2,10 +2,11 @@ package com.example.lorinczpeter94.chainreaction2.gameActivity.presenter
 
 import android.widget.ImageView
 import com.example.lorinczpeter94.chainreaction2.R
+import com.example.lorinczpeter94.chainreaction2.gameActivity.model.GameObject
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.IGameView
 
 class GamePresenter(internal var iGameView: IGameView,
-                    internal var associatedMatrix:Array<Array<Int>>,
+                    internal var associatedMatrix:Array<Array<GameObject>>,
                     internal var playerNumber: Int): IGamePresenter {
     //var gameObject:GameObject()
 
@@ -13,39 +14,51 @@ class GamePresenter(internal var iGameView: IGameView,
 
     override fun elementClicked(imageView: ImageView) {
         // Triggered when an element is clicked in a cell
-        val index1:Int
-        val index2:Int
+        val row:Int
+        val column:Int
         val indexes:ArrayList<Int> = getIndexes(imageView)
 
 
-        index1 = indexes[0]
-        index2 = indexes[1]
+        row = indexes[0]
+        column = indexes[1]
 
 
 
-        if(associatedMatrix[index1][index2] == 0) {
+        
+        if (circlesNumber(row,column) == 0){
             iGameView.setOnecircle(imageView)
-            associatedMatrix[index1][index2]++
-        } else {
-            if (associatedMatrix[index1][index2] == 1) {
-                 if(index1 == 0 && index2 == 0 || index1 == 0 && index2 == 5 ||
-                        index1 == 7 && index2 == 0 || index1 == 7 && index2 == 5) {
-                     // TODO robbanas
-                 }else {
-                     iGameView.setNoCircle(imageView)
-                     iGameView.setTwoCircles(imageView)
-                     associatedMatrix[index1][index2]++
-                 }
-            } else {
-                if(index1 == 0 || index2 == 0 || index1 == 7 || index2 == 5){
-                    // TODO robbanas
-                } else {
-                    iGameView.setNoCircle(imageView)
-                    iGameView.setThreeCircles(imageView)
-                    associatedMatrix[index1][index2]++
-                }
+            associatedMatrix[row][column].circles++
+
+        } else if (circlesNumber(row, column) == 1){
+            if (isInCorner(row,column)){
+                //TODO robbanas
+
+            }else{
+                //iGameView.setNoCircle(imageView)
+                iGameView.setTwoCircles(imageView)
+                associatedMatrix[row][column].circles++
+            }
+        } else if (circlesNumber(row,column) == 2){
+            if (isOnSide(row, column)){
+                //TODO robbanas
+            } else{
+                iGameView.setThreeCircles(imageView)
+                associatedMatrix[row][column].circles++
             }
         }
+    }
+
+    private fun isInCorner(row:Int, column:Int):Boolean{
+        return (row == 0 && column == 0 || row == 0 && column == 5 ||
+                row == 7 && column == 0 || row == 7 && column == 5)
+    }
+    private fun isOnSide(row:Int, column:Int):Boolean{
+        return (row in 1..6 && column == 0 || row in 1..6 && column == 5 ||
+                column in 1..4 && row == 0 || column in 1..4 && row == 7)
+    }
+
+    private fun circlesNumber(row: Int, column: Int):Int{
+        return associatedMatrix[row][column].circles
     }
 
     private fun getIndexes(imageView: ImageView):ArrayList<Int>{

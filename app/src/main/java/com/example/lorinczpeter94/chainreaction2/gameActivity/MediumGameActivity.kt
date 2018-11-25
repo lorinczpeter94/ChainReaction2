@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import com.example.lorinczpeter94.chainreaction2.R
+import com.example.lorinczpeter94.chainreaction2.gameActivity.model.GameObject
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.GamePresenter
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.IGamePresenter
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.IGameView
@@ -21,7 +22,8 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
 
 
     internal lateinit var iGamePresenter:IGamePresenter
-    var associatedMatrix:Array<Array<Int>> = Array(8) {Array(6){0} }
+    //var associatedMatrix: Array<Array<Int>> = Array(8) {Array(6){0} }
+    var associatedMatrix =Array(8) {Array(6) { GameObject() } }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
