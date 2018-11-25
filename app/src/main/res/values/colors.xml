@@ -7,7 +7,7 @@
     <color name="redCircleLight">#ff5131</color>
     <color name="redCircleDark">#9b0000</color>
 
-    <color name="greenCircleLight">#b0ff57</color>
-    <color name="greenCircleDark">#32cb00</color>
+    <color name="greenCircleLight">#99d066</color>
+    <color name="greenCircleDark">#387002</color>
     <color name="gridColor">#eeeeee</color>
 </resources>

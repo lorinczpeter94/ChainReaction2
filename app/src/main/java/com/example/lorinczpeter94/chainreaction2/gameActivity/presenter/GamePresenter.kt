@@ -1,14 +1,21 @@
 package com.example.lorinczpeter94.chainreaction2.gameActivity.presenter
 
+import android.content.Context
+import android.graphics.drawable.Drawable
+import android.support.v4.content.ContextCompat
 import android.widget.ImageView
 import com.example.lorinczpeter94.chainreaction2.R
+import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.GameObject
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.IGameView
 
-class GamePresenter(internal var iGameView: IGameView,
-                    internal var associatedMatrix:Array<Array<GameObject>>,
-                    internal var playerNumber: Int): IGamePresenter {
-    //var gameObject:GameObject()
+class GamePresenter(
+    private var iGameView: IGameView,
+    private var associatedMatrix:Array<Array<GameObject>>,
+    private var playerNumber: Int,
+    var activePlayer: ActivePlayer): IGamePresenter {
+
+
 
 
 
@@ -22,31 +29,82 @@ class GamePresenter(internal var iGameView: IGameView,
         row = indexes[0]
         column = indexes[1]
 
+        playerPut(activePlayer.getCurrentPlayer(), row, column,imageView)
+        activePlayer.nextPlayer()
 
 
-        
+
+
+    }
+
+    private fun playerPut(currentPlayer: Int, row: Int, column: Int, imageView: ImageView){
+        //current players puts a circle
+        //TODO: don't let next player to put, if current player tried to put but h did not succeed
+        //TODO:(he pushed the other player's color)
+        //TODO:(hisCircle() function implemented below this / not used)
+
         if (circlesNumber(row,column) == 0){
-            iGameView.setOnecircle(imageView)
+            associatedMatrix[row][column].color = currentPlayer
+            iGameView.setOnecircle(imageView, chooseColor(1,currentPlayer))
             associatedMatrix[row][column].circles++
 
         } else if (circlesNumber(row, column) == 1){
-            if (isInCorner(row,column)){
+            if (isInCorner(row,column) ){
                 //TODO robbanas
 
             }else{
-                //iGameView.setNoCircle(imageView)
-                iGameView.setTwoCircles(imageView)
+                associatedMatrix[row][column].color = currentPlayer
+                iGameView.setTwoCircles(imageView, chooseColor(2,currentPlayer))
                 associatedMatrix[row][column].circles++
             }
         } else if (circlesNumber(row,column) == 2){
             if (isOnSide(row, column)){
                 //TODO robbanas
             } else{
-                iGameView.setThreeCircles(imageView)
+                associatedMatrix[row][column].color = currentPlayer
+                iGameView.setThreeCircles(imageView, chooseColor(3,currentPlayer))
                 associatedMatrix[row][column].circles++
             }
         }
+
     }
+
+    private fun hisCircle(row: Int, column: Int, currentPlayer: Int): Boolean{
+        return associatedMatrix[row][column].color == currentPlayer
+    }
+
+    private fun chooseColor(noOfCircles:Int, currentPlayer: Int):Drawable {
+        //chooses background color,  depends on no. of circles and current player
+        when (currentPlayer) {
+            1 -> return when (noOfCircles) {
+                1 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.red_circle1)!!
+                }
+                2 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.red_circle2)!!
+                }
+                3 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.red_circle3)!!
+                }
+                else -> ContextCompat.getDrawable(iGameView as Context, R.drawable.red_circle1)!!
+            }
+            2 -> return when (noOfCircles) {
+                1 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.green_circle1)!!
+                }
+                2 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.green_circle2)!!
+                }
+                3 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.green_circle3)!!
+                }
+                else -> ContextCompat.getDrawable(iGameView as Context, R.drawable.green_circle1)!!
+            }
+            else-> return ContextCompat.getDrawable(iGameView as Context, R.drawable.green_circle1)!!
+        }
+    }
+
+
 
     private fun isInCorner(row:Int, column:Int):Boolean{
         return (row == 0 && column == 0 || row == 0 && column == 5 ||
@@ -58,6 +116,7 @@ class GamePresenter(internal var iGameView: IGameView,
     }
 
     private fun circlesNumber(row: Int, column: Int):Int{
+        //returns number of circles on the current indexes
         return associatedMatrix[row][column].circles
     }
 

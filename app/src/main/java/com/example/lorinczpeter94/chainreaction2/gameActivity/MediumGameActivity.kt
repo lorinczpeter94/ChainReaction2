@@ -1,15 +1,13 @@
 package com.example.lorinczpeter94.chainreaction2.gameActivity
 
-import android.content.Context
-import android.graphics.Color
-import android.graphics.ColorFilter
+import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.ImageView
-import android.widget.Toast
 import com.example.lorinczpeter94.chainreaction2.R
+import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.GameObject
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.GamePresenter
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.IGamePresenter
@@ -24,12 +22,14 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
     internal lateinit var iGamePresenter:IGamePresenter
     //var associatedMatrix: Array<Array<Int>> = Array(8) {Array(6){0} }
     var associatedMatrix =Array(8) {Array(6) { GameObject() } }
-
+    var activePlayer = ActivePlayer(1, 2)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_medium_game)
 
+        val playerNumber = intent.getIntExtra(PLAYERNUM, 2)
+        activePlayer.setPlayerNumber(playerNumber)
 
 
 
@@ -51,26 +51,27 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
         val playerNumber = intent.getIntExtra(PLAYERNUM, 2)
 
 
-        iGamePresenter = GamePresenter(this, associatedMatrix, playerNumber)
+        iGamePresenter = GamePresenter(this, associatedMatrix, playerNumber, activePlayer)
         val objectClicked = view as ImageView
         iGamePresenter.elementClicked(objectClicked)
     }
 
 
-    override fun setOnecircle(imageView: ImageView) {
-        // Sets the circle1 drawable as background
-        imageView.background = ContextCompat.getDrawable(this, R.drawable.circle1)
-    }
-
-    override fun setTwoCircles(imageView: ImageView) {
-        // Sets the circle2 drawable as background
-        imageView.background = ContextCompat.getDrawable(this, R.drawable.circle2)
+    override fun setOnecircle(imageView: ImageView, oneCircle:Drawable) {
+        // Sets the red_circle1 drawable as background
+        imageView.background = oneCircle
 
     }
 
-    override fun setThreeCircles(imageView: ImageView) {
-        // Sets the circle3 drawable as background
-        imageView.background = ContextCompat.getDrawable(this, R.drawable.circle3)
+    override fun setTwoCircles(imageView: ImageView, twoCircles:Drawable) {
+        // Sets the red_circle2 drawable as background
+        imageView.background = twoCircles
+
+    }
+
+    override fun setThreeCircles(imageView: ImageView, threeCircles:Drawable) {
+        // Sets the red_circle3 drawable as background
+        imageView.background = threeCircles
 
     }
     override fun setNoCircle(imageView: ImageView) {
