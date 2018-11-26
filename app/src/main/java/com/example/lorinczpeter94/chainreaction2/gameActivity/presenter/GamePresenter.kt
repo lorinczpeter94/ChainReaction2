@@ -1,5 +1,6 @@
 package com.example.lorinczpeter94.chainreaction2.gameActivity.presenter
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
@@ -11,6 +12,7 @@ import com.example.lorinczpeter94.chainreaction2.gameActivity.view.IGameView
 
 class GamePresenter(
     private var iGameView: IGameView,
+    private var activity: Activity,
     private var associatedMatrix:Array<Array<GameObject>>,
     private var playerNumber: Int,
     var activePlayer: ActivePlayer): IGamePresenter {
@@ -45,32 +47,34 @@ class GamePresenter(
             return true //put succeeded
 
         } else if (circlesNumber(row, column) == 1){
-            if (isInCorner(row,column) ){
-                // TODO robbanas
-                return false    // TODO return true
+            return if (isInCorner(row,column) ){
+                // TODO robbanas WIP
+
+                explode(row, column, currentPlayer, imageView)
+                true    // TODO return true
 
             }else{
                 if(hisCircle(row, column, currentPlayer)) { //if it's the current player's square
                     associatedMatrix[row][column].color = currentPlayer
                     iGameView.setTwoCircles(imageView, chooseColor(2, currentPlayer))
                     associatedMatrix[row][column].circles++
-                    return true //put succeeded
+                    true //put succeeded
                 } else
-                    return false
+                    false
             }
         } else if (circlesNumber(row,column) == 2){
-            if (isOnSide(row, column)){
-                // TODO robbanas
-                return false // TODO return true
+            return if (isOnSide(row, column)){
+                // TODO robbanas buggy
+                false // TODO return true
 
             } else{
                 if(hisCircle(row, column, currentPlayer)) { //if it's the current player's square
                     associatedMatrix[row][column].color = currentPlayer
                     iGameView.setThreeCircles(imageView, chooseColor(3, currentPlayer))
                     associatedMatrix[row][column].circles++
-                    return true //put succeeded
+                    true //put succeeded
                 } else
-                    return false
+                    false
             }
         }
         return false
@@ -111,6 +115,133 @@ class GamePresenter(
         }
     }
 
+
+    private fun explode(row: Int, column: Int, currentPlayer: Int, imageView: ImageView){
+        //explodes
+
+        iGameView.setNoCircle(imageView)
+        associatedMatrix[row][column].circles = 0
+        //var associatedMatrix =Array(8) {Array(6) { GameObject() } }
+        var neighbours:ArrayList<List<Int>> = getNeighbours(row, column)
+
+
+        var newImageView = activity.findViewById<ImageView>(R.id.gameObject01)
+
+
+        for(i in neighbours){
+
+            //
+            explodePut(currentPlayer, i[0], i[1], getImageView(i[0], i[1])) //TODO ?
+
+
+        }
+
+
+
+    }
+
+
+
+
+    private fun getNeighbours(row: Int, column: Int):ArrayList<List<Int>>{
+
+        var neighbours = ArrayList<List<Int>>()
+
+
+        if (isInCorner(row, column)){
+            if (row == 0 && column == 0){
+                //top left corner
+                var currentNeighbour1 = ArrayList<Int>()
+                var currentNeighbour2 = ArrayList<Int>()
+
+                currentNeighbour1.add(0)
+                currentNeighbour1.add(1)
+
+
+                neighbours.add(currentNeighbour1)
+
+
+                currentNeighbour2.add(1)
+                currentNeighbour2.add(0)
+
+
+                neighbours.add(currentNeighbour2)
+
+
+//                for (i in neighbours){
+//                    for (j in i){
+//                        println(i[j])
+//                    }
+//                }
+
+                return neighbours
+
+
+
+            }else if (row == 0 && column == 5){
+                //top right corner
+
+
+            } else if(row == 7 && column ==0){
+                //bottom left corner
+
+
+            } else{
+                //bottom right corner
+
+
+            }
+
+
+
+        } else if (isOnSide(row, column)){
+
+        } else {
+
+        }
+        return  neighbours
+
+
+
+    }
+
+
+    private fun  explodePut(currentPlayer: Int, row: Int, column: Int, imageView: ImageView){
+        //current players puts a circle
+
+        if (circlesNumber(row,column) == 0){    // 1st put in the corner
+            associatedMatrix[row][column].color = currentPlayer
+            iGameView.setOnecircle(imageView, chooseColor(1,currentPlayer))
+            associatedMatrix[row][column].circles++
+
+        } else if (circlesNumber(row, column) == 1){
+            if (isInCorner(row,column) ){
+                // TODO robbanas WIP
+                associatedMatrix[row][column].circles = 0
+                explode(row, column, currentPlayer, imageView)
+
+
+            }else{
+                    associatedMatrix[row][column].color = currentPlayer
+                    iGameView.setTwoCircles(imageView, chooseColor(2, currentPlayer))
+                    associatedMatrix[row][column].circles++
+
+
+            }
+        } else if (circlesNumber(row,column) == 2){
+            if (isOnSide(row, column)){
+                // TODO robbanas
+
+            } else{
+                    associatedMatrix[row][column].color = currentPlayer
+                    iGameView.setThreeCircles(imageView, chooseColor(3, currentPlayer))
+                    associatedMatrix[row][column].circles++
+
+
+            }
+        }
+    }
+
     private fun isInCorner(row:Int, column:Int):Boolean{
         return (row == 0 && column == 0 || row == 0 && column == 5 ||
                 row == 7 && column == 0 || row == 7 && column == 5)
@@ -124,6 +255,84 @@ class GamePresenter(
     private fun circlesNumber(row: Int, column: Int):Int{
         //returns number of circles on the current indexes
         return associatedMatrix[row][column].circles
+    }
+
+    private fun getImageView(row: Int, column: Int):ImageView{
+        return when (row){
+            0 -> return when(column){
+                0 -> activity.findViewById<ImageView>(R.id.gameObject00)
+                1 -> activity.findViewById<ImageView>(R.id.gameObject01)
+                2 -> activity.findViewById<ImageView>(R.id.gameObject02)
+                3 -> activity.findViewById<ImageView>(R.id.gameObject03)
+                4 -> activity.findViewById<ImageView>(R.id.gameObject04)
+                5 -> activity.findViewById<ImageView>(R.id.gameObject05)
+                else -> activity.findViewById<ImageView>(R.id.gameObject00)
+            }
+            1 -> return when(column) {
+                0 -> activity.findViewById<ImageView>(R.id.gameObject10)
+                1 -> activity.findViewById<ImageView>(R.id.gameObject11)
+                2 -> activity.findViewById<ImageView>(R.id.gameObject12)
+                3 -> activity.findViewById<ImageView>(R.id.gameObject13)
+                4 -> activity.findViewById<ImageView>(R.id.gameObject14)
+                5 -> activity.findViewById<ImageView>(R.id.gameObject15)
+                else -> activity.findViewById<ImageView>(R.id.gameObject00)
+            }
+            2 -> return when(column) {
+                0 -> activity.findViewById<ImageView>(R.id.gameObject20)
+                1 -> activity.findViewById<ImageView>(R.id.gameObject21)
+                2 -> activity.findViewById<ImageView>(R.id.gameObject22)
+                3 -> activity.findViewById<ImageView>(R.id.gameObject23)
+                4 -> activity.findViewById<ImageView>(R.id.gameObject24)
+                5 -> activity.findViewById<ImageView>(R.id.gameObject25)
+                else -> activity.findViewById<ImageView>(R.id.gameObject00)
+            }
+            3 -> return when(column) {
+                0 -> activity.findViewById<ImageView>(R.id.gameObject30)
+                1 -> activity.findViewById<ImageView>(R.id.gameObject31)
+                2 -> activity.findViewById<ImageView>(R.id.gameObject32)
+                3 -> activity.findViewById<ImageView>(R.id.gameObject33)
+                4 -> activity.findViewById<ImageView>(R.id.gameObject34)
+                5 -> activity.findViewById<ImageView>(R.id.gameObject35)
+                else -> activity.findViewById<ImageView>(R.id.gameObject00)
+            }
+            4 -> return when(column) {
+                0 -> activity.findViewById<ImageView>(R.id.gameObject40)
+                1 -> activity.findViewById<ImageView>(R.id.gameObject41)
+                2 -> activity.findViewById<ImageView>(R.id.gameObject42)
+                3 -> activity.findViewById<ImageView>(R.id.gameObject43)
+                4 -> activity.findViewById<ImageView>(R.id.gameObject44)
+                5 -> activity.findViewById<ImageView>(R.id.gameObject45)
+                else -> activity.findViewById<ImageView>(R.id.gameObject00)
+            }
+            5 -> return when(column) {
+                0 -> activity.findViewById<ImageView>(R.id.gameObject50)
+                1 -> activity.findViewById<ImageView>(R.id.gameObject51)
+                2 -> activity.findViewById<ImageView>(R.id.gameObject52)
+                3 -> activity.findViewById<ImageView>(R.id.gameObject53)
+                4 -> activity.findViewById<ImageView>(R.id.gameObject54)
+                5 -> activity.findViewById<ImageView>(R.id.gameObject55)
+                else -> activity.findViewById<ImageView>(R.id.gameObject00)
+            }
+            6 -> return when(column) {
+                0 -> activity.findViewById<ImageView>(R.id.gameObject60)
+                1 -> activity.findViewById<ImageView>(R.id.gameObject61)
+                2 -> activity.findViewById<ImageView>(R.id.gameObject62)
+                3 -> activity.findViewById<ImageView>(R.id.gameObject63)
+                4 -> activity.findViewById<ImageView>(R.id.gameObject64)
+                5 -> activity.findViewById<ImageView>(R.id.gameObject65)
+                else -> activity.findViewById<ImageView>(R.id.gameObject00)
+            }
+            7 -> return when(column) {
+                0 -> activity.findViewById<ImageView>(R.id.gameObject70)
+                1 -> activity.findViewById<ImageView>(R.id.gameObject71)
+                2 -> activity.findViewById<ImageView>(R.id.gameObject72)
+                3 -> activity.findViewById<ImageView>(R.id.gameObject73)
+                4 -> activity.findViewById<ImageView>(R.id.gameObject74)
+                5 -> activity.findViewById<ImageView>(R.id.gameObject75)
+                else -> activity.findViewById<ImageView>(R.id.gameObject00)
+            }
+            else -> return activity.findViewById<ImageView>(R.id.gameObject00)
+        }
     }
 
     private fun getIndexes(imageView: ImageView):ArrayList<Int>{

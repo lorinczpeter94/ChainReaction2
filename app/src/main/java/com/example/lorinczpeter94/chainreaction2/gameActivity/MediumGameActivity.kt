@@ -1,5 +1,6 @@
 package com.example.lorinczpeter94.chainreaction2.gameActivity
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -22,7 +23,10 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
     internal lateinit var iGamePresenter:IGamePresenter
     //var associatedMatrix: Array<Array<Int>> = Array(8) {Array(6){0} }
     var associatedMatrix =Array(8) {Array(6) { GameObject() } }
+    var associatedViewMatrix =Array(8) {Array(6) { GameObject() } }
     var activePlayer = ActivePlayer(1, 2)
+    
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +55,7 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
         val playerNumber = intent.getIntExtra(PLAYERNUM, 2)
 
 
-        iGamePresenter = GamePresenter(this, associatedMatrix, playerNumber, activePlayer)
+        iGamePresenter = GamePresenter(this, this, associatedMatrix, playerNumber, activePlayer)
         val objectClicked = view as ImageView
         iGamePresenter.elementClicked(objectClicked)
     }
