@@ -25,7 +25,7 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
     var associatedMatrix =Array(8) {Array(6) { GameObject() } }
     var associatedViewMatrix =Array(8) {Array(6) { GameObject() } }
     var activePlayer = ActivePlayer(1, 2)
-    
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

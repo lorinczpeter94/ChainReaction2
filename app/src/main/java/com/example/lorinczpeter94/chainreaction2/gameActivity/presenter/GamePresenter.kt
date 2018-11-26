@@ -76,6 +76,9 @@ class GamePresenter(
                 } else
                     false
             }
+        }else if (circlesNumber(row, column) == 3){
+            //TODO: robbanas
+            println("3 kor")
         }
         return false
     }
@@ -145,12 +148,13 @@ class GamePresenter(
 
     private fun getNeighbours(row: Int, column: Int):ArrayList<List<Int>>{
 
-        var neighbours = ArrayList<List<Int>>()
+        var neighbourForRet = ArrayList<List<Int>>()
 
 
         if (isInCorner(row, column)){
             if (row == 0 && column == 0){
                 //top left corner
+                var neighbours = ArrayList<List<Int>>()
                 var currentNeighbour1 = ArrayList<Int>()
                 var currentNeighbour2 = ArrayList<Int>()
 
@@ -168,19 +172,29 @@ class GamePresenter(
                 neighbours.add(currentNeighbour2)
 
 
-//                for (i in neighbours){
-//                    for (j in i){
-//                        println(i[j])
-//                    }
-//                }
-
                 return neighbours
 
 
 
             }else if (row == 0 && column == 5){
                 //top right corner
+                var neighbours = ArrayList<List<Int>>()
+                var currentNeighbour1 = ArrayList<Int>()
+                var currentNeighbour2 = ArrayList<Int>()
 
+                currentNeighbour1.add(1)
+                currentNeighbour1.add(5)
+
+
+                neighbours.add(currentNeighbour1)
+
+
+                currentNeighbour2.add(0)
+                currentNeighbour2.add(4)
+
+
+                neighbours.add(currentNeighbour2)
+                return neighbours
 
             } else if(row == 7 && column ==0){
                 //bottom left corner
@@ -199,7 +213,7 @@ class GamePresenter(
         } else {
 
         }
-        return  neighbours
+        return  neighbourForRet
 
 
 
