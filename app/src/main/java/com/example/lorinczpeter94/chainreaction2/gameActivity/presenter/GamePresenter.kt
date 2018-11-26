@@ -49,9 +49,11 @@ class GamePresenter(
         } else if (circlesNumber(row, column) == 1){
             return if (isInCorner(row,column) ){
                 // TODO robbanas WIP
-
-                explode(row, column, currentPlayer, imageView)
-                true    // TODO return true
+                if(currentPlayer == associatedMatrix[row][column].color) {
+                    explode(row, column, currentPlayer, imageView)
+                    true    // TODO return true
+                } else
+                    false
 
             }else{
                 if(hisCircle(row, column, currentPlayer)) { //if it's the current player's square
@@ -65,7 +67,12 @@ class GamePresenter(
         } else if (circlesNumber(row,column) == 2){
             return if (isOnSide(row, column)){
                 // TODO robbanas buggy
-                false // TODO return true
+
+                if(currentPlayer == associatedMatrix[row][column].color) {
+                    explode(row, column, currentPlayer, imageView)
+                    true // TODO return true
+                } else
+                    false
 
             } else{
                 if(hisCircle(row, column, currentPlayer)) { //if it's the current player's square
@@ -78,7 +85,11 @@ class GamePresenter(
             }
         }else if (circlesNumber(row, column) == 3){
             //TODO: robbanas
-            println("3 kor")
+            if(currentPlayer == associatedMatrix[row][column].color) {
+                explode(row, column, currentPlayer, imageView)
+                return true // TODO return true
+            } else
+                return false
         }
         return false
     }
@@ -126,17 +137,10 @@ class GamePresenter(
         associatedMatrix[row][column].circles = 0
         //var associatedMatrix =Array(8) {Array(6) { GameObject() } }
         var neighbours:ArrayList<List<Int>> = getNeighbours(row, column)
-
-
         var newImageView = activity.findViewById<ImageView>(R.id.gameObject01)
 
-
-        for(i in neighbours){
-
-            //
+        for(i in neighbours){   //iterate through all neighbours
             explodePut(currentPlayer, i[0], i[1], getImageView(i[0], i[1])) //TODO ?
-
-
         }
 
 
@@ -158,21 +162,13 @@ class GamePresenter(
 
                 currentNeighbour1.add(0)
                 currentNeighbour1.add(1)
-
-
                 neighbours.add(currentNeighbour1)
-
 
                 currentNeighbour2.add(1)
                 currentNeighbour2.add(0)
-
-
                 neighbours.add(currentNeighbour2)
 
-
                 return neighbours
-
-
 
             }else if (row == 0 && column == 5){
                 //top right corner
@@ -182,34 +178,152 @@ class GamePresenter(
 
                 currentNeighbour1.add(1)
                 currentNeighbour1.add(5)
-
-
                 neighbours.add(currentNeighbour1)
-
 
                 currentNeighbour2.add(0)
                 currentNeighbour2.add(4)
-
-
                 neighbours.add(currentNeighbour2)
+
                 return neighbours
 
             } else if(row == 7 && column ==0){
                 //bottom left corner
+                var neighbours = ArrayList<List<Int>>()
+                var currentNeighbour1 = ArrayList<Int>()
+                var currentNeighbour2 = ArrayList<Int>()
 
+                currentNeighbour1.add(6)
+                currentNeighbour1.add(0)
+                neighbours.add(currentNeighbour1)
 
-            } else{
+                currentNeighbour2.add(7)
+                currentNeighbour2.add(1)
+                neighbours.add(currentNeighbour2)
+
+                return neighbours
+
+            } else{ //row == 7 && column == 5
                 //bottom right corner
+                var neighbours = ArrayList<List<Int>>()
+                var currentNeighbour1 = ArrayList<Int>()
+                var currentNeighbour2 = ArrayList<Int>()
 
+                currentNeighbour1.add(7)
+                currentNeighbour1.add(4)
+                neighbours.add(currentNeighbour1)
 
+                currentNeighbour2.add(6)
+                currentNeighbour2.add(5)
+                neighbours.add(currentNeighbour2)
+
+                return neighbours
             }
 
-
-
         } else if (isOnSide(row, column)){
+            if(column == 0){    //left side
+                var neighbours = ArrayList<List<Int>>()
+                var currentNeighbour1 = ArrayList<Int>()
+                var currentNeighbour2 = ArrayList<Int>()
+                var currentNeighbour3 = ArrayList<Int>()
 
-        } else {
+                currentNeighbour1.add(row - 1)
+                currentNeighbour1.add(column)
+                neighbours.add(currentNeighbour1)   //the upper one
 
+                currentNeighbour2.add(row)
+                currentNeighbour2.add(column + 1)
+                neighbours.add(currentNeighbour2)   //the right one
+
+                currentNeighbour3.add(row + 1)
+                currentNeighbour3.add(column)
+                neighbours.add(currentNeighbour3)   //the bottom one
+
+                return neighbours
+
+            } else if(column == 5){ //right side
+                var neighbours = ArrayList<List<Int>>()
+                var currentNeighbour1 = ArrayList<Int>()
+                var currentNeighbour2 = ArrayList<Int>()
+                var currentNeighbour3 = ArrayList<Int>()
+
+                currentNeighbour1.add(row - 1)
+                currentNeighbour1.add(column)
+                neighbours.add(currentNeighbour1)
+
+                currentNeighbour2.add(row + 1)
+                currentNeighbour2.add(column)
+                neighbours.add(currentNeighbour2)
+
+                currentNeighbour3.add(row)
+                currentNeighbour3.add(column - 1)
+                neighbours.add(currentNeighbour3)
+
+                return neighbours
+
+            } else if(row == 0){    //top side
+                var neighbours = ArrayList<List<Int>>()
+                var currentNeighbour1 = ArrayList<Int>()
+                var currentNeighbour2 = ArrayList<Int>()
+                var currentNeighbour3 = ArrayList<Int>()
+
+                currentNeighbour1.add(row)
+                currentNeighbour1.add(column + 1)
+                neighbours.add(currentNeighbour1)
+
+                currentNeighbour2.add(row + 1)
+                currentNeighbour2.add(column)
+                neighbours.add(currentNeighbour2)
+
+                currentNeighbour3.add(row)
+                currentNeighbour3.add(column - 1)
+                neighbours.add(currentNeighbour3)
+
+                return neighbours
+
+            } else{ //row == 7      bottom side
+                var neighbours = ArrayList<List<Int>>()
+                var currentNeighbour1 = ArrayList<Int>()
+                var currentNeighbour2 = ArrayList<Int>()
+                var currentNeighbour3 = ArrayList<Int>()
+
+                currentNeighbour1.add(row - 1)
+                currentNeighbour1.add(column)
+                neighbours.add(currentNeighbour1)
+
+                currentNeighbour2.add(row)
+                currentNeighbour2.add(column + 1)
+                neighbours.add(currentNeighbour2)
+
+                currentNeighbour3.add(row)
+                currentNeighbour3.add(column - 1)
+                neighbours.add(currentNeighbour3)
+
+                return neighbours
+            }
+        } else {    //around the middle
+            var neighbours = ArrayList<List<Int>>()
+            var currentNeighbour1 = ArrayList<Int>()
+            var currentNeighbour2 = ArrayList<Int>()
+            var currentNeighbour3 = ArrayList<Int>()
+            var currentNeighbour4 = ArrayList<Int>()
+
+            currentNeighbour1.add(row - 1)
+            currentNeighbour1.add(column)
+            neighbours.add(currentNeighbour1)
+
+            currentNeighbour2.add(row)
+            currentNeighbour2.add(column + 1)
+            neighbours.add(currentNeighbour2)
+
+            currentNeighbour3.add(row + 1)
+            currentNeighbour3.add(column)
+            neighbours.add(currentNeighbour3)
+
+            currentNeighbour4.add(row)
+            currentNeighbour4.add(column - 1)
+            neighbours.add(currentNeighbour4)
+
+            return neighbours
         }
         return  neighbourForRet
 
@@ -229,7 +343,7 @@ class GamePresenter(
         } else if (circlesNumber(row, column) == 1){
             if (isInCorner(row,column) ){
                 // TODO robbanas WIP
-                associatedMatrix[row][column].circles = 0
+                associatedMatrix[row][column].circles = 0   // TODO -2 not 0
                 explode(row, column, currentPlayer, imageView)
 
 
@@ -242,7 +356,9 @@ class GamePresenter(
             }
         } else if (circlesNumber(row,column) == 2){
             if (isOnSide(row, column)){
-                // TODO robbanas
+                // TODO robbanas WIP
+                associatedMatrix[row][column].circles = 0   // TODO -3 not 0
+                explode(row, column, currentPlayer, imageView)
 
             } else{
                     associatedMatrix[row][column].color = currentPlayer
@@ -251,6 +367,9 @@ class GamePresenter(
 
 
             }
+        } else if(circlesNumber(row, column) == 3){
+            associatedMatrix[row][column].circles = 0   // TODO -4 not 0
+            explode(row, column, currentPlayer, imageView)
         }
     }
 
