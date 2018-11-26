@@ -142,9 +142,7 @@ class GamePresenter(
 
 
     }
-
-
-
+    
 
     private fun getNeighbours(row: Int, column: Int):ArrayList<List<Int>>{
 
