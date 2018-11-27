@@ -3,12 +3,16 @@ package com.example.lorinczpeter94.chainreaction2.gameActivity.presenter
 import android.app.Activity
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.os.Handler
 import android.support.v4.content.ContextCompat
 import android.widget.ImageView
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.GameObject
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.IGameView
+import android.support.v4.os.HandlerCompat.postDelayed
+
+
 
 class GamePresenter(
     private var iGameView: IGameView,
@@ -32,6 +36,8 @@ class GamePresenter(
 
         if(playerPut(activePlayer.getCurrentPlayer(), row, column, imageView) == true) {
             activePlayer.nextPlayer()
+            val playerCircle = activity.findViewById<ImageView>(R.id.playerCircle)
+            iGameView.setOnecircle(playerCircle, chooseColor(1, activePlayer.getCurrentPlayer()))
         }
 
     }
@@ -48,10 +54,9 @@ class GamePresenter(
 
         } else if (circlesNumber(row, column) == 1){
             return if (isInCorner(row,column) ){
-                // TODO robbanas WIP
                 if(currentPlayer == associatedMatrix[row][column].color) {
                     explode(row, column, currentPlayer, imageView)
-                    true    // TODO return true
+                    true
                 } else
                     false
 
@@ -66,11 +71,10 @@ class GamePresenter(
             }
         } else if (circlesNumber(row,column) == 2){
             return if (isOnSide(row, column)){
-                // TODO robbanas buggy
 
                 if(currentPlayer == associatedMatrix[row][column].color) {
                     explode(row, column, currentPlayer, imageView)
-                    true // TODO return true
+                    true
                 } else
                     false
 
@@ -125,6 +129,78 @@ class GamePresenter(
                 }
                 else -> ContextCompat.getDrawable(iGameView as Context, R.drawable.green_circle1)!!
             }
+            3 -> return when (noOfCircles) {
+                1 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.blue_circle1)!!
+                }
+                2 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.blue_circle2)!!
+                }
+                3 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.blue_circle3)!!
+                }
+                else -> ContextCompat.getDrawable(iGameView as Context, R.drawable.green_circle1)!!
+            }
+            4 -> return when (noOfCircles) {
+                1 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.yellow_circle1)!!
+                }
+                2 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.yellow_circle2)!!
+                }
+                3 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.yellow_circle3)!!
+                }
+                else -> ContextCompat.getDrawable(iGameView as Context, R.drawable.green_circle1)!!
+            }
+            5 -> return when (noOfCircles) {
+                1 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.purple_circle1)!!
+                }
+                2 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.purple_circle2)!!
+                }
+                3 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.purple_circle3)!!
+                }
+                else -> ContextCompat.getDrawable(iGameView as Context, R.drawable.green_circle1)!!
+            }
+            6 -> return when (noOfCircles) {
+                1 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.cyan_circle1)!!
+                }
+                2 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.cyan_circle2)!!
+                }
+                3 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.cyan_circle3)!!
+                }
+                else -> ContextCompat.getDrawable(iGameView as Context, R.drawable.green_circle1)!!
+            }
+            7 -> return when (noOfCircles) {
+                1 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.orange_circle1)!!
+                }
+                2 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.orange_circle2)!!
+                }
+                3 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.orange_circle3)!!
+                }
+                else -> ContextCompat.getDrawable(iGameView as Context, R.drawable.green_circle1)!!
+            }
+            8 -> return when (noOfCircles) {
+                1 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.white_circle1)!!
+                }
+                2 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.white_circle2)!!
+                }
+                3 -> {
+                    ContextCompat.getDrawable(iGameView as Context, R.drawable.white_circle3)!!
+                }
+                else -> ContextCompat.getDrawable(iGameView as Context, R.drawable.green_circle1)!!
+            }
             else-> return ContextCompat.getDrawable(iGameView as Context, R.drawable.green_circle1)!!
         }
     }
@@ -134,13 +210,18 @@ class GamePresenter(
         //explodes
 
         iGameView.setNoCircle(imageView)
+        //Thread.sleep(500)
         associatedMatrix[row][column].circles = 0
         //var associatedMatrix =Array(8) {Array(6) { GameObject() } }
         var neighbours:ArrayList<List<Int>> = getNeighbours(row, column)
         var newImageView = activity.findViewById<ImageView>(R.id.gameObject01)
 
         for(i in neighbours){   //iterate through all neighbours
-            explodePut(currentPlayer, i[0], i[1], getImageView(i[0], i[1])) //TODO ?
+
+            //explodePut(currentPlayer, i[0], i[1], getImageView(i[0], i[1])) //TODO ?
+
+            Handler().postDelayed(({ this.explodePut(currentPlayer, i[0], i[1], getImageView(i[0], i[1])) }), 300)
+
         }
 
 

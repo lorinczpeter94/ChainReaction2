@@ -1,6 +1,5 @@
 package com.example.lorinczpeter94.chainreaction2.gameActivity
 
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -17,6 +16,8 @@ import com.example.lorinczpeter94.chainreaction2.welcome_activity.PLAYERNUM
 
 
 
+
+
 class MediumGameActivity : AppCompatActivity(), IGameView {
 
 
@@ -28,10 +29,14 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
 
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_medium_game)
 
+
+        val playerCircle = findViewById<ImageView>(R.id.playerCircle)
+        playerCircle.background = ContextCompat.getDrawable(this, R.drawable.red_circle1)
         val playerNumber = intent.getIntExtra(PLAYERNUM, 2)
         activePlayer.setPlayerNumber(playerNumber)
 
@@ -79,6 +84,8 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
 
     }
     override fun setNoCircle(imageView: ImageView) {
+
+
         imageView.background = ContextCompat.getDrawable(this, R.drawable.no_circle)
     }
 
