@@ -25,14 +25,11 @@ import com.example.lorinczpeter94.chainreaction2.welcome_activity.PLAYERNUM
 class MediumGameActivity : AppCompatActivity(), IGameView {
 
 
-    internal lateinit var iGamePresenter:IGamePresenter
-    //var associatedMatrix: Array<Array<Int>> = Array(8) {Array(6){0} }
-    var associatedMatrix =Array(8) {Array(6) { GameObject() } }
-    var associatedViewMatrix =Array(8) {Array(6) { GameObject() } }
-    var activePlayer = ActivePlayer(1, 2)
+    private lateinit var iGamePresenter:IGamePresenter
 
+    private var associatedMatrix =Array(8) {Array(6) { GameObject() } }
 
-
+    private var activePlayer = ActivePlayer(1, 2)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,19 +41,13 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
         val playerNumber = intent.getIntExtra(PLAYERNUM, 2)
         activePlayer.setPlayerNumber(playerNumber)
 
-
-
-
-
     }
 
 
     fun onGameObjectClicked(view: View){
         // Triggered when a cell is pushed in the game
-        val playerNumber = intent.getIntExtra(PLAYERNUM, 2)
 
-
-        iGamePresenter = GamePresenter(this, this, associatedMatrix, playerNumber, activePlayer)
+        iGamePresenter = GamePresenter(this, this, associatedMatrix, activePlayer)
         val objectClicked = view as ImageView
         iGamePresenter.elementClicked(objectClicked)
     }
@@ -80,20 +71,22 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
 
     }
     override fun setNoCircle(imageView: ImageView) {
-
+        //Sets an empty background for the imageView
 
         imageView.background = ContextCompat.getDrawable(this, R.drawable.no_circle)
     }
 
     override fun setActiveGameObject(imageView: ImageView) {
+        //"Activates" the game objects by rotating them
         val anim = RotateAnimation(0f, 360f, 75f, 75f)
         anim.interpolator = LinearInterpolator()
         anim.repeatCount = Animation.INFINITE
-        anim.duration = 700
+        anim.duration = 1000
         imageView.startAnimation(anim)
     }
 
     override fun stopActiveGameObject(imageView: ImageView) {
+        //Stops the rotation of the imageView
         imageView.clearAnimation()
     }
 }
