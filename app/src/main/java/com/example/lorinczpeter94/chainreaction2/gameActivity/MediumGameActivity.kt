@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.WindowManager
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
 import android.widget.ImageView
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
@@ -43,15 +46,7 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
 
 
 
-        //animation for later.
-//        val circle:ImageView = findViewById(R.id.imgCircle)
-//
-//        val anim = RotateAnimation(0f, 360f, -5f, -5f)
-//        anim.interpolator = LinearInterpolator()
-//        anim.repeatCount = Animation.INFINITE
-//        anim.duration = 700
-//
-//        circle.startAnimation(ganim)
+
 
     }
 
@@ -90,6 +85,15 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
         imageView.background = ContextCompat.getDrawable(this, R.drawable.no_circle)
     }
 
+    override fun setActiveGameObject(imageView: ImageView) {
+        val anim = RotateAnimation(0f, 360f, 75f, 75f)
+        anim.interpolator = LinearInterpolator()
+        anim.repeatCount = Animation.INFINITE
+        anim.duration = 700
+        imageView.startAnimation(anim)
+    }
 
-
+    override fun stopActiveGameObject(imageView: ImageView) {
+        imageView.clearAnimation()
+    }
 }

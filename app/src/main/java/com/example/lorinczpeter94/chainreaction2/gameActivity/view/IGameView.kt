@@ -8,4 +8,6 @@ interface IGameView{
     fun setTwoCircles(imageView: ImageView, twoCircles:Drawable)
     fun setThreeCircles(imageView: ImageView, threeCircles:Drawable)
     fun setNoCircle(imageView: ImageView)
+    fun setActiveGameObject(imageView: ImageView)
+    fun stopActiveGameObject(imageView: ImageView)
 }
