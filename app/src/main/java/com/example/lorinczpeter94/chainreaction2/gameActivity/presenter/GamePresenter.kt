@@ -10,31 +10,33 @@ import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.GameObject
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.IGameView
-import android.support.v4.os.HandlerCompat.postDelayed
+
 
 
 class GamePresenter(
     private var iGameView: IGameView,
     private var activity: Activity,
     private var associatedMatrix: Array<Array<GameObject>>,
-    private var playerNumber: Int,
-    var activePlayer: ActivePlayer
+    private var activePlayer: ActivePlayer
 ) : IGamePresenter {
 
 
     override fun elementClicked(imageView: ImageView) {
         // Triggered when an element is clicked in a cell
-        val row: Int
-        val column: Int
+
         val indexes: ArrayList<Int> = getIndexes(imageView)
+        val row: Int = indexes[0]
+        val column: Int = indexes[1]
 
-        row = indexes[0]
-        column = indexes[1]
+        //calls playerPut - it will place a circle if the [row][column] is correct
+        if (playerPut(activePlayer.getCurrentPlayer(), row, column, imageView)) {
+            activePlayer.nextPlayer()  //Game goes to next player only if the current player managed to place a circle
 
-        if (playerPut(activePlayer.getCurrentPlayer(), row, column, imageView) == true) {
-            activePlayer.nextPlayer()
+
+            //Current Player color on top
             val playerCircle = activity.findViewById<ImageView>(R.id.playerCircle)
             iGameView.setOnecircle(playerCircle, chooseColor(1, activePlayer.getCurrentPlayer()))
+
         }
 
     }
@@ -43,22 +45,23 @@ class GamePresenter(
         //current players puts a circle
 
 
-        if (circlesNumber(row, column) == 0) {    // 1st put in the corner
-            associatedMatrix[row][column].color = currentPlayer
-            iGameView.setOnecircle(imageView, chooseColor(1, currentPlayer))
-            associatedMatrix[row][column].circles++
+        when {
+            circlesNumber(row, column) == 0 -> {    // 1st put in the corner
+                associatedMatrix[row][column].color = currentPlayer
+                iGameView.setOnecircle(imageView, chooseColor(1, currentPlayer))
+                associatedMatrix[row][column].circles++
 
-            //Set Animation on circles in corner
-            if (isInCorner(row, column)) {
-                iGameView.setActiveGameObject(imageView)
+                //Set Animation on circles in corner
+                if (isInCorner(row, column)) {
+                    iGameView.setActiveGameObject(imageView)
+                }
+                return true //put succeeded
+
             }
-            return true //put succeeded
-
-        } else if (circlesNumber(row, column) == 1) {
-            return if (isInCorner(row, column)) {
+            circlesNumber(row, column) == 1 -> return if (isInCorner(row, column)) {
                 if (currentPlayer == associatedMatrix[row][column].color) {
-                    explode(row, column, currentPlayer, imageView)
-                    true
+                    explode(row, column, currentPlayer, imageView) //second circle in corner - explode
+                    true //put succeeded
                 } else
 
                     false
@@ -68,6 +71,8 @@ class GamePresenter(
                     associatedMatrix[row][column].color = currentPlayer
                     iGameView.setTwoCircles(imageView, chooseColor(2, currentPlayer))
                     associatedMatrix[row][column].circles++
+
+                    //Sets rotation animation on side circles
                     if (isOnSide(row, column)) {
                         iGameView.setActiveGameObject(imageView)
                     }
@@ -75,12 +80,11 @@ class GamePresenter(
                 } else
                     false
             }
-        } else if (circlesNumber(row, column) == 2) {
-            return if (isOnSide(row, column)) {
+            circlesNumber(row, column) == 2 -> return if (isOnSide(row, column)) {
 
                 if (currentPlayer == associatedMatrix[row][column].color) {
-                    explode(row, column, currentPlayer, imageView)
-                    true
+                    explode(row, column, currentPlayer, imageView) //third circle on side - explode
+                    true //put succeeded
                 } else
                     false
 
@@ -90,25 +94,24 @@ class GamePresenter(
                     iGameView.setThreeCircles(imageView, chooseColor(3, currentPlayer))
                     associatedMatrix[row][column].circles++
                     if (!isOnSide(row, column) && !isInCorner(row, column)) {
-                        iGameView.setActiveGameObject(imageView);
+                        iGameView.setActiveGameObject(imageView)
                     }
                     true //put succeeded
 
                 } else
                     false
             }
-        } else if (circlesNumber(row, column) == 3) {
-            //TODO: robbanas
-            if (currentPlayer == associatedMatrix[row][column].color) {
-                explode(row, column, currentPlayer, imageView)
-                return true // TODO return true
+            circlesNumber(row, column) == 3 -> return if (currentPlayer == associatedMatrix[row][column].color) {
+                explode(row, column, currentPlayer, imageView) //4th circle on mid - explode
+                true
             } else
-                return false
+                false
+            else -> return false
         }
-        return false
     }
 
     private fun hisCircle(row: Int, column: Int, currentPlayer: Int): Boolean {
+        //returns true if on the indexes is the current player's color
         return associatedMatrix[row][column].color == currentPlayer
     }
 
@@ -217,20 +220,20 @@ class GamePresenter(
 
 
     private fun explode(row: Int, column: Int, currentPlayer: Int, imageView: ImageView) {
-        //explodes
+        //chain reaction
 
         iGameView.setNoCircle(imageView)
         associatedMatrix[row][column].circles = 0
 
         iGameView.stopActiveGameObject(imageView)
 
-        var neighbours: ArrayList<List<Int>> = getNeighbours(row, column)
-        var newImageView = activity.findViewById<ImageView>(R.id.gameObject01)
+
+        //Gets the neighbours of the circle that has to explode
+        val neighbours: ArrayList<List<Int>> = getNeighbours(row, column)
+
 
         for (i in neighbours) {   //iterate through all neighbours
-
-            //explodePut(currentPlayer, i[0], i[1], getImageView(i[0], i[1])) //TODO ?
-
+            //call explode put with a delay of 300millis
             Handler().postDelayed(({ this.explodePut(currentPlayer, i[0], i[1], getImageView(i[0], i[1])) }), 300)
 
         }
@@ -240,16 +243,14 @@ class GamePresenter(
 
 
     private fun getNeighbours(row: Int, column: Int): ArrayList<List<Int>> {
-
-        var neighbourForRet = ArrayList<List<Int>>()
-
+    //returns the indexes of the neighbours of circle on indexes [row][column]
 
         if (isInCorner(row, column)) {
             if (row == 0 && column == 0) {
                 //top left corner
-                var neighbours = ArrayList<List<Int>>()
-                var currentNeighbour1 = ArrayList<Int>()
-                var currentNeighbour2 = ArrayList<Int>()
+                val neighbours = ArrayList<List<Int>>()
+                val currentNeighbour1 = ArrayList<Int>()
+                val currentNeighbour2 = ArrayList<Int>()
 
                 currentNeighbour1.add(0)
                 currentNeighbour1.add(1)
@@ -263,9 +264,9 @@ class GamePresenter(
 
             } else if (row == 0 && column == 5) {
                 //top right corner
-                var neighbours = ArrayList<List<Int>>()
-                var currentNeighbour1 = ArrayList<Int>()
-                var currentNeighbour2 = ArrayList<Int>()
+                val neighbours = ArrayList<List<Int>>()
+                val currentNeighbour1 = ArrayList<Int>()
+                val currentNeighbour2 = ArrayList<Int>()
 
                 currentNeighbour1.add(1)
                 currentNeighbour1.add(5)
@@ -279,9 +280,9 @@ class GamePresenter(
 
             } else if (row == 7 && column == 0) {
                 //bottom left corner
-                var neighbours = ArrayList<List<Int>>()
-                var currentNeighbour1 = ArrayList<Int>()
-                var currentNeighbour2 = ArrayList<Int>()
+                val neighbours = ArrayList<List<Int>>()
+                val currentNeighbour1 = ArrayList<Int>()
+                val currentNeighbour2 = ArrayList<Int>()
 
                 currentNeighbour1.add(6)
                 currentNeighbour1.add(0)
@@ -295,9 +296,9 @@ class GamePresenter(
 
             } else { //row == 7 && column == 5
                 //bottom right corner
-                var neighbours = ArrayList<List<Int>>()
-                var currentNeighbour1 = ArrayList<Int>()
-                var currentNeighbour2 = ArrayList<Int>()
+                val neighbours = ArrayList<List<Int>>()
+                val currentNeighbour1 = ArrayList<Int>()
+                val currentNeighbour2 = ArrayList<Int>()
 
                 currentNeighbour1.add(7)
                 currentNeighbour1.add(4)
@@ -311,92 +312,97 @@ class GamePresenter(
             }
 
         } else if (isOnSide(row, column)) {
-            if (column == 0) {    //left side
-                var neighbours = ArrayList<List<Int>>()
-                var currentNeighbour1 = ArrayList<Int>()
-                var currentNeighbour2 = ArrayList<Int>()
-                var currentNeighbour3 = ArrayList<Int>()
+            when {
+                column == 0 -> {    //left side
+                    val neighbours = ArrayList<List<Int>>()
+                    val currentNeighbour1 = ArrayList<Int>()
+                    val currentNeighbour2 = ArrayList<Int>()
+                    val currentNeighbour3 = ArrayList<Int>()
 
-                currentNeighbour1.add(row - 1)
-                currentNeighbour1.add(column)
-                neighbours.add(currentNeighbour1)   //the upper one
+                    currentNeighbour1.add(row - 1)
+                    currentNeighbour1.add(column)
+                    neighbours.add(currentNeighbour1)   //the top one
 
-                currentNeighbour2.add(row)
-                currentNeighbour2.add(column + 1)
-                neighbours.add(currentNeighbour2)   //the right one
+                    currentNeighbour2.add(row)
+                    currentNeighbour2.add(column + 1)
+                    neighbours.add(currentNeighbour2)   //the right one
 
-                currentNeighbour3.add(row + 1)
-                currentNeighbour3.add(column)
-                neighbours.add(currentNeighbour3)   //the bottom one
+                    currentNeighbour3.add(row + 1)
+                    currentNeighbour3.add(column)
+                    neighbours.add(currentNeighbour3)   //the bottom one
 
-                return neighbours
+                    return neighbours
 
-            } else if (column == 5) { //right side
-                var neighbours = ArrayList<List<Int>>()
-                var currentNeighbour1 = ArrayList<Int>()
-                var currentNeighbour2 = ArrayList<Int>()
-                var currentNeighbour3 = ArrayList<Int>()
+                }
+                column == 5 -> { //right side
+                    val neighbours = ArrayList<List<Int>>()
+                    val currentNeighbour1 = ArrayList<Int>()
+                    val currentNeighbour2 = ArrayList<Int>()
+                    val currentNeighbour3 = ArrayList<Int>()
 
-                currentNeighbour1.add(row - 1)
-                currentNeighbour1.add(column)
-                neighbours.add(currentNeighbour1)
+                    currentNeighbour1.add(row - 1)
+                    currentNeighbour1.add(column)
+                    neighbours.add(currentNeighbour1)
 
-                currentNeighbour2.add(row + 1)
-                currentNeighbour2.add(column)
-                neighbours.add(currentNeighbour2)
+                    currentNeighbour2.add(row + 1)
+                    currentNeighbour2.add(column)
+                    neighbours.add(currentNeighbour2)
 
-                currentNeighbour3.add(row)
-                currentNeighbour3.add(column - 1)
-                neighbours.add(currentNeighbour3)
+                    currentNeighbour3.add(row)
+                    currentNeighbour3.add(column - 1)
+                    neighbours.add(currentNeighbour3)
 
-                return neighbours
+                    return neighbours
 
-            } else if (row == 0) {    //top side
-                var neighbours = ArrayList<List<Int>>()
-                var currentNeighbour1 = ArrayList<Int>()
-                var currentNeighbour2 = ArrayList<Int>()
-                var currentNeighbour3 = ArrayList<Int>()
+                }
+                row == 0 -> {    //top side
+                    val neighbours = ArrayList<List<Int>>()
+                    val currentNeighbour1 = ArrayList<Int>()
+                    val currentNeighbour2 = ArrayList<Int>()
+                    val currentNeighbour3 = ArrayList<Int>()
 
-                currentNeighbour1.add(row)
-                currentNeighbour1.add(column + 1)
-                neighbours.add(currentNeighbour1)
+                    currentNeighbour1.add(row)
+                    currentNeighbour1.add(column + 1)
+                    neighbours.add(currentNeighbour1)
 
-                currentNeighbour2.add(row + 1)
-                currentNeighbour2.add(column)
-                neighbours.add(currentNeighbour2)
+                    currentNeighbour2.add(row + 1)
+                    currentNeighbour2.add(column)
+                    neighbours.add(currentNeighbour2)
 
-                currentNeighbour3.add(row)
-                currentNeighbour3.add(column - 1)
-                neighbours.add(currentNeighbour3)
+                    currentNeighbour3.add(row)
+                    currentNeighbour3.add(column - 1)
+                    neighbours.add(currentNeighbour3)
 
-                return neighbours
+                    return neighbours
 
-            } else { //row == 7      bottom side
-                var neighbours = ArrayList<List<Int>>()
-                var currentNeighbour1 = ArrayList<Int>()
-                var currentNeighbour2 = ArrayList<Int>()
-                var currentNeighbour3 = ArrayList<Int>()
+                }
+                else -> { //row == 7      bottom side
+                    val neighbours = ArrayList<List<Int>>()
+                    val currentNeighbour1 = ArrayList<Int>()
+                    val currentNeighbour2 = ArrayList<Int>()
+                    val currentNeighbour3 = ArrayList<Int>()
 
-                currentNeighbour1.add(row - 1)
-                currentNeighbour1.add(column)
-                neighbours.add(currentNeighbour1)
+                    currentNeighbour1.add(row - 1)
+                    currentNeighbour1.add(column)
+                    neighbours.add(currentNeighbour1)
 
-                currentNeighbour2.add(row)
-                currentNeighbour2.add(column + 1)
-                neighbours.add(currentNeighbour2)
+                    currentNeighbour2.add(row)
+                    currentNeighbour2.add(column + 1)
+                    neighbours.add(currentNeighbour2)
 
-                currentNeighbour3.add(row)
-                currentNeighbour3.add(column - 1)
-                neighbours.add(currentNeighbour3)
+                    currentNeighbour3.add(row)
+                    currentNeighbour3.add(column - 1)
+                    neighbours.add(currentNeighbour3)
 
-                return neighbours
+                    return neighbours
+                }
             }
         } else {    //around the middle
-            var neighbours = ArrayList<List<Int>>()
-            var currentNeighbour1 = ArrayList<Int>()
-            var currentNeighbour2 = ArrayList<Int>()
-            var currentNeighbour3 = ArrayList<Int>()
-            var currentNeighbour4 = ArrayList<Int>()
+            val neighbours = ArrayList<List<Int>>()
+            val currentNeighbour1 = ArrayList<Int>()
+            val currentNeighbour2 = ArrayList<Int>()
+            val currentNeighbour3 = ArrayList<Int>()
+            val currentNeighbour4 = ArrayList<Int>()
 
             currentNeighbour1.add(row - 1)
             currentNeighbour1.add(column)
@@ -416,14 +422,13 @@ class GamePresenter(
 
             return neighbours
         }
-        return neighbourForRet
-
-
     }
 
 
     private fun explodePut(currentPlayer: Int, row: Int, column: Int, imageView: ImageView) {
-        //current players puts a circle
+        //explosion puts it's circles
+        
+
 
         if (circlesNumber(row, column) == 0) {    // 1st put in the corner
             associatedMatrix[row][column].color = currentPlayer
@@ -437,8 +442,7 @@ class GamePresenter(
 
         } else if (circlesNumber(row, column) == 1) {
             if (isInCorner(row, column)) {
-                // TODO robbanas WIP
-                associatedMatrix[row][column].circles = 0   // TODO -2 not 0
+                associatedMatrix[row][column].circles = 0
                 explode(row, column, currentPlayer, imageView)
 
 
@@ -455,8 +459,7 @@ class GamePresenter(
             }
         } else if (circlesNumber(row, column) == 2) {
             if (isOnSide(row, column)) {
-                // TODO robbanas WIP
-                associatedMatrix[row][column].circles = 0   // TODO -3 not 0
+                associatedMatrix[row][column].circles = 0
                 explode(row, column, currentPlayer, imageView)
 
             } else {
@@ -468,22 +471,23 @@ class GamePresenter(
                     iGameView.setActiveGameObject(imageView)
                 }
 
-
-
-
             }
         } else if (circlesNumber(row, column) == 3) {
-            associatedMatrix[row][column].circles = 0   // TODO -4 not 0
+            associatedMatrix[row][column].circles = 0
             explode(row, column, currentPlayer, imageView)
         }
     }
 
+
+
     private fun isInCorner(row: Int, column: Int): Boolean {
+        //returns true if for the corner indexes
         return (row == 0 && column == 0 || row == 0 && column == 5 ||
                 row == 7 && column == 0 || row == 7 && column == 5)
     }
 
     private fun isOnSide(row: Int, column: Int): Boolean {
+        //returns true for the indexes on the side of the matrix but not in the corner
         return (row in 1..6 && column == 0 || row in 1..6 && column == 5 ||
                 column in 1..4 && row == 0 || column in 1..4 && row == 7)
     }
@@ -494,80 +498,80 @@ class GamePresenter(
     }
 
     private fun getImageView(row: Int, column: Int): ImageView {
-        return when (row) {
+        when (row) {
             0 -> return when (column) {
-                0 -> activity.findViewById<ImageView>(R.id.gameObject00)
-                1 -> activity.findViewById<ImageView>(R.id.gameObject01)
-                2 -> activity.findViewById<ImageView>(R.id.gameObject02)
-                3 -> activity.findViewById<ImageView>(R.id.gameObject03)
-                4 -> activity.findViewById<ImageView>(R.id.gameObject04)
-                5 -> activity.findViewById<ImageView>(R.id.gameObject05)
-                else -> activity.findViewById<ImageView>(R.id.gameObject00)
+                0 -> activity.findViewById(R.id.gameObject00)
+                1 -> activity.findViewById(R.id.gameObject01)
+                2 -> activity.findViewById(R.id.gameObject02)
+                3 -> activity.findViewById(R.id.gameObject03)
+                4 -> activity.findViewById(R.id.gameObject04)
+                5 -> activity.findViewById(R.id.gameObject05)
+                else -> activity.findViewById(R.id.gameObject00)
             }
             1 -> return when (column) {
-                0 -> activity.findViewById<ImageView>(R.id.gameObject10)
-                1 -> activity.findViewById<ImageView>(R.id.gameObject11)
-                2 -> activity.findViewById<ImageView>(R.id.gameObject12)
-                3 -> activity.findViewById<ImageView>(R.id.gameObject13)
-                4 -> activity.findViewById<ImageView>(R.id.gameObject14)
-                5 -> activity.findViewById<ImageView>(R.id.gameObject15)
-                else -> activity.findViewById<ImageView>(R.id.gameObject00)
+                0 -> activity.findViewById(R.id.gameObject10)
+                1 -> activity.findViewById(R.id.gameObject11)
+                2 -> activity.findViewById(R.id.gameObject12)
+                3 -> activity.findViewById(R.id.gameObject13)
+                4 -> activity.findViewById(R.id.gameObject14)
+                5 -> activity.findViewById(R.id.gameObject15)
+                else -> activity.findViewById(R.id.gameObject00)
             }
             2 -> return when (column) {
-                0 -> activity.findViewById<ImageView>(R.id.gameObject20)
-                1 -> activity.findViewById<ImageView>(R.id.gameObject21)
-                2 -> activity.findViewById<ImageView>(R.id.gameObject22)
-                3 -> activity.findViewById<ImageView>(R.id.gameObject23)
-                4 -> activity.findViewById<ImageView>(R.id.gameObject24)
-                5 -> activity.findViewById<ImageView>(R.id.gameObject25)
-                else -> activity.findViewById<ImageView>(R.id.gameObject00)
+                0 -> activity.findViewById(R.id.gameObject20)
+                1 -> activity.findViewById(R.id.gameObject21)
+                2 -> activity.findViewById(R.id.gameObject22)
+                3 -> activity.findViewById(R.id.gameObject23)
+                4 -> activity.findViewById(R.id.gameObject24)
+                5 -> activity.findViewById(R.id.gameObject25)
+                else -> activity.findViewById(R.id.gameObject00)
             }
             3 -> return when (column) {
-                0 -> activity.findViewById<ImageView>(R.id.gameObject30)
-                1 -> activity.findViewById<ImageView>(R.id.gameObject31)
-                2 -> activity.findViewById<ImageView>(R.id.gameObject32)
-                3 -> activity.findViewById<ImageView>(R.id.gameObject33)
-                4 -> activity.findViewById<ImageView>(R.id.gameObject34)
-                5 -> activity.findViewById<ImageView>(R.id.gameObject35)
-                else -> activity.findViewById<ImageView>(R.id.gameObject00)
+                0 -> activity.findViewById(R.id.gameObject30)
+                1 -> activity.findViewById(R.id.gameObject31)
+                2 -> activity.findViewById(R.id.gameObject32)
+                3 -> activity.findViewById(R.id.gameObject33)
+                4 -> activity.findViewById(R.id.gameObject34)
+                5 -> activity.findViewById(R.id.gameObject35)
+                else -> activity.findViewById(R.id.gameObject00)
             }
             4 -> return when (column) {
-                0 -> activity.findViewById<ImageView>(R.id.gameObject40)
-                1 -> activity.findViewById<ImageView>(R.id.gameObject41)
-                2 -> activity.findViewById<ImageView>(R.id.gameObject42)
-                3 -> activity.findViewById<ImageView>(R.id.gameObject43)
-                4 -> activity.findViewById<ImageView>(R.id.gameObject44)
-                5 -> activity.findViewById<ImageView>(R.id.gameObject45)
-                else -> activity.findViewById<ImageView>(R.id.gameObject00)
+                0 -> activity.findViewById(R.id.gameObject40)
+                1 -> activity.findViewById(R.id.gameObject41)
+                2 -> activity.findViewById(R.id.gameObject42)
+                3 -> activity.findViewById(R.id.gameObject43)
+                4 -> activity.findViewById(R.id.gameObject44)
+                5 -> activity.findViewById(R.id.gameObject45)
+                else -> activity.findViewById(R.id.gameObject00)
             }
             5 -> return when (column) {
-                0 -> activity.findViewById<ImageView>(R.id.gameObject50)
-                1 -> activity.findViewById<ImageView>(R.id.gameObject51)
-                2 -> activity.findViewById<ImageView>(R.id.gameObject52)
-                3 -> activity.findViewById<ImageView>(R.id.gameObject53)
-                4 -> activity.findViewById<ImageView>(R.id.gameObject54)
-                5 -> activity.findViewById<ImageView>(R.id.gameObject55)
-                else -> activity.findViewById<ImageView>(R.id.gameObject00)
+                0 -> activity.findViewById(R.id.gameObject50)
+                1 -> activity.findViewById(R.id.gameObject51)
+                2 -> activity.findViewById(R.id.gameObject52)
+                3 -> activity.findViewById(R.id.gameObject53)
+                4 -> activity.findViewById(R.id.gameObject54)
+                5 -> activity.findViewById(R.id.gameObject55)
+                else -> activity.findViewById(R.id.gameObject00)
             }
             6 -> return when (column) {
-                0 -> activity.findViewById<ImageView>(R.id.gameObject60)
-                1 -> activity.findViewById<ImageView>(R.id.gameObject61)
-                2 -> activity.findViewById<ImageView>(R.id.gameObject62)
-                3 -> activity.findViewById<ImageView>(R.id.gameObject63)
-                4 -> activity.findViewById<ImageView>(R.id.gameObject64)
-                5 -> activity.findViewById<ImageView>(R.id.gameObject65)
-                else -> activity.findViewById<ImageView>(R.id.gameObject00)
+                0 -> activity.findViewById(R.id.gameObject60)
+                1 -> activity.findViewById(R.id.gameObject61)
+                2 -> activity.findViewById(R.id.gameObject62)
+                3 -> activity.findViewById(R.id.gameObject63)
+                4 -> activity.findViewById(R.id.gameObject64)
+                5 -> activity.findViewById(R.id.gameObject65)
+                else -> activity.findViewById(R.id.gameObject00)
             }
             7 -> return when (column) {
-                0 -> activity.findViewById<ImageView>(R.id.gameObject70)
-                1 -> activity.findViewById<ImageView>(R.id.gameObject71)
-                2 -> activity.findViewById<ImageView>(R.id.gameObject72)
-                3 -> activity.findViewById<ImageView>(R.id.gameObject73)
-                4 -> activity.findViewById<ImageView>(R.id.gameObject74)
-                5 -> activity.findViewById<ImageView>(R.id.gameObject75)
-                else -> activity.findViewById<ImageView>(R.id.gameObject00)
+                0 -> activity.findViewById(R.id.gameObject70)
+                1 -> activity.findViewById(R.id.gameObject71)
+                2 -> activity.findViewById(R.id.gameObject72)
+                3 -> activity.findViewById(R.id.gameObject73)
+                4 -> activity.findViewById(R.id.gameObject74)
+                5 -> activity.findViewById(R.id.gameObject75)
+                else -> activity.findViewById(R.id.gameObject00)
             }
-            else -> return activity.findViewById<ImageView>(R.id.gameObject00)
+            else -> return activity.findViewById(R.id.gameObject00)
         }
     }
 
