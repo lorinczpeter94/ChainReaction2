@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.view.View
+import android.view.WindowManager
 import android.widget.ImageView
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
@@ -33,7 +34,7 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_medium_game)
-
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         val playerCircle = findViewById<ImageView>(R.id.playerCircle)
         playerCircle.background = ContextCompat.getDrawable(this, R.drawable.red_circle1)
@@ -50,7 +51,7 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
 //        anim.repeatCount = Animation.INFINITE
 //        anim.duration = 700
 //
-//        circle.startAnimation(anim)
+//        circle.startAnimation(ganim)
 
     }
 
