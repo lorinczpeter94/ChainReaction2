@@ -9,12 +9,18 @@
         tools:context=".gameActivity.MediumGameActivity"
         android:background="@color/colorPrimaryDark">
 
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" app:srcCompat="@drawable/no_circle" android:id="@+id/playerCircle"
+            android:layout_marginTop="8dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/tableLayout"/>
     <TableLayout
-            android:gravity="center"
-            android:layout_width="match_parent"
+            android:gravity="bottom"
+            android:layout_width="0dp"
             android:layout_marginLeft="10pt"
             android:layout_marginRight="10pt"
-            android:layout_height="match_parent"
+            android:layout_height="453dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.502"
@@ -22,7 +28,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:background="@color/colorPrimaryDark"
 
-    >
+            android:layout_marginTop="8dp" android:id="@+id/tableLayout">
         <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -38,7 +44,7 @@
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject00"
                     android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -57,7 +63,7 @@
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject02"
                     android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -66,7 +72,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject03" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -75,7 +81,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject04" android:onClick="onGameObjectClicked"
-                    />
+            />
 
             <View
                     android:layout_width="1dp"
@@ -86,7 +92,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject05" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -110,7 +116,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject10" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -119,7 +125,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject11" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -128,7 +134,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject12" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -137,7 +143,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject13" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -146,7 +152,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject14" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -155,7 +161,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject15" android:onClick="onGameObjectClicked"
-                    />
+            />
 
             <View
                     android:layout_width="1dp"
@@ -178,7 +184,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject20" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -187,7 +193,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject21" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -196,7 +202,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject22" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -205,7 +211,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject23" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -214,7 +220,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject24" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -223,7 +229,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject25" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -246,7 +252,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject30" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -255,7 +261,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject31" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -264,7 +270,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject32" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -273,7 +279,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject33" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -282,7 +288,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject34" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -291,7 +297,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject35" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -314,7 +320,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject40" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -323,7 +329,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject41" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -332,7 +338,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject42" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -341,7 +347,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject43" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -350,7 +356,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject44" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -359,7 +365,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject45" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -382,7 +388,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject50" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -391,7 +397,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject51" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -400,7 +406,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject52" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -409,7 +415,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject53" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -418,7 +424,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject54" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -427,7 +433,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject55" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -450,7 +456,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject60" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -459,7 +465,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject61" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -468,7 +474,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject62" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -477,7 +483,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject63" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -486,7 +492,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject64" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -495,7 +501,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject65" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -518,7 +524,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject70" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -527,7 +533,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject71" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -536,7 +542,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject72" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -545,7 +551,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject73" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
@@ -554,7 +560,7 @@
             <ImageView
                     android:background="@drawable/no_circle"
                     android:id="@+id/gameObject74" android:onClick="onGameObjectClicked"
-                    />
+            />
             <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"

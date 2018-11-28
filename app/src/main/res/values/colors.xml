@@ -6,8 +6,29 @@
     <color name="lightGrey">#eeeeee</color>
     <color name="redCircleLight">#ff5131</color>
     <color name="redCircleDark">#9b0000</color>
-
-    <color name="greenCircleLight">#b0ff57</color>
-    <color name="greenCircleDark">#32cb00</color>
     <color name="gridColor">#eeeeee</color>
+
+    <color name="greenCircleLight">#99d066</color>
+    <color name="greenCircleDark">#387002</color>
+
+
+    <color name="blueCircleLight">#5e92f3</color>
+    <color name="blueCircleDark">#003c8f</color>
+
+    <color name="cyanCircleLight">#8bf6ff</color>
+    <color name="cyanCircleDark">#0093c4</color>
+
+    <color name="orangeCircleLight">#ffad42</color>
+    <color name="orangeCircleDark">#f57c00</color>
+
+    <color name="purpleCircleLight">#c158dc</color>
+    <color name="purpleCircleDark">#5c007a</color>
+
+    <color name="whiteCircleLight">#efefef</color>
+    <color name="whiteCircleDark">#8d8d8d</color>
+
+    <color name="yellowCircleLight">#fffd61</color>
+    <color name="yellowCircleDark">#ffca28</color>
+
+
 </resources>
