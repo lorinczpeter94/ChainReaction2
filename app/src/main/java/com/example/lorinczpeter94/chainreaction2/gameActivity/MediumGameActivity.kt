@@ -3,13 +3,17 @@ package com.example.lorinczpeter94.chainreaction2.gameActivity
 import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
+import android.view.animation.TranslateAnimation
 import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TableLayout
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.GameObject
@@ -88,5 +92,49 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
     override fun stopActiveGameObject(imageView: ImageView) {
         //Stops the rotation of the imageView
         imageView.clearAnimation()
+    }
+
+    override fun midAnimation(imageView: ImageView, color: Drawable) {
+        val myLayout: RelativeLayout = findViewById(R.id.relativeLayout)
+        val animationView1 = ImageView(this)
+        val animationView2 = ImageView(this)
+        val animationView3 = ImageView(this)
+        val animationView4 = ImageView(this)
+
+        myLayout.addView(animationView1)
+        myLayout.addView(animationView2)
+        myLayout.addView(animationView3)
+        myLayout.addView(animationView4)
+
+        setOnecircle(animationView1, color)
+        setOnecircle(animationView2, color)
+        setOnecircle(animationView3, color)
+        setOnecircle(animationView4, color)
+
+        val animRight = TranslateAnimation(imageView.x, imageView.x + 100f, imageView.y, imageView.y)
+        val animLeft = TranslateAnimation(imageView.x, imageView.x - 100f, imageView.y, imageView.y)
+        val animUp = TranslateAnimation(imageView.x, imageView.x, imageView.y, imageView.y +  100f)
+        val animDown = TranslateAnimation(imageView.x, imageView.x, imageView.y, imageView.y - 100f)
+
+        animRight.interpolator = LinearInterpolator()
+        animLeft.interpolator = LinearInterpolator()
+        animUp.interpolator = LinearInterpolator()
+        animDown.interpolator = LinearInterpolator()
+
+        animRight.duration = 200
+        animLeft.duration = 200
+        animUp.duration = 200
+        animDown.duration = 200
+
+        animationView1.startAnimation(animRight)
+        animationView2.startAnimation(animLeft)
+        animationView3.startAnimation(animUp)
+        animationView4.startAnimation(animDown)
+
+        myLayout.removeView(animationView1)
+        myLayout.removeView(animationView2)
+        myLayout.removeView(animationView3)
+        myLayout.removeView(animationView4)
+
     }
 }

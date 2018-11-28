@@ -10,4 +10,5 @@ interface IGameView{
     fun setNoCircle(imageView: ImageView)
     fun setActiveGameObject(imageView: ImageView)
     fun stopActiveGameObject(imageView: ImageView)
+    fun midAnimation(imageView: ImageView, color:Drawable)
 }

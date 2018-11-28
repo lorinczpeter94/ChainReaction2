@@ -5,7 +5,10 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.support.v4.content.ContextCompat
+import android.view.animation.TranslateAnimation
 import android.widget.ImageView
+import android.widget.TableLayout
+import android.widget.Toast
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.GameObject
@@ -234,6 +237,8 @@ class GamePresenter(
 
         for (i in neighbours) {   //iterate through all neighbours
             //call explode put with a delay of 300millis
+            //TEST ANIMATION
+            toBeAnimated(row, column, imageView, currentPlayer)
             Handler().postDelayed(({ this.explodePut(currentPlayer, i[0], i[1], getImageView(i[0], i[1])) }), 300)
 
         }
@@ -427,7 +432,8 @@ class GamePresenter(
 
     private fun explodePut(currentPlayer: Int, row: Int, column: Int, imageView: ImageView) {
         //explosion puts it's circles
-        
+
+
 
 
         if (circlesNumber(row, column) == 0) {    // 1st put in the corner
@@ -478,7 +484,12 @@ class GamePresenter(
         }
     }
 
+    private fun toBeAnimated(row: Int, column: Int, imageView: ImageView, currentPlayer: Int){
 
+        iGameView.midAnimation(imageView, chooseColor(1, currentPlayer))
+
+
+    }
 
     private fun isInCorner(row: Int, column: Int): Boolean {
         //returns true if for the corner indexes
