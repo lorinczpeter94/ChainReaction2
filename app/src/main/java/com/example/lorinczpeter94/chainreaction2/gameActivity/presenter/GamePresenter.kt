@@ -12,6 +12,7 @@ import android.widget.Toast
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.GameObject
+import com.example.lorinczpeter94.chainreaction2.gameActivity.model.Players
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.IGameView
 
 
@@ -20,7 +21,8 @@ class GamePresenter(
     private var iGameView: IGameView,
     private var activity: Activity,
     private var associatedMatrix: Array<Array<GameObject>>,
-    private var activePlayer: ActivePlayer
+    private var activePlayer: ActivePlayer,
+    private var player:Players
 ) : IGamePresenter {
 
 
@@ -53,6 +55,9 @@ class GamePresenter(
                 associatedMatrix[row][column].color = currentPlayer
                 iGameView.setOnecircle(imageView, chooseColor(1, currentPlayer))
                 associatedMatrix[row][column].circles++
+
+                player.add(currentPlayer)
+
 
                 //Set Animation on circles in corner
                 if (isInCorner(row, column)) {
@@ -237,9 +242,19 @@ class GamePresenter(
 
         for (i in neighbours) {   //iterate through all neighbours
             //call explode put with a delay of 300millis
+            player.succ(associatedMatrix[i[0]][i[1]].color)
+            player.add(currentPlayer)
+
+
+
+
             //TEST ANIMATION
             toBeAnimated(row, column, imageView, currentPlayer)
             Handler().postDelayed(({ this.explodePut(currentPlayer, i[0], i[1], getImageView(i[0], i[1])) }), 300)
+
+            if (player.getWinner()){
+                Toast.makeText(activity, "Player $currentPlayer won!", Toast.LENGTH_LONG).show()
+            }
 
         }
 

@@ -17,6 +17,7 @@ import android.widget.TableLayout
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.GameObject
+import com.example.lorinczpeter94.chainreaction2.gameActivity.model.Players
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.GamePresenter
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.IGamePresenter
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.IGameView
@@ -51,7 +52,7 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
     fun onGameObjectClicked(view: View){
         // Triggered when a cell is pushed in the game
 
-        iGamePresenter = GamePresenter(this, this, associatedMatrix, activePlayer)
+        iGamePresenter = GamePresenter(this, this, associatedMatrix, activePlayer, Players(Array(9){0}))
         val objectClicked = view as ImageView
         iGamePresenter.elementClicked(objectClicked)
     }
