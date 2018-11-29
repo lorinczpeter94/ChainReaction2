@@ -3,7 +3,6 @@ package com.example.lorinczpeter94.chainreaction2.gameActivity
 import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.WindowManager
@@ -13,11 +12,9 @@ import android.view.animation.RotateAnimation
 import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import android.widget.TableLayout
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
-import com.example.lorinczpeter94.chainreaction2.gameActivity.model.GameObject
-import com.example.lorinczpeter94.chainreaction2.gameActivity.model.Players
+import com.example.lorinczpeter94.chainreaction2.gameActivity.model.AssociatedMatrix
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.GamePresenter
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.IGamePresenter
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.IGameView
@@ -32,9 +29,12 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
 
     private lateinit var iGamePresenter:IGamePresenter
 
-    private var associatedMatrix =Array(8) {Array(6) { GameObject() } }
 
-    private var activePlayer = ActivePlayer(1, 2)
+    private var associatedMatrix = AssociatedMatrix(8, 6)
+
+
+
+    private var activePlayer = ActivePlayer(1, 2, (Array(9){0}))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,16 +45,21 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
         playerCircle.background = ContextCompat.getDrawable(this, R.drawable.red_circle1)
         val playerNumber = intent.getIntExtra(PLAYERNUM, 2)
         activePlayer.setPlayerNumber(playerNumber)
-
+        iGamePresenter = GamePresenter(this, this, activePlayer)
     }
 
 
     fun onGameObjectClicked(view: View){
         // Triggered when a cell is pushed in the game
 
-        iGamePresenter = GamePresenter(this, this, associatedMatrix, activePlayer, Players(Array(9){0}))
+
         val objectClicked = view as ImageView
         iGamePresenter.elementClicked(objectClicked)
+
+    }
+
+    override fun getMatrixInstance(): AssociatedMatrix {
+        return associatedMatrix
     }
 
 
@@ -122,10 +127,10 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
         animUp.interpolator = LinearInterpolator()
         animDown.interpolator = LinearInterpolator()
 
-        animRight.duration = 200
-        animLeft.duration = 200
-        animUp.duration = 200
-        animDown.duration = 200
+        animRight.duration = 220
+        animLeft.duration = 220
+        animUp.duration = 220
+        animDown.duration = 220
 
         animationView1.startAnimation(animRight)
         animationView2.startAnimation(animLeft)

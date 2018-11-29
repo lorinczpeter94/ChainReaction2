@@ -2,6 +2,7 @@ package com.example.lorinczpeter94.chainreaction2.gameActivity.view
 
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
+import com.example.lorinczpeter94.chainreaction2.gameActivity.model.AssociatedMatrix
 
 interface IGameView{
     fun setOnecircle(imageView: ImageView, oneCircle:Drawable)
@@ -11,4 +12,5 @@ interface IGameView{
     fun setActiveGameObject(imageView: ImageView)
     fun stopActiveGameObject(imageView: ImageView)
     fun midAnimation(imageView: ImageView, color:Drawable)
+    fun getMatrixInstance():AssociatedMatrix
 }
