@@ -5,6 +5,9 @@ class ActivePlayer(
     private var playerNumber:Int,
     private var players:Array<Int>) : IActivePlayer{
 
+    fun getPlayerNumber():Int{
+        return playerNumber
+    }
 
     override fun getCurrentPlayer():Int{
         return currentPlayer

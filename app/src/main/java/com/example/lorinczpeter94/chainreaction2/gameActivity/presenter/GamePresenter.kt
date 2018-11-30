@@ -17,10 +17,11 @@ class GamePresenter(
     private var activity: Activity,
     private var activePlayer: ActivePlayer
 ) : IGamePresenter {
-    private var playerManager = PlayerManager(1, iGameView.getMatrixInstance())
+    private var playerManager = PlayerManager(8, iGameView.getMatrixInstance())
     private var associatedMatrix = iGameView.getMatrixInstance()
     private var positionManager = PositionManager(associatedMatrix.getHeight() + 1, associatedMatrix.getWidth() + 1)
     private var round = 0
+
     override fun elementClicked(imageView: ImageView) {
         // Triggered when an element is clicked in a cell
         round++
@@ -31,25 +32,15 @@ class GamePresenter(
 
         //calls playerPut - it will place a circle if the [row][column] is correct
         if (playerPut(activePlayer.getCurrentPlayer(), row, column, imageView)) {
-            playerManager = PlayerManager(activePlayer.getCurrentPlayer(), associatedMatrix)
-
+            playerManager = PlayerManager(activePlayer.getPlayerNumber(), associatedMatrix)
             activePlayer.nextPlayer()  //Game goes to next players only if the current players managed to place a circle
-
-
-            while (!playerManager.checkPlayer(activePlayer.getCurrentPlayer()) && round != 1) {
+            while (!playerManager.checkPlayer(activePlayer.getCurrentPlayer()) && round > activePlayer.getPlayerNumber()) {
                 activePlayer.nextPlayer()
             }
-
 
         //Current Player color on top
         val playerCircle = activity.findViewById<ImageView>(R.id.playerCircle)
         iGameView.setOnecircle(playerCircle, chooseColor(1, activePlayer.getCurrentPlayer()))
-
-            if (playerManager.checkWinner() && round != 1) {
-                Toast.makeText(activity, "Player ${activePlayer.getCurrentPlayer()} won!", Toast.LENGTH_LONG).show()
-                //activity.finish()
-            }
-
 
     }
 
@@ -131,7 +122,6 @@ private fun playerPut(currentPlayer: Int, row: Int, column: Int, imageView: Imag
         else -> return false
     }
 }
-
 
 private fun chooseColor(noOfCircles: Int, currentPlayer: Int): Drawable {
     //chooses background color,  depends on no. of circles and current players
@@ -238,6 +228,11 @@ private fun chooseColor(noOfCircles: Int, currentPlayer: Int): Drawable {
 
 private fun explode(row: Int, column: Int, currentPlayer: Int, imageView: ImageView) {
     //chain reaction
+
+    if (playerManager.checkWinner() && round != 1) {
+        Toast.makeText(activity, "Player ${activePlayer.getCurrentPlayer()} won!", Toast.LENGTH_LONG).show()
+        //activity.finish()
+    }
 
     iGameView.setNoCircle(imageView)
     associatedMatrix.setZeroCircles(row, column)

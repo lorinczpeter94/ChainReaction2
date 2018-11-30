@@ -7,8 +7,11 @@ class PlayerManager(
     private var associatedMatrix: AssociatedMatrix
 ) {
 
-    private var players:Array<Int> = Array(playerNumber+2) {0}
+    private var players:Array<Int> = Array(playerNumber + 1) {0}
 
+    fun setPlayerNumber(playerNumber:Int){
+        this.playerNumber = playerNumber
+    }
 
     fun calcPlayerFields(){
         for(i in 0.. associatedMatrix.getHeight()){
@@ -21,7 +24,7 @@ class PlayerManager(
     }
 
     fun checkWinner(): Boolean{
-        players = Array(playerNumber+2){0}
+        players = Array(playerNumber + 1){0}
 
         calcPlayerFields()
         var db = 0
@@ -36,7 +39,7 @@ class PlayerManager(
 
 
     fun checkPlayer(currentPlayer: Int): Boolean{
-        players = Array(playerNumber+2){0}
+        players = Array(playerNumber +1 ){0}
         calcPlayerFields()
 
         return (players[currentPlayer] != 0)
