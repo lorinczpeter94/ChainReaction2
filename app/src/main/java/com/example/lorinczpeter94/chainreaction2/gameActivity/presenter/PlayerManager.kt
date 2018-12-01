@@ -21,6 +21,25 @@ class PlayerManager(
                 }
             }
         }
+
+
+        //-----------------------
+        println("Matix:")
+        for (i in 0 .. associatedMatrix.getHeight()){
+            for(j in 0..associatedMatrix.getWidth()){
+                print("(${associatedMatrix.getColor(i,j)}, ${associatedMatrix.getCircles(i, j)}) ")
+            }
+            println()
+        }
+
+
+        println("players array:")
+        println()
+        for (i in players){
+            print("$i ")
+        }
+        println()
+        //-----------------------
     }
 
     fun checkWinner(): Boolean{

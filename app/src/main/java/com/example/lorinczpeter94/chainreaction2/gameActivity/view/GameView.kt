@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.AssociatedMatrix
 
-interface IGameView{
+interface GameView{
     fun setOnecircle(imageView: ImageView, oneCircle:Drawable)
     fun setTwoCircles(imageView: ImageView, twoCircles:Drawable)
     fun setThreeCircles(imageView: ImageView, threeCircles:Drawable)
