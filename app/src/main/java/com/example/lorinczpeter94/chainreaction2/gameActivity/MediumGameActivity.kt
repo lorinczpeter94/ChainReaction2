@@ -1,38 +1,33 @@
 package com.example.lorinczpeter94.chainreaction2.gameActivity
 
-import android.graphics.drawable.Drawable
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
-import android.view.animation.Animation
-import android.view.animation.LinearInterpolator
-import android.view.animation.RotateAnimation
-import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
-import com.example.lorinczpeter94.chainreaction2.gameActivity.model.AssociatedMatrix
+import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.BackgroundSelector
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.GamePresenter
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.IGamePresenter
-import com.example.lorinczpeter94.chainreaction2.gameActivity.view.CustomImageView
-import com.example.lorinczpeter94.chainreaction2.gameActivity.view.GameLayout
-import com.example.lorinczpeter94.chainreaction2.gameActivity.view.GameView
+import com.example.lorinczpeter94.chainreaction2.gameActivity.utilities.IDtoInt
+import com.example.lorinczpeter94.chainreaction2.gameActivity.view.IGameView
 import com.example.lorinczpeter94.chainreaction2.welcome_activity.PLAYERNUM
 
 
-class MediumGameActivity : AppCompatActivity(), GameView {
+class MediumGameActivity : AppCompatActivity(), IGameView {
 
-    private val noOfRows: Int = 8
-    private val noOfColumns: Int = 6
 
-    private var viewMatrix: Array<Array<CustomImageView>>?= null
+
+
 
     private var iGamePresenter:IGamePresenter? = null
-    private var associatedMatrix = AssociatedMatrix(8, 6)
     private var activePlayer = ActivePlayer(1, 2, (Array(9){0}))
+
 
 
 
@@ -41,35 +36,21 @@ class MediumGameActivity : AppCompatActivity(), GameView {
         setContentView(R.layout.activity_medium_game)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        viewMatrix = Array(noOfRows) {Array(noOfColumns) { CustomImageView(this) } }
 
         val relativeLayout: RelativeLayout = findViewById(R.id.relativeLayout)
 
-        viewMatrix?.let {
-            var gameLayout = GameLayout(this, relativeLayout, it)
-            gameLayout.createLayout()
+
             val playerCircle = findViewById<ImageView>(R.id.playerCircle)
             playerCircle.background = ContextCompat.getDrawable(this, R.drawable.red_circle1)
             val playerNumber = intent.getIntExtra(PLAYERNUM, 2)
+
+
             activePlayer.setPlayerNumber(playerNumber)
-            iGamePresenter = GamePresenter(this, this, activePlayer)
 
-        }
+            iGamePresenter = GamePresenter(this as IGameView, this as Activity, this as Context,  activePlayer)
+
+
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -95,89 +76,4 @@ class MediumGameActivity : AppCompatActivity(), GameView {
 
     }
 
-    override fun getMatrixInstance(): AssociatedMatrix {
-        return associatedMatrix
-    }
-
-
-    override fun setOnecircle(imageView: ImageView, oneCircle:Drawable) {
-        // Sets the red_circle1 drawable as background
-        imageView.background = oneCircle
-
-    }
-
-    override fun setTwoCircles(imageView: ImageView, twoCircles:Drawable) {
-        // Sets the red_circle2 drawable as background
-        imageView.background = twoCircles
-
-    }
-
-    override fun setThreeCircles(imageView: ImageView, threeCircles:Drawable) {
-        // Sets the red_circle3 drawable as background
-        imageView.background = threeCircles
-
-    }
-    override fun setNoCircle(imageView: ImageView) {
-        //Sets an empty background for the imageView
-
-        imageView.background = ContextCompat.getDrawable(this, R.drawable.no_circle)
-    }
-
-    override fun setActiveGameObject(imageView: ImageView) {
-        //"Activates" the game objects by rotating them
-        val anim = RotateAnimation(0f, 360f, 75f, 75f)
-        anim.interpolator = LinearInterpolator()
-        anim.repeatCount = Animation.INFINITE
-        anim.duration = 1000
-        imageView.startAnimation(anim)
-    }
-
-    override fun stopActiveGameObject(imageView: ImageView) {
-        //Stops the rotation of the imageView
-        imageView.clearAnimation()
-    }
-
-    override fun midAnimation(imageView: ImageView, color: Drawable) {
-        val myLayout: RelativeLayout = findViewById(R.id.relativeLayout)
-        val animationView1 = ImageView(this)
-        val animationView2 = ImageView(this)
-        val animationView3 = ImageView(this)
-        val animationView4 = ImageView(this)
-
-        myLayout.addView(animationView1)
-        myLayout.addView(animationView2)
-        myLayout.addView(animationView3)
-        myLayout.addView(animationView4)
-
-        setOnecircle(animationView1, color)
-        setOnecircle(animationView2, color)
-        setOnecircle(animationView3, color)
-        setOnecircle(animationView4, color)
-
-        val animRight = TranslateAnimation(imageView.x, imageView.x + 100f, imageView.y, imageView.y)
-        val animLeft = TranslateAnimation(imageView.x, imageView.x - 100f, imageView.y, imageView.y)
-        val animUp = TranslateAnimation(imageView.x, imageView.x, imageView.y, imageView.y +  100f)
-        val animDown = TranslateAnimation(imageView.x, imageView.x, imageView.y, imageView.y - 100f)
-
-        animRight.interpolator = LinearInterpolator()
-        animLeft.interpolator = LinearInterpolator()
-        animUp.interpolator = LinearInterpolator()
-        animDown.interpolator = LinearInterpolator()
-
-        animRight.duration = 220
-        animLeft.duration = 220
-        animUp.duration = 220
-        animDown.duration = 220
-
-        animationView1.startAnimation(animRight)
-        animationView2.startAnimation(animLeft)
-        animationView3.startAnimation(animUp)
-        animationView4.startAnimation(animDown)
-
-        myLayout.removeView(animationView1)
-        myLayout.removeView(animationView2)
-        myLayout.removeView(animationView3)
-        myLayout.removeView(animationView4)
-
-    }
 }
