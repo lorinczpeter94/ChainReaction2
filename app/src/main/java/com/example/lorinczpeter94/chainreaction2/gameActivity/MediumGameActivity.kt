@@ -44,6 +44,7 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
         activePlayer.setPlayerNumber(playerNumber)
 
         createLayout()
+
         viewMatrix.let {
             iGamePresenter = GamePresenter(this as IGameView, this as Activity, this as Context, activePlayer, it!!)
         }
@@ -55,14 +56,10 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
         val relativeLayout: RelativeLayout = findViewById(R.id.relativeLayout)
 
 
+
         viewMatrix = Array(GamePresenter.noOfRows) {
             Array(GamePresenter.noOfColumns) {
-                CustomImageView(
-                    this as Context,
-                    this as Activity,
-                    activePlayer
-                )
-            }
+                CustomImageView(this as Context, this as Activity, activePlayer) }
         }
 
 

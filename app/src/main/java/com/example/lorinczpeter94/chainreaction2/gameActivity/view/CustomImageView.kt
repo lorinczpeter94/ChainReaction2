@@ -20,7 +20,7 @@ class CustomImageView(
     context: Context,
     activity: Activity,
     private var activePlayer: ActivePlayer): ImageView(context), ICustomImageView {
-    private var viewPresenter: CustomViewPresenter? = null
+    var viewPresenter: CustomViewPresenter? = null
     private var color: Int = 0
 
     private var numberOfCircles: Int = 0
@@ -33,9 +33,9 @@ class CustomImageView(
     init {
         color = 0
         background = ContextCompat.getDrawable(context, R.drawable.no_circle)
+        viewPresenter = CustomViewPresenter(this, context, activity)
         this.setOnClickListener {
-            viewPresenter = CustomViewPresenter(this, context, activity, numberOfCircles, color, activePlayer)
-            viewPresenter!!.elementClicked(numberOfCircles, color, id)
+            viewPresenter!!.elementClicked(numberOfCircles, color, id, activePlayer)
         }
 
     }
@@ -60,8 +60,9 @@ class CustomImageView(
         numberOfCircles = 0
     }
 
-    private fun circleComeIn(color: Int){
-        Toast.makeText(context, "number of circles: $numberOfCircles", Toast.LENGTH_LONG).show()
+    fun circleComeIn(color: Int){
+        //TODO: CIRCLE came in need to increase number of circles
+
     }
 
     override fun setOnecircle(oneCircle:Drawable) {
