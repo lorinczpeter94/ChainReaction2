@@ -18,6 +18,7 @@ class CustomViewPresenter(
 
     private var positionManager = PositionManager(GamePresenter.noOfRows, GamePresenter.noOfColumns)
     private var backgroundSelector = BackgroundSelector(context)
+    private var neighbourManager = NeighbourManager()
 
     fun elementClicked(numberOfCircles: Int, color: Int, id: Int) {
 
@@ -53,7 +54,7 @@ class CustomViewPresenter(
                     if (positionManager.hisCircle(color, activePlayer.getCurrentPlayer())) {
                         //current Game object is in corner
                         //TODO: EXPLODE
-                        explode()
+                        explode(id, numberOfCircles)
                         return true
                     }
                     return false
@@ -76,7 +77,7 @@ class CustomViewPresenter(
                 if (positionManager.isOnSide(id)){
                     if (positionManager.hisCircle(color, activePlayer.getCurrentPlayer())){
                         //TODO: EXPLODE
-                        explode()
+                        explode(id, numberOfCircles)
                         return true
                     } else {
                         return false
@@ -101,7 +102,7 @@ class CustomViewPresenter(
             }
             3 -> {
                 if (positionManager.hisCircle(color, activePlayer.getCurrentPlayer())){
-                    explode()
+                    explode(id, numberOfCircles)
                     return true
                 } else {
                     return false
@@ -114,7 +115,14 @@ class CustomViewPresenter(
     }
 
 
-  fun explode(){}
+  fun explode(id: Int, numberOfCircles: Int){
+      val neighbours: ArrayList<List<Int>> = neighbourManager.getNeighbours(id)
+      for (i in neighbours){
+
+      }
+
+
+  }
 
 
 }

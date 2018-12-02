@@ -13,5 +13,6 @@ interface ICustomImageView{
     fun stopActiveGameObject()
     fun midAnimation(color: Drawable)
     fun incNumberOfCircles()
+    fun zeroNumberOfCircles()
     fun setOnecircleTop(imageView: ImageView, color: Drawable)
 }

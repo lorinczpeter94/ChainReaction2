@@ -4,5 +4,4 @@ import android.widget.ImageView
 
 interface IGamePresenter {
     fun elementClicked(imageView: ImageView)
-
 }

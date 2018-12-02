@@ -21,10 +21,13 @@ class CustomImageView(
     activity: Activity,
     private var activePlayer: ActivePlayer): ImageView(context), ICustomImageView {
     private var viewPresenter: CustomViewPresenter? = null
-
     private var color: Int = 0
-        var numberOfCircles: Int by Delegates.observable(0){
-        property, oldValue, newValue -> onPropertyChanged(newValue)
+
+    private var numberOfCircles: Int = 0
+
+    private var circleComeSignal: Int by Delegates.observable(0) {
+            property, oldValue, newValue ->
+        circleComeIn(newValue)
     }
 
     init {
@@ -53,12 +56,12 @@ class CustomImageView(
         numberOfCircles++
     }
 
-    private fun onPropertyChanged(newValue: Int){
-        //TODO( "explode?")
-        if (numberOfCircles == 4){
-            Toast.makeText(context, "Explode", Toast.LENGTH_LONG).show()
-        }
+    override fun zeroNumberOfCircles() {
+        numberOfCircles = 0
+    }
 
+    private fun circleComeIn(color: Int){
+        Toast.makeText(context, "number of circles: $numberOfCircles", Toast.LENGTH_LONG).show()
     }
 
     override fun setOnecircle(oneCircle:Drawable) {
