@@ -3,6 +3,7 @@ package com.example.lorinczpeter94.chainreaction2.welcome_activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -41,8 +42,9 @@ class WelcomeActivity : AppCompatActivity(), IWelcomeView {
                 spnPlayerNumber.selectedItem.toString())
 
         }
-    }
 
+
+    }
 
     override fun mapSizeSpinnerInitializer() {
         //Adds the elements to spnMapsize spinner from R.values.strings

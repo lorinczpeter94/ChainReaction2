@@ -6,13 +6,12 @@ import android.widget.ImageView
 interface ICustomImageView{
     fun setColor(color: Int)
     fun setOnecircle(oneCircle: Drawable)
-    fun setTwoCircles(twoCircles: Drawable)
-    fun setThreeCircles(threeCircles: Drawable)
     fun setNoCircle()
     fun setActiveGameObject()
     fun stopActiveGameObject()
-    fun midAnimation(color: Drawable)
     fun incNumberOfCircles()
     fun zeroNumberOfCircles()
     fun setOnecircleTop(imageView: ImageView, color: Drawable)
+    fun getNumberOfCircles(): Int
+    fun getColor(): Int
 }

@@ -19,35 +19,30 @@ import kotlin.properties.Delegates
 class CustomImageView(
     context: Context,
     activity: Activity,
-    private var activePlayer: ActivePlayer): ImageView(context), ICustomImageView {
+    private var activePlayer: ActivePlayer
+) : ImageView(context), ICustomImageView {
     var viewPresenter: CustomViewPresenter? = null
     private var color: Int = 0
 
     private var numberOfCircles: Int = 0
 
-    private var circleComeSignal: Int by Delegates.observable(0) {
-            property, oldValue, newValue ->
-        circleComeIn(newValue)
+    private var circleComeSignal: Int by Delegates.observable(0) { property, oldValue, newValue ->
+        explodeCircleCameIn(newValue)
+        checkActive()
     }
 
+
     init {
-        color = 0
         background = ContextCompat.getDrawable(context, R.drawable.no_circle)
         viewPresenter = CustomViewPresenter(this, context, activity)
         this.setOnClickListener {
-            viewPresenter!!.elementClicked(numberOfCircles, color, id, activePlayer)
+            viewPresenter?.elementClicked(numberOfCircles, color, id, activePlayer)
         }
 
     }
 
 
-
-
-
-
-
-
-    override fun setColor(color: Int){
+    override fun setColor(color: Int) {
         this.color = color
     }
 
@@ -60,28 +55,31 @@ class CustomImageView(
         numberOfCircles = 0
     }
 
-    fun circleComeIn(color: Int){
+    fun circleComeIn(setColor: Int) {
         //TODO: CIRCLE came in need to increase number of circles
+        circleComeSignal = setColor
+
 
     }
 
-    override fun setOnecircle(oneCircle:Drawable) {
+    fun explodeCircleCameIn(setcolor: Int) {
+        viewPresenter?.circleCameIn(setcolor, id)
+    }
+
+    override fun getNumberOfCircles(): Int {
+        return numberOfCircles
+    }
+
+    override fun getColor(): Int {
+        return color
+    }
+
+    override fun setOnecircle(oneCircle: Drawable) {
         // Sets the red_circle1 drawable as background
         background = oneCircle
 
     }
 
-    override fun setTwoCircles(twoCircles:Drawable) {
-        // Sets the red_circle2 drawable as background
-        background = twoCircles
-
-    }
-
-    override fun setThreeCircles(threeCircles:Drawable) {
-        // Sets the red_circle3 drawable as background
-        background = threeCircles
-
-    }
     override fun setNoCircle() {
         //Sets an empty background for the imageView
 
@@ -91,6 +89,11 @@ class CustomImageView(
     override fun setOnecircleTop(imageView: ImageView, color: Drawable) {
         imageView.background = color
     }
+
+    private fun checkActive() {
+        viewPresenter?.checkForActive(id)
+    }
+
 
     override fun setActiveGameObject() {
         //"Activates" the game objects by rotating them
@@ -106,47 +109,5 @@ class CustomImageView(
         clearAnimation()
     }
 
-    override fun midAnimation(color: Drawable) {
-        val myLayout: RelativeLayout = findViewById(R.id.relativeLayout)
-        val animationView1 = ImageView(context)
-        val animationView2 = ImageView(context)
-        val animationView3 = ImageView(context)
-        val animationView4 = ImageView(context)
 
-        myLayout.addView(animationView1)
-        myLayout.addView(animationView2)
-        myLayout.addView(animationView3)
-        myLayout.addView(animationView4)
-
-        //setOnecircle(animationView1, color)
-        //setOnecircle(animationView2, color)
-        //setOnecircle(animationView3, color)
-        //setOnecircle(animationView4, color)
-
-        val animRight = TranslateAnimation(this.x, this.x + 100f, this.y, this.y)
-        val animLeft = TranslateAnimation(this.x, this.x - 100f, this.y, this.y)
-        val animUp = TranslateAnimation(this.x, this.x, this.y, this.y +  100f)
-        val animDown = TranslateAnimation(this.x, this.x, this.y, this.y - 100f)
-
-        animRight.interpolator = LinearInterpolator()
-        animLeft.interpolator = LinearInterpolator()
-        animUp.interpolator = LinearInterpolator()
-        animDown.interpolator = LinearInterpolator()
-
-        animRight.duration = 200
-        animLeft.duration = 200
-        animUp.duration = 200
-        animDown.duration = 200
-
-        animationView1.startAnimation(animRight)
-        animationView2.startAnimation(animLeft)
-        animationView3.startAnimation(animUp)
-        animationView4.startAnimation(animDown)
-
-        myLayout.removeView(animationView1)
-        myLayout.removeView(animationView2)
-        myLayout.removeView(animationView3)
-        myLayout.removeView(animationView4)
-
-    }
 }

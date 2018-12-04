@@ -9,12 +9,13 @@ import com.example.lorinczpeter94.chainreaction2.gameActivity.view.ICustomImageV
 
 interface CustomPresenterDelegate {
     fun onExplode(id: Int, color: Int)
+    fun getCheckPlayer(currentPlayer: Int): Boolean
 }
 
 
 class CustomViewPresenter(
     private var iCustomImageView: ICustomImageView,
-    private var context: Context,
+    context: Context,
     private var activity: Activity
 ) {
 
@@ -26,23 +27,33 @@ class CustomViewPresenter(
 
     fun elementClicked(numberOfCircles: Int, color: Int, id: Int, activePlayer: ActivePlayer) {
 
+
         if (playerPut(id, color, numberOfCircles, activePlayer)) {
+            checkForActive(id) //if circles are active
+
             activePlayer.nextPlayer()
+
+            while (activePlayer.getRoundCounter() >= activePlayer.getPlayerNumber() &&
+
+                customPresenterDelegate!!.getCheckPlayer(activePlayer.getCurrentPlayer())) {
+                    activePlayer.nextPlayer()
+
+            }
+
+
 
             val playerCircle = activity.findViewById<ImageView>(R.id.playerCircle)
             iCustomImageView.setOnecircleTop(
                 playerCircle, backgroundSelector.chooseColor(
-                    numberOfCircles,
+                    1,
                     activePlayer.getCurrentPlayer()
                 )
             )
         }
-
-
     }
 
 
-    fun playerPut(id: Int, color: Int, numberOfCircles: Int, activePlayer: ActivePlayer): Boolean {
+    private fun playerPut(id: Int, color: Int, numberOfCircles: Int, activePlayer: ActivePlayer): Boolean {
 
         when (numberOfCircles) {
             0 -> {
@@ -61,7 +72,7 @@ class CustomViewPresenter(
                     if (positionManager.hisCircle(color, activePlayer.getCurrentPlayer())) {
                         //current Game object is in corner
                         //TODO: EXPLODE
-                        explode(id, numberOfCircles)
+                        explode(id, activePlayer.getCurrentPlayer())
 
                         return true
                     }
@@ -71,7 +82,7 @@ class CustomViewPresenter(
                 } else if (positionManager.hisCircle(color, activePlayer.getCurrentPlayer())) {
                     iCustomImageView.setColor(activePlayer.getCurrentPlayer())
                     iCustomImageView.incNumberOfCircles()
-                    iCustomImageView.setTwoCircles(
+                    iCustomImageView.setOnecircle(
                         backgroundSelector.chooseColor(
                             numberOfCircles + 1,
                             activePlayer.getCurrentPlayer()
@@ -87,7 +98,7 @@ class CustomViewPresenter(
                 if (positionManager.isOnSide(id)) {
                     if (positionManager.hisCircle(color, activePlayer.getCurrentPlayer())) {
                         //TODO: EXPLODE
-                        explode(id, numberOfCircles)
+                        explode(id, activePlayer.getCurrentPlayer())
                         return true
                     } else {
                         return false
@@ -100,7 +111,7 @@ class CustomViewPresenter(
                         )
                     ) { //if it's the current player's square
                         iCustomImageView.setColor(activePlayer.getCurrentPlayer())
-                        iCustomImageView.setThreeCircles(
+                        iCustomImageView.setOnecircle(
                             backgroundSelector.chooseColor(
                                 numberOfCircles + 1,
                                 activePlayer.getCurrentPlayer()
@@ -118,7 +129,7 @@ class CustomViewPresenter(
             }
             3 -> {
                 if (positionManager.hisCircle(color, activePlayer.getCurrentPlayer())) {
-                    explode(id, numberOfCircles)
+                    explode(id, activePlayer.getCurrentPlayer())
                     return true
                 } else {
                     return false
@@ -130,16 +141,40 @@ class CustomViewPresenter(
         }
     }
 
-
-    fun circleCameIn(){
+    fun circleCameIn(color: Int, id: Int) {
+        iCustomImageView.incNumberOfCircles()
+        iCustomImageView.setColor(color)
+        if (shouldExplode(id)) {
+            explode(id, color)
+        } else {
+            iCustomImageView.setOnecircle(backgroundSelector.chooseColor(iCustomImageView.getNumberOfCircles(), color))
+        }
 
     }
 
     fun explode(id: Int, color: Int) {
         iCustomImageView.setNoCircle()
         iCustomImageView.zeroNumberOfCircles()
+        iCustomImageView.stopActiveGameObject()
         customPresenterDelegate?.onExplode(id, color)
+
     }
 
+    private fun shouldExplode(id: Int): Boolean {
+        return if (positionManager.isInCorner(id) && iCustomImageView.getNumberOfCircles() == 2) {
+            true
+        } else if (positionManager.isOnSide(id) && iCustomImageView.getNumberOfCircles() == 3) {
+            true
+        } else iCustomImageView.getNumberOfCircles() == 4
+    }
+
+    fun checkForActive(id: Int) {
+        if (positionManager.isInCorner(id) && iCustomImageView.getNumberOfCircles() == 1 ||
+            positionManager.isOnSide(id) && iCustomImageView.getNumberOfCircles() == 2 ||
+            iCustomImageView.getNumberOfCircles() == 3
+        ) {
+            iCustomImageView.setActiveGameObject()
+        }
+    }
 
 }

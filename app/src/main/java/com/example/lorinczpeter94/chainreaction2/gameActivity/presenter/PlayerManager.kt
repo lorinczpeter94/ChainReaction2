@@ -1,23 +1,19 @@
 package com.example.lorinczpeter94.chainreaction2.gameActivity.presenter
 
-import com.example.lorinczpeter94.chainreaction2.gameActivity.model.AssociatedMatrix
+import com.example.lorinczpeter94.chainreaction2.gameActivity.view.CustomImageView
 
 class PlayerManager(
     private var playerNumber: Int,
-    private var associatedMatrix: AssociatedMatrix
+    private var viewMatrix: Array<Array<CustomImageView>>
 ) {
 
-    private var players:Array<Int> = Array(playerNumber + 1) {0}
+    private var players: Array<Int> = Array(playerNumber + 1) { 0 }
 
-    fun setPlayerNumber(playerNumber:Int){
-        this.playerNumber = playerNumber
-    }
-
-    fun calcPlayerFields(){
-        for(i in 0.. associatedMatrix.getHeight()){
-            for (j in 0..associatedMatrix.getWidth()){
-                if (associatedMatrix.getCircles(i, j) > 0){
-                    players[associatedMatrix.getColor(i, j)]++
+    private fun calcPlayerFields() {
+        for (i in 0 until GamePresenter.noOfRows) {
+            for (j in 0 until GamePresenter.noOfColumns) {
+                if (viewMatrix[i][j].getNumberOfCircles() > 0) {
+                    players[viewMatrix[i][j].getColor()]++
                 }
             }
         }
@@ -25,9 +21,9 @@ class PlayerManager(
 
         //-----------------------
         println("Matix:")
-        for (i in 0 .. associatedMatrix.getHeight()){
-            for(j in 0..associatedMatrix.getWidth()){
-                print("(${associatedMatrix.getColor(i,j)}, ${associatedMatrix.getCircles(i, j)}) ")
+        for (i in 0 until GamePresenter.noOfRows) {
+            for (j in 0 until GamePresenter.noOfColumns) {
+                print("(${viewMatrix[i][j].getColor()}, ${viewMatrix[i][j].getNumberOfCircles()}) ")
             }
             println()
         }
@@ -35,21 +31,27 @@ class PlayerManager(
 
         println("players array:")
         println()
-        for (i in players){
+        for (i in players) {
             print("$i ")
         }
         println()
         //-----------------------
     }
 
-    fun checkWinner(): Boolean{
-        players = Array(playerNumber + 1){0}
+    fun checkWinner(): Boolean {
+        players = Array(playerNumber + 1) { 0 }
 
         calcPlayerFields()
         var db = 0
-        for(i in 1 until players.size){
-            if(players[i] != 0)
+        for (i in 1 until players.size) {
+            if (players[i] != 0)
                 db++
+        }
+
+        for (i in 1 until players.size){
+            if (players[i] == 0){
+                players[i] = -1;
+            }
         }
 
         return db == 1
@@ -57,11 +59,17 @@ class PlayerManager(
     }
 
 
-    fun checkPlayer(currentPlayer: Int): Boolean{
-        players = Array(playerNumber +1 ){0}
-        calcPlayerFields()
+    fun checkPlayer(currentPlayer: Int): Boolean {
+        //players = Array(playerNumber + 1) { 0 }
+        //calcPlayerFields()
 
-        return (players[currentPlayer] != 0)
+        println("players array:")
+        println()
+        for (i in players) {
+            print("$i ")
+        }
+        println()
+        return (players[currentPlayer] == 0)
     }
 
 }
