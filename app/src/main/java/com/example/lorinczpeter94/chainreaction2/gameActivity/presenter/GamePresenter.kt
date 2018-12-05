@@ -70,6 +70,7 @@ class GamePresenter(
             for (i in neighbours) {
                 viewMatrix[i[0]][i[1]].circleComeIn(color)
                 if (playerManager.checkWinner()){
+
                     Toast.makeText(context, "Player $color won!", Toast.LENGTH_LONG).show()
                     activity.finish()
                 }

@@ -50,7 +50,6 @@ class PlayerManager(
 
         for (i in 1 until players.size){
             if (players[i] == 0){
-                players[i] = -1;
             }
         }
 

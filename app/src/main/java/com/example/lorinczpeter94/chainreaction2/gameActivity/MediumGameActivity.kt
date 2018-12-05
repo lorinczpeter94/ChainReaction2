@@ -17,6 +17,7 @@ import android.widget.RelativeLayout
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.BackgroundSelector
+import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.CustomViewPresenter
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.GamePresenter
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.IGamePresenter
 import com.example.lorinczpeter94.chainreaction2.gameActivity.utilities.IDtoInt
@@ -120,7 +121,6 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
 
         animRight.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(arg0: Animation) {
-
             }
             override fun onAnimationRepeat(arg0: Animation) {}
             override fun onAnimationEnd(arg0: Animation) {
