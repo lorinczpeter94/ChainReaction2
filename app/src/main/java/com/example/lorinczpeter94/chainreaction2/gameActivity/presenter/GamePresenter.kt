@@ -21,7 +21,6 @@ class GamePresenter(
     private var activePlayer: ActivePlayer,
     private var viewMatrix: Array<Array<CustomImageView>>) : IGamePresenter, CustomPresenterDelegate {
 
-
     companion object {
         val noOfRows: Int = 8
         val noOfColumns: Int = 6
@@ -29,7 +28,8 @@ class GamePresenter(
     var neighbourManager = NeighbourManager()
     private var backgroundSelector = BackgroundSelector(context)
     private var playerManager = PlayerManager(activePlayer.getPlayerNumber(), viewMatrix)
-
+    private var lastStep: Array<Array<CustomImageView>>? = null
+    private var lastPlayer: Int = 0
 
 
     init {
@@ -41,18 +41,17 @@ class GamePresenter(
                 println("set delegate")
             }
         }
+        lastStep = viewMatrix
 
         val item: MenuItem = menu.findItem(R.id.btn_undo)
         item.setOnMenuItemClickListener {
-            Toast.makeText(context, "Undo clicked", Toast.LENGTH_LONG).show()
+            undo()
             true
         }
         true
     }
 
-
-    override fun elementClicked(imageView: ImageView) {
-    }
+    override fun elementClicked(imageView: ImageView) {}
 
     override fun getCheckPlayer(currentPlayer: Int): Boolean {
         playerManager.checkWinner()
@@ -95,7 +94,6 @@ class GamePresenter(
 
     }
 
-
     fun idToInt(id: Int): ArrayList<Int> {
         val indexArray = ArrayList<Int>()
 
@@ -107,6 +105,28 @@ class GamePresenter(
         return indexArray
     }
 
+    override fun saveLastStep(){
+        lastPlayer = activePlayer.getCurrentPlayer()
+        for(i in 1 until noOfRows){
+            for(j in 1 until noOfColumns){
+                lastStep?.get(i)?.get(j)?.setColor(viewMatrix[i][j].getColor());
+                lastStep?.get(i)?.get(j)?.setNumberOfCircles(viewMatrix[i][j].getNumberOfCircles())
+            }
+        }
+    }
+
+    fun undo(){
+        activePlayer.setActivePlayer(lastPlayer)
+        if(lastStep == null){
+            return
+        }
+        for(i in 1 until noOfRows){
+            for(j in 1 until noOfColumns){
+                lastStep?.get(i)?.get(j)?.getColor()?.let { viewMatrix[i][j].setColor(it) }
+                lastStep?.get(i)?.get(j)?.getNumberOfCircles()?.let { viewMatrix[i][j].setNumberOfCircles(it) }
+            }
+        }
+    }
 
 
 

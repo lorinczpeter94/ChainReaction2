@@ -16,11 +16,11 @@ import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.CustomViewPresenter
 import kotlin.properties.Delegates
 
-class CustomImageView(
+class ExplodeElement(
     context: Context,
     activity: Activity,
     private var activePlayer: ActivePlayer
-) : ImageView(context), ICustomImageView {
+){
     var viewPresenter: CustomViewPresenter? = null
     private var color: Int = 0
 
@@ -28,12 +28,10 @@ class CustomImageView(
 
     private var circleComeSignal: Int by Delegates.observable(0) { property, oldValue, newValue ->
         explodeCircleCameIn(newValue)
-        checkActive()
     }
 
 
     init {
-        background = ContextCompat.getDrawable(context, R.drawable.no_circle)
         viewPresenter = CustomViewPresenter(this, context, activity)
         this.setOnClickListener {
             viewPresenter?.elementClicked(numberOfCircles, color, id, activePlayer)
@@ -42,12 +40,12 @@ class CustomImageView(
     }
 
 
-    override fun setColor(color: Int) {
+    fun setColor(color: Int) {
         this.color = color
     }
 
 
-    override fun incNumberOfCircles() {
+    fun incNumberOfCircles() {
         numberOfCircles++
     }
 
@@ -76,41 +74,6 @@ class CustomImageView(
 
     override fun getColor(): Int {
         return color
-    }
-
-    override fun setOnecircle(oneCircle: Drawable) {
-        // Sets the red_circle1 drawable as background
-        background = oneCircle
-
-    }
-
-    override fun setNoCircle() {
-        //Sets an empty background for the imageView
-
-        background = ContextCompat.getDrawable(context, R.drawable.no_circle)
-    }
-
-    override fun setOnecircleTop(imageView: ImageView, color: Drawable) {
-        imageView.background = color
-    }
-
-    private fun checkActive() {
-        viewPresenter?.checkForActive(id)
-    }
-
-
-    override fun setActiveGameObject() {
-        //"Activates" the game objects by rotating them
-        val anim = RotateAnimation(0f, 360f, 75f, 75f)
-        anim.interpolator = LinearInterpolator()
-        anim.repeatCount = Animation.INFINITE
-        anim.duration = 1000
-        startAnimation(anim)
-    }
-
-    override fun stopActiveGameObject() {
-        //Stops the rotation of the imageView
-        clearAnimation()
     }
 
 

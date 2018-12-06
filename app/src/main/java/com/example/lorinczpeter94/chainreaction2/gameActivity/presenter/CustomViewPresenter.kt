@@ -6,14 +6,14 @@ import android.widget.ImageView
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.ICustomImageView
-import java.time.LocalTime
-import java.util.*
+
+
 
 interface CustomPresenterDelegate {
     fun onExplode(id: Int, color: Int)
     fun getCheckPlayer(currentPlayer: Int): Boolean
+    fun saveLastStep()
 }
-
 
 class CustomViewPresenter(
     private var iCustomImageView: ICustomImageView,
@@ -31,12 +31,14 @@ class CustomViewPresenter(
 
         if (playerPut(id, color, numberOfCircles, activePlayer)) {
             checkForActive(id) //if circles are active
-            activePlayer.nextPlayer()
+            customPresenterDelegate!!.saveLastStep()
 
+            activePlayer.nextPlayer()
             while (activePlayer.getRoundCounter() >= activePlayer.getPlayerNumber() &&
                 customPresenterDelegate!!.getCheckPlayer(activePlayer.getCurrentPlayer())
             ) {
                 activePlayer.nextPlayer()
+
 
             }
 

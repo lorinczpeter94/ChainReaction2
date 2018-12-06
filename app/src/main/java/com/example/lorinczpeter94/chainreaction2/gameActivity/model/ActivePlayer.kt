@@ -8,6 +8,10 @@ class ActivePlayer(
 
     private var roundCounter: Int = 0
 
+    override fun setActivePlayer(player: Int){
+        currentPlayer = player
+    }
+
     fun getPlayerNumber(): Int {
         return playerNumber
     }
