@@ -3,8 +3,11 @@ package com.example.lorinczpeter94.chainreaction2.gameActivity.presenter
 import android.app.Activity
 import android.content.Context
 import android.os.Handler
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.Toast
+import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.CustomImageView
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.IGameView
@@ -14,6 +17,7 @@ class GamePresenter(
     private var iIGameView: IGameView,
     private var activity: Activity,
     private var context: Context,
+    private var menu: Menu,
     private var activePlayer: ActivePlayer,
     private var viewMatrix: Array<Array<CustomImageView>>) : IGamePresenter, CustomPresenterDelegate {
 
@@ -37,7 +41,15 @@ class GamePresenter(
                 println("set delegate")
             }
         }
+
+        val item: MenuItem = menu.findItem(R.id.btn_undo)
+        item.setOnMenuItemClickListener {
+            Toast.makeText(context, "Undo clicked", Toast.LENGTH_LONG).show()
+            true
+        }
+        true
     }
+
 
     override fun elementClicked(imageView: ImageView) {
     }
@@ -76,8 +88,6 @@ class GamePresenter(
                 }
             }
         }), 350)
-
-
 
 
 

@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
@@ -14,6 +15,7 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.Toast
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.BackgroundSelector
@@ -34,7 +36,17 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
     private var iGamePresenter: IGamePresenter? = null
     private var activePlayer = ActivePlayer(1, 2, (Array(9) { 0 }))
     private var viewMatrix: Array<Array<CustomImageView>>? = null
+    private var optionsMenu: Menu? = null
 
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.game_menu, menu)
+        optionsMenu = menu
+        viewMatrix.let {
+            iGamePresenter = GamePresenter(this as IGameView, this as Activity, this as Context, optionsMenu!!, activePlayer, it!!)
+        }
+        return true
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,9 +64,8 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
 
         createLayout()
 
-        viewMatrix.let {
-            iGamePresenter = GamePresenter(this as IGameView, this as Activity, this as Context, activePlayer, it!!)
-        }
+
+
 
     }
 
@@ -79,7 +90,6 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
     override fun setOneCircle(imageView: ImageView, oneCircle: Drawable) {
         imageView.background = oneCircle
     }
-
 
 
 
