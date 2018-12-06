@@ -26,6 +26,8 @@ class CustomImageView(
 
     private var numberOfCircles: Int = 0
 
+    private var simulation: Boolean = false
+
     private var circleComeSignal: Int by Delegates.observable(0) { property, oldValue, newValue ->
         explodeCircleCameIn(newValue)
         checkActive()
@@ -55,8 +57,11 @@ class CustomImageView(
         numberOfCircles = 0
     }
 
+    override fun setSimulation(simulation: Boolean) {
+        this.simulation = simulation
+    }
+
     fun circleComeIn(setColor: Int) {
-        //TODO: CIRCLE came in need to increase number of circles
         circleComeSignal = setColor
 
 
@@ -67,7 +72,7 @@ class CustomImageView(
     }
 
     override fun explodeCircleCameIn(setcolor: Int) {
-        viewPresenter?.circleCameIn(setcolor, id)
+        viewPresenter?.circleCameIn(setcolor, id, simulation)
     }
 
     override fun getNumberOfCircles(): Int {

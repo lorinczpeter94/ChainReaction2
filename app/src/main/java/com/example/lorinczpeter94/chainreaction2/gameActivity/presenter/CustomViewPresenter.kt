@@ -10,9 +10,15 @@ import com.example.lorinczpeter94.chainreaction2.gameActivity.view.ICustomImageV
 
 
 interface CustomPresenterDelegate {
-    fun onExplode(id: Int, color: Int)
+    fun onExplode(id: Int, color: Int, simulator: Boolean)
     fun getCheckPlayer(currentPlayer: Int): Boolean
     fun saveLastStep()
+    fun saveState()
+    fun printState()
+    fun printViewMatrix()
+    fun resetState()
+    fun setSimulation(simulation: Boolean)
+
 }
 
 class CustomViewPresenter(
@@ -28,8 +34,18 @@ class CustomViewPresenter(
 
     fun elementClicked(numberOfCircles: Int, color: Int, id: Int, activePlayer: ActivePlayer) {
 
+        println("StartViewMatrix")
+        customPresenterDelegate!!.saveState()
 
-        if (playerPut(id, color, numberOfCircles, activePlayer)) {
+        playerPut(id, color, numberOfCircles, activePlayer, true)
+        customPresenterDelegate!!.resetState()
+        println("EndViewMatrix")
+
+        println("Number of explosions: ${GamePresenter.explodeCount}")
+
+
+
+        if (playerPut(id, color, numberOfCircles, activePlayer, false)) {
             checkForActive(id) //if circles are active
             customPresenterDelegate!!.saveLastStep()
 
@@ -39,9 +55,7 @@ class CustomViewPresenter(
             ) {
                 activePlayer.nextPlayer()
 
-
             }
-
 
             val playerCircle = activity.findViewById<ImageView>(R.id.playerCircle)
             iCustomImageView.setOnecircleTop(
@@ -54,8 +68,8 @@ class CustomViewPresenter(
     }
 
 
-    private fun playerPut(id: Int, color: Int, numberOfCircles: Int, activePlayer: ActivePlayer): Boolean {
-
+    private fun playerPut(id: Int, color: Int, numberOfCircles: Int, activePlayer: ActivePlayer, simulation: Boolean): Boolean {
+        customPresenterDelegate!!.setSimulation(simulation)
         when (numberOfCircles) {
             0 -> {
                 iCustomImageView.incNumberOfCircles()
@@ -73,7 +87,7 @@ class CustomViewPresenter(
                     if (positionManager.hisCircle(color, activePlayer.getCurrentPlayer())) {
                         //current Game object is in corner
                         //TODO: EXPLODE
-                        explode(id, activePlayer.getCurrentPlayer())
+                        explode(id, activePlayer.getCurrentPlayer(), simulation)
 
                         return true
                     }
@@ -99,7 +113,7 @@ class CustomViewPresenter(
                 if (positionManager.isOnSide(id)) {
                     if (positionManager.hisCircle(color, activePlayer.getCurrentPlayer())) {
                         //TODO: EXPLODE
-                        explode(id, activePlayer.getCurrentPlayer())
+                        explode(id, activePlayer.getCurrentPlayer(), simulation)
                         return true
                     } else {
                         return false
@@ -130,7 +144,7 @@ class CustomViewPresenter(
             }
             3 -> {
                 if (positionManager.hisCircle(color, activePlayer.getCurrentPlayer())) {
-                    explode(id, activePlayer.getCurrentPlayer())
+                    explode(id, activePlayer.getCurrentPlayer(), simulation)
                     return true
                 } else {
                     return false
@@ -142,22 +156,42 @@ class CustomViewPresenter(
         }
     }
 
-    fun circleCameIn(color: Int, id: Int) {
-        iCustomImageView.incNumberOfCircles()
-        iCustomImageView.setColor(color)
-        if (shouldExplode(id)) {
-            explode(id, color)
+    fun circleCameIn(color: Int, id: Int, simulation: Boolean) {
+        if (!simulation){
+            iCustomImageView.incNumberOfCircles()
+            iCustomImageView.setColor(color)
+            if (shouldExplode(id)) {
+                explode(id, color, simulation)
+            } else {
+                iCustomImageView.setOnecircle(backgroundSelector.chooseColor(iCustomImageView.getNumberOfCircles(), color))
+            }
         } else {
-            iCustomImageView.setOnecircle(backgroundSelector.chooseColor(iCustomImageView.getNumberOfCircles(), color))
+            iCustomImageView.incNumberOfCircles()
+            iCustomImageView.setColor(color)
+            if (shouldExplode(id)) {
+                explode(id, color, simulation)
+            }
         }
 
     }
 
-    fun explode(id: Int, color: Int) {
-        iCustomImageView.setNoCircle()
-        iCustomImageView.zeroNumberOfCircles()
-        iCustomImageView.stopActiveGameObject()
-        customPresenterDelegate?.onExplode(id, color)
+    fun explode(id: Int, color: Int, simulation: Boolean) {
+
+        if (simulation){
+            GamePresenter.explodeCount++
+            println("EXPLODECOUNT++: ${GamePresenter.explodeCount}")
+        } else {
+            GamePresenter.explodeCount--
+            println("EXPLODECOUNT--: ${GamePresenter.explodeCount}")
+        }
+
+
+        if (!simulation) {
+            iCustomImageView.setNoCircle()
+            iCustomImageView.zeroNumberOfCircles()
+            iCustomImageView.stopActiveGameObject()
+        }
+        customPresenterDelegate?.onExplode(id, color, simulation)
 
     }
 

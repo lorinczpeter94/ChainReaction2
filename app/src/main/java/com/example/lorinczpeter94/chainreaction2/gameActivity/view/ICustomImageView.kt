@@ -16,4 +16,5 @@ interface ICustomImageView{
     fun getColor(): Int
     fun setNumberOfCircles(numberOfCircles: Int)
     fun explodeCircleCameIn(setcolor: Int)
+    fun setSimulation(simulation: Boolean)
 }

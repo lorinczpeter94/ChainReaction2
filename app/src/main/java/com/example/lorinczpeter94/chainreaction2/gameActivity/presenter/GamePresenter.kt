@@ -22,13 +22,15 @@ class GamePresenter(
     private var viewMatrix: Array<Array<CustomImageView>>) : IGamePresenter, CustomPresenterDelegate {
 
     companion object {
-        val noOfRows: Int = 8
-        val noOfColumns: Int = 6
+        const val noOfRows: Int = 8
+        const val noOfColumns: Int = 6
+        var explodeCount: Int = 0
     }
     var neighbourManager = NeighbourManager()
     private var backgroundSelector = BackgroundSelector(context)
     private var playerManager = PlayerManager(activePlayer.getPlayerNumber(), viewMatrix)
     private var lastStep: Array<Array<CustomImageView>>? = null
+    private var lastState: Array<Array<CustomImageView>>? = null
     private var lastPlayer: Int = 0
 
 
@@ -41,7 +43,16 @@ class GamePresenter(
                 println("set delegate")
             }
         }
-        lastStep = viewMatrix
+        lastStep = Array(GamePresenter.noOfRows) {
+            Array(GamePresenter.noOfColumns) {
+                CustomImageView(context, activity, activePlayer) }
+        }
+
+        lastState= Array(GamePresenter.noOfRows) {
+            Array(GamePresenter.noOfColumns) {
+                CustomImageView(context, activity, activePlayer) }
+        }
+
 
         val item: MenuItem = menu.findItem(R.id.btn_undo)
         item.setOnMenuItemClickListener {
@@ -56,37 +67,56 @@ class GamePresenter(
     override fun getCheckPlayer(currentPlayer: Int): Boolean {
         playerManager.checkWinner()
         if (playerManager.checkPlayer(currentPlayer)){
-            println("TRUE!!!")
+            //println("TRUE!!!")
             return true
         } else {
-            println("FALSE!!!")
+            //println("FALSE!!!")
             return false
         }
     }
 
-    override fun onExplode(id: Int, color: Int) {
+    override fun onExplode(id: Int, color: Int, simulator: Boolean) {
+
+
+
+
         val indexes = idToInt(id)
         val row = indexes[0]
         val column = indexes[1]
-        val background = backgroundSelector.chooseColor(1, color)
         val neighbours: ArrayList<List<Int>> = neighbourManager.getNeighbours(id)
-        Handler().postDelayed(({
+        if (!simulator) {
+            val background = backgroundSelector.chooseColor(1, color)
+            Handler().postDelayed(({
 
-            iIGameView.midAnimation(viewMatrix[row][column], background)
-        }), 100)
+                iIGameView.midAnimation(viewMatrix[row][column], background)
+            }), 100)
+            Handler().postDelayed(({
 
 
+                for (i in neighbours) {
+                    viewMatrix[i[0]][i[1]].circleComeIn(color)
+//                    if (playerManager.checkWinner()){
+//
+//                        Toast.makeText(context, "Player $color won!", Toast.LENGTH_LONG).show()
+//                        //activity.finish()
+//                    }
+                }
+            }), 350)
 
-        Handler().postDelayed(({
+        } else{
+
+
             for (i in neighbours) {
                 viewMatrix[i[0]][i[1]].circleComeIn(color)
                 if (playerManager.checkWinner()){
-
-                    Toast.makeText(context, "Player $color won!", Toast.LENGTH_LONG).show()
-                    activity.finish()
+                    return
                 }
             }
-        }), 350)
+        }
+
+
+
+
 
 
 
@@ -105,12 +135,38 @@ class GamePresenter(
         return indexArray
     }
 
+    override fun saveState() {
+        for(i in 0 until noOfRows){
+            for(j in 0 until noOfColumns){
+                lastState?.get(i)?.get(j)?.setColor(viewMatrix[i][j].getColor())
+                lastState?.get(i)?.get(j)?.setNumberOfCircles(viewMatrix[i][j].getNumberOfCircles())
+            }
+        }
+    }
+
+    override fun resetState() {
+        for(i in 0 until noOfRows){
+            for(j in 0 until noOfColumns){
+                lastState?.get(i)?.get(j)?.getColor()?.let { viewMatrix[i][j].setColor(it) }
+                lastState?.get(i)?.get(j)?.getNumberOfCircles()?.let { viewMatrix[i][j].setNumberOfCircles(it) }
+            }
+        }
+    }
+
     override fun saveLastStep(){
         lastPlayer = activePlayer.getCurrentPlayer()
-        for(i in 1 until noOfRows){
-            for(j in 1 until noOfColumns){
+        for(i in 0 until noOfRows){
+            for(j in 0 until noOfColumns){
                 lastStep?.get(i)?.get(j)?.setColor(viewMatrix[i][j].getColor());
                 lastStep?.get(i)?.get(j)?.setNumberOfCircles(viewMatrix[i][j].getNumberOfCircles())
+            }
+        }
+    }
+
+    override fun setSimulation(simulation: Boolean) {
+        for(i in 0 until noOfRows) {
+            for (j in 0 until noOfColumns) {
+                viewMatrix[i][j]!!.setSimulation(simulation)
             }
         }
     }
@@ -120,8 +176,8 @@ class GamePresenter(
         if(lastStep == null){
             return
         }
-        for(i in 1 until noOfRows){
-            for(j in 1 until noOfColumns){
+        for(i in 0 until noOfRows){
+            for(j in 0 until noOfColumns){
                 lastStep?.get(i)?.get(j)?.getColor()?.let { viewMatrix[i][j].setColor(it) }
                 lastStep?.get(i)?.get(j)?.getNumberOfCircles()?.let { viewMatrix[i][j].setNumberOfCircles(it) }
             }
@@ -129,22 +185,22 @@ class GamePresenter(
     }
 
 
+    override fun printState() {
+        println("STATE:")
+        for (i in 0 until noOfRows){
+            for (j in 0 until  noOfColumns){
+                print("${lastState!![i][j].getNumberOfCircles()} ")
+            }
+            println()
+        }
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    override fun printViewMatrix() {
+        for (i in 0 until noOfRows){
+            for (j in 0 until  noOfColumns){
+                print("${viewMatrix!![i][j].getNumberOfCircles()} ")
+            }
+            println()
+        }
+    }
 }
