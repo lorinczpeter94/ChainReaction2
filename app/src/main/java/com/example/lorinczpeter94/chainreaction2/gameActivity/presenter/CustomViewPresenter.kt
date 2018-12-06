@@ -5,6 +5,7 @@ import android.content.Context
 import android.widget.ImageView
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
+import com.example.lorinczpeter94.chainreaction2.gameActivity.model.AssociatedMatrix
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.ICustomImageView
 import java.time.LocalTime
 import java.util.*
@@ -20,6 +21,7 @@ class CustomViewPresenter(
     context: Context,
     private var activity: Activity
 ) {
+
 
     private var positionManager = PositionManager(GamePresenter.noOfRows, GamePresenter.noOfColumns)
     private var backgroundSelector = BackgroundSelector(context)
@@ -37,7 +39,6 @@ class CustomViewPresenter(
                 customPresenterDelegate!!.getCheckPlayer(activePlayer.getCurrentPlayer())
             ) {
                 activePlayer.nextPlayer()
-
             }
 
 
@@ -50,6 +51,7 @@ class CustomViewPresenter(
             )
         }
     }
+
 
 
     private fun playerPut(id: Int, color: Int, numberOfCircles: Int, activePlayer: ActivePlayer): Boolean {

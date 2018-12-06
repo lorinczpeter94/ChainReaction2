@@ -46,6 +46,10 @@ class CustomImageView(
         this.color = color
     }
 
+    override fun setNumberOfCircles(numberOfCircles: Int) {
+        this.numberOfCircles = numberOfCircles
+    }
+
 
     override fun incNumberOfCircles() {
         numberOfCircles++
@@ -62,7 +66,7 @@ class CustomImageView(
 
     }
 
-    fun explodeCircleCameIn(setcolor: Int) {
+    override fun explodeCircleCameIn(setcolor: Int) {
         viewPresenter?.circleCameIn(setcolor, id)
     }
 

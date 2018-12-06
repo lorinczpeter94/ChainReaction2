@@ -6,6 +6,7 @@ import android.os.Handler
 import android.widget.ImageView
 import android.widget.Toast
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
+import com.example.lorinczpeter94.chainreaction2.gameActivity.model.AssociatedMatrix
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.CustomImageView
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.IGameView
 
@@ -25,7 +26,7 @@ class GamePresenter(
     var neighbourManager = NeighbourManager()
     private var backgroundSelector = BackgroundSelector(context)
     private var playerManager = PlayerManager(activePlayer.getPlayerNumber(), viewMatrix)
-
+    private var lastStep : Array<Array<CustomImageView>>? = null
 
 
     init {
@@ -85,7 +86,6 @@ class GamePresenter(
 
     }
 
-
     fun idToInt(id: Int): ArrayList<Int> {
         val indexArray = ArrayList<Int>()
 
@@ -95,6 +95,20 @@ class GamePresenter(
         indexArray.add(j)
         indexArray.add(i)
         return indexArray
+    }
+
+    fun saveLastStep(){
+        for(i in 1..noOfRows){
+            for(j in 1..noOfColumns){
+                lastStep?.get(i)?.get(j)?.setColor(viewMatrix[i][j].getColor());
+                lastStep?.get(i)?.get(j)?.setNumberOfCircles(viewMatrix[i][j].getNumberOfCircles())
+            }
+
+        }
+    }
+
+    fun undo(){
+
     }
 
 

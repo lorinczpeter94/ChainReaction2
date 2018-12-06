@@ -8,9 +8,7 @@ fun Context.toID(iPosition: Int, jPosition: Int): Int {
 
 fun Context.IDtoInt(id:Int):ArrayList<Int>{
     val indexArray = ArrayList<Int>()
-
     val i = (id % 10) - 1
-
     val j = ((id / 10) % 10)-1
     indexArray.add(j)
     indexArray.add(i)
