@@ -64,7 +64,6 @@ class CustomImageView(
     fun circleComeIn(setColor: Int) {
         circleComeSignal = setColor
 
-
     }
 
     override fun setNumberOfCircles(numberOfCircles: Int) {

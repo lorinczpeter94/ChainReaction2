@@ -5,12 +5,13 @@ import android.content.Context
 import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.ImageView
-import android.widget.Toast
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.CustomImageView
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.IGameView
+import kotlin.properties.Delegates
 
 
 class GamePresenter(
@@ -24,7 +25,7 @@ class GamePresenter(
     companion object {
         const val noOfRows: Int = 8
         const val noOfColumns: Int = 6
-        var explodeCount: Int = 0
+
     }
     var neighbourManager = NeighbourManager()
     private var backgroundSelector = BackgroundSelector(context)
@@ -32,6 +33,9 @@ class GamePresenter(
     private var lastStep: Array<Array<CustomImageView>>? = null
     private var lastState: Array<Array<CustomImageView>>? = null
     private var lastPlayer: Int = 0
+    private var explodeCount: Int by Delegates.observable(0) { property, oldValue, newValue ->
+        checkGameState(newValue)
+    }
 
 
     init {
@@ -73,6 +77,32 @@ class GamePresenter(
             //println("FALSE!!!")
             return false
         }
+    }
+
+    fun checkGameState(explodeCountNewValue: Int){
+        if (explodeCountNewValue == 1){
+            activity.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        }
+        if (explodeCountNewValue == 0){
+            activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        }
+    }
+
+    override fun incExplodeCount(){
+        this.explodeCount++
+    }
+
+    override fun decExplodeCount(){
+        this.explodeCount--
+    }
+
+    override fun setZeroExplodeCount() {
+        explodeCount = 0
+    }
+
+    override fun getCount():Int {
+        return explodeCount
     }
 
     override fun onExplode(id: Int, color: Int, simulator: Boolean) {
@@ -204,3 +234,9 @@ class GamePresenter(
         }
     }
 }
+
+
+
+
+//getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+//WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);

@@ -2,6 +2,7 @@ package com.example.lorinczpeter94.chainreaction2.gameActivity.presenter
 
 import android.app.Activity
 import android.content.Context
+import android.view.WindowManager
 import android.widget.ImageView
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
@@ -17,6 +18,11 @@ interface CustomPresenterDelegate {
     fun printViewMatrix()
     fun resetState()
     fun setSimulation(simulation: Boolean)
+    fun incExplodeCount()
+    fun decExplodeCount()
+    fun setZeroExplodeCount()
+    fun getCount(): Int
+
 
 }
 
@@ -32,15 +38,15 @@ class CustomViewPresenter(
     var customPresenterDelegate: CustomPresenterDelegate? = null
 
     fun elementClicked(numberOfCircles: Int, color: Int, id: Int, activePlayer: ActivePlayer) {
+        customPresenterDelegate!!.setZeroExplodeCount()
 
-        println("StartViewMatrix")
         customPresenterDelegate!!.saveState()
+
+
 
         playerPut(id, color, numberOfCircles, activePlayer, true)
         customPresenterDelegate!!.resetState()
-        println("EndViewMatrix")
 
-        println("Number of explosions: ${GamePresenter.explodeCount}")
 
         if (playerPut(id, color, numberOfCircles, activePlayer, false)) {
 
@@ -187,13 +193,15 @@ class CustomViewPresenter(
     }
 
     fun explode(id: Int, color: Int, simulation: Boolean) {
+        println("id = $id")
 
         if (simulation) {
-            GamePresenter.explodeCount++
-            println("EXPLODECOUNT++: ${GamePresenter.explodeCount}")
+            iCustomImageView.zeroNumberOfCircles()
+            customPresenterDelegate!!.incExplodeCount()
+            println("EXPLODECOUNT++: ${customPresenterDelegate!!.getCount()}")
         } else {
-            GamePresenter.explodeCount--
-            println("EXPLODECOUNT--: ${GamePresenter.explodeCount}")
+            customPresenterDelegate!!.decExplodeCount()
+            println("EXPLODECOUNT--: ${customPresenterDelegate!!.getCount()}")
         }
 
 
