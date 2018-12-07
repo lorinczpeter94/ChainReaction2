@@ -43,7 +43,7 @@ class WelcomeActivity : AppCompatActivity(), IWelcomeView {
                 spnPlayerNumber.selectedItem.toString())
 
         }
-        
+
     }
 
     override fun mapSizeSpinnerInitializer() {
