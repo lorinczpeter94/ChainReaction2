@@ -47,6 +47,7 @@ class GamePresenter(
 
             if(oldValue == 0 && newValue == 0 && putsucceed){
                 activePlayer.nextPlayer()
+                println("playernumber::: ${activePlayer.getPlayerNumber()}")
                 val playerCircle = activity.findViewById<ImageView>(R.id.playerCircle)
                 iIGameView.setOnecircleTop(
                     playerCircle, backgroundSelector.chooseColor(
@@ -123,7 +124,7 @@ class GamePresenter(
             println()
 
             for (i in 1 until players.size){
-                if (players[i] == 0 && activePlayer.getRoundCounter() > 1){
+                if (players[i] == 0 && activePlayer.getRoundCounter() >= activePlayer.getPlayerNumber()){
                     activePlayer.setPlayerFalse(i)
                 }
             }
@@ -175,11 +176,7 @@ class GamePresenter(
 
                 for (i in neighbours) {
                     viewMatrix[i[0]][i[1]].circleComeIn(color)
-//                    if (playerManager.checkWinner()){
-//
-//                        Toast.makeText(context, "Player $color won!", Toast.LENGTH_LONG).show()
-//                        //activity.finish()
-//                    }
+
                 }
             }), 350)//350
 
@@ -193,15 +190,6 @@ class GamePresenter(
                 }
             }
         }
-
-
-
-
-
-
-
-
-
     }
 
     fun idToInt(id: Int): ArrayList<Int> {

@@ -59,13 +59,9 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
         playerCircle.background = ContextCompat.getDrawable(this, R.drawable.red_circle1)
         val playerNumber = intent.getIntExtra(PLAYERNUM, 2)
 
-
         activePlayer.setPlayerNumber(playerNumber)
 
         createLayout()
-
-
-
 
     }
 

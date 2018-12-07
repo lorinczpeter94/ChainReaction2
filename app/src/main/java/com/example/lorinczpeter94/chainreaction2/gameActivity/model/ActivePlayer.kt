@@ -6,6 +6,9 @@ class ActivePlayer(
     private var players: Array<Boolean>
 ) : IActivePlayer {
 
+    init {
+       // println("PLAYERNUMBER: $playerNumber")
+    }
     private var roundCounter: Int = 0
 
     override fun setActivePlayer(player: Int){
@@ -22,6 +25,7 @@ class ActivePlayer(
 
     override fun setPlayerNumber(playerNumber: Int) {
         this.playerNumber = playerNumber
+        println("setPlayernumber: $playerNumber")
     }
 
     override fun nextPlayer() {
