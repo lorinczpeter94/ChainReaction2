@@ -181,7 +181,7 @@ class GamePresenter(
 //                        //activity.finish()
 //                    }
                 }
-            }), 350)
+            }), 350)//350
 
         } else{
 
