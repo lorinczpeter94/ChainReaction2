@@ -3,7 +3,7 @@ package com.example.lorinczpeter94.chainreaction2.gameActivity.model
 class ActivePlayer(
     private var currentPlayer: Int,
     private var playerNumber: Int,
-    private var players: Array<Int>
+    private var players: Array<Boolean>
 ) : IActivePlayer {
 
     private var roundCounter: Int = 0

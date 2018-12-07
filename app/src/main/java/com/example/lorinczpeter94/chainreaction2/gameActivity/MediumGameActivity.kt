@@ -34,7 +34,7 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
 
 
     private var iGamePresenter: IGamePresenter? = null
-    private var activePlayer = ActivePlayer(1, 2, (Array(9) { 0 }))
+    private var activePlayer = ActivePlayer(1, 2, (Array(9) { true }))
     private var viewMatrix: Array<Array<CustomImageView>>? = null
     private var optionsMenu: Menu? = null
 

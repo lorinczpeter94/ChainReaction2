@@ -34,7 +34,11 @@ class GamePresenter(
     private var lastState: Array<Array<CustomImageView>>? = null
     private var lastPlayer: Int = 0
     private var explodeCount: Int by Delegates.observable(0) { property, oldValue, newValue ->
-        checkGameState(newValue)
+        freezeScreen(newValue)
+
+        Handler().postDelayed(({
+            checkGameState(newValue)
+        }), 400)
     }
 
 
@@ -79,13 +83,26 @@ class GamePresenter(
         }
     }
 
-    fun checkGameState(explodeCountNewValue: Int){
+    fun freezeScreen(explodeCountNewValue: Int){
         if (explodeCountNewValue == 1){
             activity.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         }
         if (explodeCountNewValue == 0){
             activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        }
+    }
+
+    fun checkGameState(explodeCountNewValue: Int){
+
+        if (explodeCountNewValue == 0){
+            var players = playerManager.getGameState()
+
+
+            for (i in players){
+                print("$i, " )
+            }
+            println()
         }
     }
 

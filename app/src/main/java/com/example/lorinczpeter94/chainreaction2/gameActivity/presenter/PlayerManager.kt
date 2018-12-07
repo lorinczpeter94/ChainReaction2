@@ -38,6 +38,12 @@ class PlayerManager(
         //-----------------------
     }
 
+    fun getGameState(): Array<Int>{
+        players = Array(playerNumber + 1) { 0 }
+        calcPlayerFields()
+        return players
+    }
+
     fun checkWinner(): Boolean {
         players = Array(playerNumber + 1) { 0 }
 
