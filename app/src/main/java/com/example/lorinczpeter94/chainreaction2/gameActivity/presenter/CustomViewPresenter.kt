@@ -60,23 +60,9 @@ class CustomViewPresenter(
             checkForActive(id) //if circles are active
             customPresenterDelegate!!.saveLastStep()
 
-            //activePlayer.nextPlayer()
 
-            while (activePlayer.getRoundCounter() >= activePlayer.getPlayerNumber() &&
-                customPresenterDelegate!!.getCheckPlayer(activePlayer.getCurrentPlayer())
-            ) {
 
-                activePlayer.nextPlayer()
 
-            }
-
-//            val playerCircle = activity.findViewById<ImageView>(R.id.playerCircle)
-//            iCustomImageView.setOnecircleTop(
-//                playerCircle, backgroundSelector.chooseColor(
-//                    1,
-//                    activePlayer.getCurrentPlayer()
-//                )
-//            )
         }
 
     }
