@@ -14,4 +14,7 @@ interface ICustomImageView{
     fun setOnecircleTop(imageView: ImageView, color: Drawable)
     fun getNumberOfCircles(): Int
     fun getColor(): Int
+    fun setNumberOfCircles(numberOfCircles: Int)
+    fun explodeCircleCameIn(setcolor: Int)
+    fun setSimulation(simulation: Boolean)
 }

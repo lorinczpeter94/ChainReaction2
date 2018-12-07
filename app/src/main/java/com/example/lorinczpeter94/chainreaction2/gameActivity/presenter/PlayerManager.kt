@@ -20,22 +20,28 @@ class PlayerManager(
 
 
         //-----------------------
-        println("Matix:")
-        for (i in 0 until GamePresenter.noOfRows) {
-            for (j in 0 until GamePresenter.noOfColumns) {
-                print("(${viewMatrix[i][j].getColor()}, ${viewMatrix[i][j].getNumberOfCircles()}) ")
-            }
-            println()
-        }
-
-
-        println("players array:")
-        println()
-        for (i in players) {
-            print("$i ")
-        }
-        println()
+//        println("Matix:")
+//        for (i in 0 until GamePresenter.noOfRows) {
+//            for (j in 0 until GamePresenter.noOfColumns) {
+//                print("(${viewMatrix[i][j].getColor()}, ${viewMatrix[i][j].getNumberOfCircles()}) ")
+//            }
+//            println()
+//        }
+//
+//
+//        println("players array:")
+//        println()
+//        for (i in players) {
+//            print("$i ")
+//        }
+//        println()
         //-----------------------
+    }
+
+    fun getGameState(): Array<Int>{
+        players = Array(playerNumber + 1) { 0 }
+        calcPlayerFields()
+        return players
     }
 
     fun checkWinner(): Boolean {
@@ -62,13 +68,15 @@ class PlayerManager(
         //players = Array(playerNumber + 1) { 0 }
         //calcPlayerFields()
 
-        println("players array:")
-        println()
-        for (i in players) {
-            print("$i ")
-        }
-        println()
+//        println("players array:")
+//        println()
+//        for (i in players) {
+//            print("$i ")
+//        }
+//        println()
         return (players[currentPlayer] == 0)
     }
+
+
 
 }

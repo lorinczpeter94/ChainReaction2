@@ -4,5 +4,6 @@ interface IActivePlayer{
     fun getCurrentPlayer():Int
     fun setPlayerNumber(playerNumber: Int)
     fun nextPlayer()
+    fun setActivePlayer(player: Int)
 
 }

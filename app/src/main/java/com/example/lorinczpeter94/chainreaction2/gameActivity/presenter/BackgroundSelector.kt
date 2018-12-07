@@ -8,9 +8,6 @@ import com.example.lorinczpeter94.chainreaction2.R
 class BackgroundSelector(
     private var context: Context) {
 
-
-
-
     fun chooseColor(noOfCircles: Int, currentPlayer: Int): Drawable {
         //chooses background color,  depends on no. of circles and current players
         when (currentPlayer) {
