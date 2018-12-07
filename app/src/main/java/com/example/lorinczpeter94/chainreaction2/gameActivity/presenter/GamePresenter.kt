@@ -21,14 +21,17 @@ class GamePresenter(
     private var context: Context,
     private var menu: Menu,
     private var activePlayer: ActivePlayer,
-    private var viewMatrix: Array<Array<CustomImageView>>) : IGamePresenter, CustomPresenterDelegate {
+    private var viewMatrix: Array<Array<CustomImageView>>
+) : IGamePresenter, CustomPresenterDelegate {
 
     companion object {
         const val noOfRows: Int = 8
         const val noOfColumns: Int = 6
 
     }
+
     var neighbourManager = NeighbourManager()
+    private val vibrationHandler = VibrationHandler(context)
     private var backgroundSelector = BackgroundSelector(context)
     private var playerManager = PlayerManager(activePlayer.getPlayerNumber(), viewMatrix)
     private var lastStep: Array<Array<CustomImageView>>? = null
@@ -41,11 +44,11 @@ class GamePresenter(
         Handler().postDelayed(({
             checkGameState(oldValue, newValue)
 
-            if (oldValue != 0){
+            if (oldValue != 0) {
                 //If there was an explode
             }
 
-            if(oldValue == 0 && newValue == 0 && putsucceed){
+            if (oldValue == 0 && newValue == 0 && putsucceed) {
                 activePlayer.nextPlayer()
                 println("playernumber::: ${activePlayer.getPlayerNumber()}")
                 val playerCircle = activity.findViewById<ImageView>(R.id.playerCircle)
@@ -63,8 +66,8 @@ class GamePresenter(
 
     init {
         println("Game presenter init called")
-        for (i in 0 until noOfRows){
-            for (j in 0 until noOfColumns){
+        for (i in 0 until noOfRows) {
+            for (j in 0 until noOfColumns) {
                 viewMatrix[i][j].viewPresenter?.customPresenterDelegate = this
 
                 println("set delegate")
@@ -72,12 +75,14 @@ class GamePresenter(
         }
         lastStep = Array(GamePresenter.noOfRows) {
             Array(GamePresenter.noOfColumns) {
-                CustomImageView(context, activity, activePlayer) }
+                CustomImageView(context, activity, activePlayer)
+            }
         }
 
-        lastState= Array(GamePresenter.noOfRows) {
+        lastState = Array(GamePresenter.noOfRows) {
             Array(GamePresenter.noOfColumns) {
-                CustomImageView(context, activity, activePlayer) }
+                CustomImageView(context, activity, activePlayer)
+            }
         }
 
 
@@ -93,7 +98,7 @@ class GamePresenter(
 
     override fun getCheckPlayer(currentPlayer: Int): Boolean {
         playerManager.checkWinner()
-        if (playerManager.checkPlayer(currentPlayer)){
+        if (playerManager.checkPlayer(currentPlayer)) {
             //println("TRUE!!!")
             return true
         } else {
@@ -102,34 +107,36 @@ class GamePresenter(
         }
     }
 
-    override fun freezeScreen(explodeCountNewValue: Int){
-        if (explodeCountNewValue == 1){
-            activity.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+    override fun freezeScreen(explodeCountNewValue: Int) {
+        if (explodeCountNewValue == 1) {
+            activity.window.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+            )
         }
-        if (explodeCountNewValue == 0){
+        if (explodeCountNewValue == 0) {
             activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         }
     }
 
-    fun checkGameState(oldValue: Int, explodeCountNewValue: Int){
+    fun checkGameState(oldValue: Int, explodeCountNewValue: Int) {
 
-        if (explodeCountNewValue == 0){
+        if (explodeCountNewValue == 0) {
             var players = playerManager.getGameState()
 
 
-            for (i in players){
-                print("$i, " )
+            for (i in players) {
+                print("$i, ")
             }
             println()
 
-            for (i in 1 until players.size){
-                if (players[i] == 0 && activePlayer.getRoundCounter() > activePlayer.getPlayerNumber()){
+            for (i in 1 until players.size) {
+                if (players[i] == 0 && activePlayer.getRoundCounter() > activePlayer.getPlayerNumber()) {
                     activePlayer.setPlayerFalse(i)
                 }
             }
 
-            if (playerManager.checkWinner() && activePlayer.getRoundCounter() > 1){
+            if (playerManager.checkWinner() && activePlayer.getRoundCounter() > 1) {
                 Toast.makeText(context, "Player ${activePlayer.getWinner()} won!", Toast.LENGTH_SHORT).show()
             }
 
@@ -140,11 +147,11 @@ class GamePresenter(
         putsucceed = succeeded
     }
 
-    override fun incExplodeCount(){
+    override fun incExplodeCount() {
         this.explodeCount++
     }
 
-    override fun decExplodeCount(){
+    override fun decExplodeCount() {
         this.explodeCount--
     }
 
@@ -152,14 +159,11 @@ class GamePresenter(
         explodeCount = 0
     }
 
-    override fun getCount():Int {
+    override fun getCount(): Int {
         return explodeCount
     }
 
     override fun onExplode(id: Int, color: Int, simulator: Boolean) {
-
-
-
 
         val indexes = idToInt(id)
         val row = indexes[0]
@@ -167,27 +171,23 @@ class GamePresenter(
         val neighbours: ArrayList<List<Int>> = neighbourManager.getNeighbours(id)
         if (!simulator) {
             val background = backgroundSelector.chooseColor(1, color)
+
+            vibrationHandler.vibrate(200)
+
             Handler().postDelayed(({
 
                 iIGameView.midAnimation(viewMatrix[row][column], background)
             }), 100)
             Handler().postDelayed(({
-
-
                 for (i in neighbours) {
                     viewMatrix[i[0]][i[1]].circleComeIn(color)
 
                 }
-            }), 350)//350
+            }), 350)
 
-        } else{
-
-
+        } else {
             for (i in neighbours) {
                 viewMatrix[i[0]][i[1]].circleComeIn(color)
-                if (playerManager.checkWinner()){
-                    return
-                }
             }
         }
     }
@@ -202,10 +202,11 @@ class GamePresenter(
         indexArray.add(i)
         return indexArray
     }
+    
 
     override fun saveState() {
-        for(i in 0 until noOfRows){
-            for(j in 0 until noOfColumns){
+        for (i in 0 until noOfRows) {
+            for (j in 0 until noOfColumns) {
                 lastState?.get(i)?.get(j)?.setColor(viewMatrix[i][j].getColor())
                 lastState?.get(i)?.get(j)?.setNumberOfCircles(viewMatrix[i][j].getNumberOfCircles())
             }
@@ -213,18 +214,18 @@ class GamePresenter(
     }
 
     override fun resetState() {
-        for(i in 0 until noOfRows){
-            for(j in 0 until noOfColumns){
+        for (i in 0 until noOfRows) {
+            for (j in 0 until noOfColumns) {
                 lastState?.get(i)?.get(j)?.getColor()?.let { viewMatrix[i][j].setColor(it) }
                 lastState?.get(i)?.get(j)?.getNumberOfCircles()?.let { viewMatrix[i][j].setNumberOfCircles(it) }
             }
         }
     }
 
-    override fun saveLastStep(){
+    override fun saveLastStep() {
         lastPlayer = activePlayer.getCurrentPlayer()
-        for(i in 0 until noOfRows){
-            for(j in 0 until noOfColumns){
+        for (i in 0 until noOfRows) {
+            for (j in 0 until noOfColumns) {
                 lastStep?.get(i)?.get(j)?.setColor(viewMatrix[i][j].getColor());
                 lastStep?.get(i)?.get(j)?.setNumberOfCircles(viewMatrix[i][j].getNumberOfCircles())
             }
@@ -232,20 +233,20 @@ class GamePresenter(
     }
 
     override fun setSimulation(simulation: Boolean) {
-        for(i in 0 until noOfRows) {
+        for (i in 0 until noOfRows) {
             for (j in 0 until noOfColumns) {
                 viewMatrix[i][j]!!.setSimulation(simulation)
             }
         }
     }
 
-    fun undo(){
+    fun undo() {
         activePlayer.setActivePlayer(lastPlayer)
-        if(lastStep == null){
+        if (lastStep == null) {
             return
         }
-        for(i in 0 until noOfRows){
-            for(j in 0 until noOfColumns){
+        for (i in 0 until noOfRows) {
+            for (j in 0 until noOfColumns) {
                 lastStep?.get(i)?.get(j)?.getColor()?.let { viewMatrix[i][j].setColor(it) }
                 lastStep?.get(i)?.get(j)?.getNumberOfCircles()?.let { viewMatrix[i][j].setNumberOfCircles(it) }
             }
@@ -255,8 +256,8 @@ class GamePresenter(
 
     override fun printState() {
         println("STATE:")
-        for (i in 0 until noOfRows){
-            for (j in 0 until  noOfColumns){
+        for (i in 0 until noOfRows) {
+            for (j in 0 until noOfColumns) {
                 print("${lastState!![i][j].getNumberOfCircles()} ")
             }
             println()
@@ -264,16 +265,14 @@ class GamePresenter(
     }
 
     override fun printViewMatrix() {
-        for (i in 0 until noOfRows){
-            for (j in 0 until  noOfColumns){
+        for (i in 0 until noOfRows) {
+            for (j in 0 until noOfColumns) {
                 print("${viewMatrix!![i][j].getNumberOfCircles()} ")
             }
             println()
         }
     }
 }
-
-
 
 
 //getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
