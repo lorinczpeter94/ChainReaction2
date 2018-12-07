@@ -7,22 +7,16 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
-import android.view.MotionEvent
-import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import android.widget.Toast
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
-import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.BackgroundSelector
-import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.CustomViewPresenter
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.GamePresenter
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.IGamePresenter
-import com.example.lorinczpeter94.chainreaction2.gameActivity.utilities.IDtoInt
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.CustomImageView
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.GameLayout
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.IGameView
@@ -34,7 +28,7 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
 
 
     private var iGamePresenter: IGamePresenter? = null
-    private var activePlayer = ActivePlayer(1, 2, (Array(9) { 0 }))
+    private var activePlayer = ActivePlayer(1, 2, (Array(9) { t qrue }))
     private var viewMatrix: Array<Array<CustomImageView>>? = null
     private var optionsMenu: Menu? = null
 

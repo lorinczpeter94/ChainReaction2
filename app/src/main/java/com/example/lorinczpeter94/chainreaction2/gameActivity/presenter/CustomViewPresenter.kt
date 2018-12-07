@@ -38,8 +38,8 @@ class CustomViewPresenter(
     var customPresenterDelegate: CustomPresenterDelegate? = null
 
     fun elementClicked(numberOfCircles: Int, color: Int, id: Int, activePlayer: ActivePlayer) {
+        //customPresenterDelegate!!.setZeroExplodeCount()
         customPresenterDelegate!!.setZeroExplodeCount()
-
         customPresenterDelegate!!.saveState()
 
 
@@ -49,19 +49,21 @@ class CustomViewPresenter(
 
 
         if (playerPut(id, color, numberOfCircles, activePlayer, false)) {
-
             checkForActive(id) //if circles are active
             customPresenterDelegate!!.saveLastStep()
 
+
             activePlayer.nextPlayer()
 
-            while (activePlayer.getRoundCounter() >= activePlayer.getPlayerNumber() &&
-                customPresenterDelegate!!.getCheckPlayer(activePlayer.getCurrentPlayer())
-            ) {
 
-                activePlayer.nextPlayer()
 
-            }
+//            while (activePlayer.getRoundCounter() >= activePlayer.getPlayerNumber() &&
+//                customPresenterDelegate!!.getCheckPlayer(activePlayer.getCurrentPlayer())
+//            ) {
+//
+//                activePlayer.nextPlayer()
+//
+//            }
 
             val playerCircle = activity.findViewById<ImageView>(R.id.playerCircle)
             iCustomImageView.setOnecircleTop(
@@ -71,6 +73,8 @@ class CustomViewPresenter(
                 )
             )
         }
+
+
 
     }
 
@@ -195,20 +199,13 @@ class CustomViewPresenter(
     fun explode(id: Int, color: Int, simulation: Boolean) {
         println("id = $id")
 
-        if (simulation) {
-            iCustomImageView.zeroNumberOfCircles()
-            customPresenterDelegate!!.incExplodeCount()
-            println("EXPLODECOUNT++: ${customPresenterDelegate!!.getCount()}")
-        } else {
-            customPresenterDelegate!!.decExplodeCount()
-            println("EXPLODECOUNT--: ${customPresenterDelegate!!.getCount()}")
-        }
-
 
         if (!simulation) {
             iCustomImageView.setNoCircle()
             iCustomImageView.zeroNumberOfCircles()
             iCustomImageView.stopActiveGameObject()
+        } else {
+            iCustomImageView.zeroNumberOfCircles()
         }
         customPresenterDelegate?.onExplode(id, color, simulation)
 

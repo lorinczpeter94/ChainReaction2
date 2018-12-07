@@ -33,8 +33,12 @@ class GamePresenter(
     private var lastStep: Array<Array<CustomImageView>>? = null
     private var lastState: Array<Array<CustomImageView>>? = null
     private var lastPlayer: Int = 0
-    private var explodeCount: Int by Delegates.observable(0) { property, oldValue, newValue ->
-        checkGameState(newValue)
+
+    private var explodeCount: Int by Delegates.observable(0) { _, _, newValue ->
+        lockScreen(newValue)
+        Handler().postDelayed(({
+            checkGameState(newValue)
+        }), 400)
     }
 
 
@@ -70,16 +74,14 @@ class GamePresenter(
 
     override fun getCheckPlayer(currentPlayer: Int): Boolean {
         playerManager.checkWinner()
-        if (playerManager.checkPlayer(currentPlayer)){
-            //println("TRUE!!!")
-            return true
-        } else {
-            //println("FALSE!!!")
-            return false
+        if (playerManager.checkPlayer(currentPlayer)) {
+            //TODO:
         }
+        return false
+
     }
 
-    fun checkGameState(explodeCountNewValue: Int){
+    fun lockScreen(explodeCountNewValue: Int){
         if (explodeCountNewValue == 1){
             activity.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
@@ -88,6 +90,27 @@ class GamePresenter(
             activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         }
     }
+
+    fun checkGameState(explodeCountNewValue: Int){
+        if (explodeCountNewValue == 0){
+
+            val players = playerManager.checkGameState()
+
+            //Printing players array
+            println("Players: ")
+            for (i in players){
+                println("$i ")
+            }
+
+            for (i in 1 until players.size){
+                if (players[i] == 0){
+                    activePlayer.setIndexToFalse(i)
+                }
+            }
+        }
+
+    }
+
 
     override fun incExplodeCount(){
         this.explodeCount++
@@ -104,6 +127,8 @@ class GamePresenter(
     override fun getCount():Int {
         return explodeCount
     }
+
+
 
     override fun onExplode(id: Int, color: Int, simulator: Boolean) {
 
@@ -138,14 +163,19 @@ class GamePresenter(
 
             for (i in neighbours) {
                 viewMatrix[i[0]][i[1]].circleComeIn(color)
-                if (playerManager.checkWinner()){
-                    return
-                }
+                //TODO: INFINITE LOOP?
             }
         }
 
 
+        if (simulator) {
 
+            incExplodeCount()
+            println("EXPLODECOUNT++: ${getCount()}")
+        } else {
+            decExplodeCount()
+            println("EXPLODECOUNT--: ${getCount()}")
+        }
 
 
 

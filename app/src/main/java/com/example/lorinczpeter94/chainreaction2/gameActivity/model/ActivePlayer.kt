@@ -3,7 +3,7 @@ package com.example.lorinczpeter94.chainreaction2.gameActivity.model
 class ActivePlayer(
     private var currentPlayer: Int,
     private var playerNumber: Int,
-    private var players: Array<Int>
+    private var players: Array<Boolean>
 ) : IActivePlayer {
 
     private var roundCounter: Int = 0
@@ -16,6 +16,10 @@ class ActivePlayer(
         return playerNumber
     }
 
+    fun setIndexToFalse(index: Int){
+        players[index] = false
+    }
+
     override fun getCurrentPlayer(): Int {
         return currentPlayer
     }
@@ -26,6 +30,9 @@ class ActivePlayer(
 
     override fun nextPlayer() {
         currentPlayer = currentPlayer % playerNumber + 1
+        if (!players[currentPlayer]){
+            nextPlayer()
+        }
         roundCounter++
     }
 
