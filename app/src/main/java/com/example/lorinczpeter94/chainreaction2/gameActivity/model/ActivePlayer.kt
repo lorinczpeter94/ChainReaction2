@@ -26,7 +26,14 @@ class ActivePlayer(
 
     override fun nextPlayer() {
         currentPlayer = currentPlayer % playerNumber + 1
+        if (!players[currentPlayer]){
+            nextPlayer()
+        }
         roundCounter++
+    }
+
+    fun setPlayerFalse(index: Int){
+        players[index] = false
     }
 
     fun getRoundCounter(): Int{

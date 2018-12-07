@@ -150,4 +150,8 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
 
     }
 
+    override fun setOnecircleTop(imageView: ImageView, color: Drawable) {
+        imageView.background = color
+    }
+
 }

@@ -22,6 +22,8 @@ interface CustomPresenterDelegate {
     fun decExplodeCount()
     fun setZeroExplodeCount()
     fun getCount(): Int
+    fun putSucceed(succeeded: Boolean)
+    fun freezeScreen(explodeCountNewValue: Int)
 
 
 }
@@ -44,7 +46,12 @@ class CustomViewPresenter(
 
 
 
-        playerPut(id, color, numberOfCircles, activePlayer, true)
+        if (playerPut(id, color, numberOfCircles, activePlayer, true)){
+            customPresenterDelegate!!.putSucceed(true)
+            customPresenterDelegate!!.freezeScreen(1)
+        } else
+            customPresenterDelegate!!.putSucceed(false)
+
         customPresenterDelegate!!.resetState()
 
 
@@ -53,7 +60,7 @@ class CustomViewPresenter(
             checkForActive(id) //if circles are active
             customPresenterDelegate!!.saveLastStep()
 
-            activePlayer.nextPlayer()
+            //activePlayer.nextPlayer()
 
             while (activePlayer.getRoundCounter() >= activePlayer.getPlayerNumber() &&
                 customPresenterDelegate!!.getCheckPlayer(activePlayer.getCurrentPlayer())
@@ -63,13 +70,13 @@ class CustomViewPresenter(
 
             }
 
-            val playerCircle = activity.findViewById<ImageView>(R.id.playerCircle)
-            iCustomImageView.setOnecircleTop(
-                playerCircle, backgroundSelector.chooseColor(
-                    1,
-                    activePlayer.getCurrentPlayer()
-                )
-            )
+//            val playerCircle = activity.findViewById<ImageView>(R.id.playerCircle)
+//            iCustomImageView.setOnecircleTop(
+//                playerCircle, backgroundSelector.chooseColor(
+//                    1,
+//                    activePlayer.getCurrentPlayer()
+//                )
+//            )
         }
 
     }

@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.Toast
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.CustomImageView
@@ -33,11 +34,28 @@ class GamePresenter(
     private var lastStep: Array<Array<CustomImageView>>? = null
     private var lastState: Array<Array<CustomImageView>>? = null
     private var lastPlayer: Int = 0
-    private var explodeCount: Int by Delegates.observable(0) { property, oldValue, newValue ->
+    private var putsucceed: Boolean = false
+    private var explodeCount: Int by Delegates.observable(0) { _, oldValue, newValue ->
         freezeScreen(newValue)
 
         Handler().postDelayed(({
-            checkGameState(newValue)
+            checkGameState(oldValue, newValue)
+
+            if (oldValue != 0){
+                //If there was an explode
+            }
+
+            if(oldValue == 0 && newValue == 0 && putsucceed){
+                activePlayer.nextPlayer()
+                val playerCircle = activity.findViewById<ImageView>(R.id.playerCircle)
+                iIGameView.setOnecircleTop(
+                    playerCircle, backgroundSelector.chooseColor(
+                        1,
+                        activePlayer.getCurrentPlayer()
+                    )
+                )
+                freezeScreen(0)
+            }
         }), 400)
     }
 
@@ -83,7 +101,7 @@ class GamePresenter(
         }
     }
 
-    fun freezeScreen(explodeCountNewValue: Int){
+    override fun freezeScreen(explodeCountNewValue: Int){
         if (explodeCountNewValue == 1){
             activity.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
@@ -93,7 +111,7 @@ class GamePresenter(
         }
     }
 
-    fun checkGameState(explodeCountNewValue: Int){
+    fun checkGameState(oldValue: Int, explodeCountNewValue: Int){
 
         if (explodeCountNewValue == 0){
             var players = playerManager.getGameState()
@@ -103,7 +121,22 @@ class GamePresenter(
                 print("$i, " )
             }
             println()
+
+            for (i in 1 until players.size){
+                if (players[i] == 0 && activePlayer.getRoundCounter() > 1){
+                    activePlayer.setPlayerFalse(i)
+                }
+            }
+
+            if (playerManager.checkWinner() && activePlayer.getRoundCounter() > 1){
+                Toast.makeText(context, "Player ${activePlayer.getCurrentPlayer()} won!", Toast.LENGTH_SHORT).show()
+            }
+
         }
+    }
+
+    override fun putSucceed(succeeded: Boolean) {
+        putsucceed = succeeded
     }
 
     override fun incExplodeCount(){

@@ -7,5 +7,5 @@ import android.widget.ImageView
 interface IGameView{
     fun setOneCircle(imageView: ImageView, oneCircle: Drawable)
     fun midAnimation(imageView: CustomImageView, color: Drawable)
-    fun dispatchTouchEvent(ev: MotionEvent?): Boolean
+    fun setOnecircleTop(imageView: ImageView, color: Drawable)
 }
