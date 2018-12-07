@@ -4,13 +4,14 @@ class NeighbourManager {
     private var positionManager = PositionManager(GamePresenter.noOfRows, GamePresenter.noOfColumns)
 
 
-
     fun getNeighbours(id: Int): ArrayList<List<Int>> {
-        //returns the indexes of the neighbours of circle on indexes [row][column] based on id
+        /**
+         * returns the indexes of the neighbours of circle on indexes \[row]\[column] based on id
+         */
+
         val indexes = positionManager.idToInt(id)
         val row = indexes[0]
         val column = indexes[1]
-
 
         if (positionManager.isInCorner(id)) {
             if (row == 0 && column == 0) {
@@ -190,6 +191,4 @@ class NeighbourManager {
             return neighbours
         }
     }
-
-
 }

@@ -14,121 +14,103 @@ import com.example.lorinczpeter94.chainreaction2.gameActivity.view.CustomImageVi
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.IGameView
 import kotlin.properties.Delegates
 
+/**
+ * GamePresenter Class
+ *  - coordinates the interactions between the viewMatrix elements
+ *
+ */
 
 class GamePresenter(
     private var iIGameView: IGameView,
     private var activity: Activity,
     private var context: Context,
-    private var menu: Menu,
+    menu: Menu,
     private var activePlayer: ActivePlayer,
     private var viewMatrix: Array<Array<CustomImageView>>
 ) : IGamePresenter, CustomPresenterDelegate {
 
-    companion object {
-        const val noOfRows: Int = 8
-        const val noOfColumns: Int = 6
-
-    }
-
-    var neighbourManager = NeighbourManager()
+    private var neighbourManager = NeighbourManager()
     private val vibrationHandler = VibrationHandler(context)
     private var backgroundSelector = BackgroundSelector(context)
     private var playerManager = PlayerManager(activePlayer.getPlayerNumber(), viewMatrix)
     private var lastStep: Array<Array<CustomImageView>>? = null
     private var lastState: Array<Array<CustomImageView>>? = null
     private var lastPlayer: Int = 0
-    private var putsucceed: Boolean = false
+    private var putSucceed: Boolean = false
+
     private var explodeCount: Int by Delegates.observable(0) { _, oldValue, newValue ->
         freezeScreen(newValue)
 
         Handler().postDelayed(({
-            checkGameState(oldValue, newValue)
+            checkGameState(newValue)
+            checkForNextPlayer(oldValue, newValue)
 
-            if (oldValue != 0) {
-                //If there was an explode
-            }
-
-            if (oldValue == 0 && newValue == 0 && putsucceed) {
-                activePlayer.nextPlayer()
-                println("playernumber::: ${activePlayer.getPlayerNumber()}")
-                val playerCircle = activity.findViewById<ImageView>(R.id.playerCircle)
-                iIGameView.setOnecircleTop(
-                    playerCircle, backgroundSelector.chooseColor(
-                        1,
-                        activePlayer.getCurrentPlayer()
-                    )
-                )
-                freezeScreen(0)
-            }
         }), 400)
     }
 
-
     init {
-        println("Game presenter init called")
-        for (i in 0 until noOfRows) {
-            for (j in 0 until noOfColumns) {
-                viewMatrix[i][j].viewPresenter?.customPresenterDelegate = this
+        setDelegate()
 
-                println("set delegate")
-            }
-        }
         lastStep = Array(GamePresenter.noOfRows) {
             Array(GamePresenter.noOfColumns) {
-                CustomImageView(context, activity, activePlayer)
+                CustomImageView(context, activePlayer)
             }
         }
 
         lastState = Array(GamePresenter.noOfRows) {
             Array(GamePresenter.noOfColumns) {
-                CustomImageView(context, activity, activePlayer)
+                CustomImageView(context, activePlayer)
             }
         }
-
 
         val item: MenuItem = menu.findItem(R.id.btn_undo)
         item.setOnMenuItemClickListener {
             undo()
             true
         }
-        true
     }
 
-    override fun elementClicked(imageView: ImageView) {}
-
-    override fun getCheckPlayer(currentPlayer: Int): Boolean {
-        playerManager.checkWinner()
-        if (playerManager.checkPlayer(currentPlayer)) {
-            //println("TRUE!!!")
-            return true
-        } else {
-            //println("FALSE!!!")
-            return false
-        }
+    companion object {
+        //Static variables
+        const val noOfRows: Int = 8
+        const val noOfColumns: Int = 6
     }
 
-    override fun freezeScreen(explodeCountNewValue: Int) {
-        if (explodeCountNewValue == 1) {
-            activity.window.setFlags(
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-            )
-        }
-        if (explodeCountNewValue == 0) {
-            activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        }
-    }
-
-    fun checkGameState(oldValue: Int, explodeCountNewValue: Int) {
-
-        if (explodeCountNewValue == 0) {
-            var players = playerManager.getGameState()
-
-
-            for (i in players) {
-                print("$i, ")
+    private fun setDelegate(){
+        /**
+         * CustomViewPresenter class with this class through CustomPresenterDelegate
+         */
+        for (i in 0 until noOfRows) {
+            for (j in 0 until noOfColumns) {
+                viewMatrix[i][j].viewPresenter?.customPresenterDelegate = this
             }
-            println()
+        }
+    }
+
+    private fun checkForNextPlayer(oldValue: Int, newValue: Int){
+        //Checks if it's next player's turn
+
+        if (oldValue == 0 && newValue == 0 && putSucceed) {
+            activePlayer.nextPlayer()
+            val playerCircle = activity.findViewById<ImageView>(R.id.playerCircle)
+            iIGameView.setOnecircleTop(
+                playerCircle, backgroundSelector.chooseColor(
+                    1,
+                    activePlayer.getCurrentPlayer()
+                )
+            )
+            freezeScreen(0)
+        }
+    }
+
+    private fun checkGameState(explodeCountNewValue: Int) {
+        /**
+         * Checks if the current player has any more circles, if not, then sets current player to false.
+         * Also checks for winner.
+         */
+
+        if (explodeCountNewValue == 0) {
+            val players = playerManager.getGameState()
 
             for (i in 1 until players.size) {
                 if (players[i] == 0 && activePlayer.getRoundCounter() > activePlayer.getPlayerNumber()) {
@@ -138,32 +120,75 @@ class GamePresenter(
 
             if (playerManager.checkWinner() && activePlayer.getRoundCounter() > 1) {
                 Toast.makeText(context, "Player ${activePlayer.getWinner()} won!", Toast.LENGTH_SHORT).show()
+                activity.finish()
             }
 
         }
     }
 
-    override fun putSucceed(succeeded: Boolean) {
-        putsucceed = succeeded
+    private fun iterateNeighbours(neighbours: ArrayList<List<Int>>, color: Int){
+        /**
+         * Iterates through the neighbours and sends a circle to every one of them
+         */
+
+        for (i in neighbours) {
+            viewMatrix[i[0]][i[1]].circleComeIn(color)
+            if (playerManager.checkWinner()){
+                return
+            }
+        }
     }
 
-    override fun incExplodeCount() {
-        this.explodeCount++
+    private fun undo() {
+        /**
+         * Undo to previous step
+         * Not finished yet
+          */
+        //TODO: finish the undo (refresh screen)
+
+        activePlayer.setActivePlayer(lastPlayer)
+        if (lastStep == null) {
+            return
+        }
+        for (i in 0 until noOfRows) {
+            for (j in 0 until noOfColumns) {
+                lastStep?.get(i)?.get(j)?.getColor()?.let { viewMatrix[i][j].setColor(it) }
+                lastStep?.get(i)?.get(j)?.getNumberOfCircles()?.let { viewMatrix[i][j].setNumberOfCircles(it) }
+            }
+        }
     }
 
-    override fun decExplodeCount() {
-        this.explodeCount--
+    //IGamePresenter functions
+
+    override fun idToInt(id: Int): ArrayList<Int> {
+        /**
+         * Converts a CustomImageView ID to an array of two indexes
+         */
+
+        val indexArray = ArrayList<Int>()
+
+        val i = (id % 10) - 1
+
+        val j = ((id / 10) % 10) - 1
+        indexArray.add(j)
+        indexArray.add(i)
+        return indexArray
     }
 
-    override fun setZeroExplodeCount() {
-        explodeCount = 0
-    }
 
-    override fun getCount(): Int {
-        return explodeCount
-    }
+    //CustomPresenterDelegate functions
 
     override fun onExplode(id: Int, color: Int, simulator: Boolean) {
+        /**
+         * This function is called every time there is an explosion:
+         *  - simulator and not simulator function:
+         *      - if not simulator then updates UI with post delay, also starts the animations
+         *      - if simulator, then no post delays, no UI update, only calculating
+         *
+         *  - vibrates when explode in non simulator mode
+         *
+         *  - sends a circle to every neighbour by calling iterateNeighbours
+         */
 
         val indexes = idToInt(id)
         val row = indexes[0]
@@ -179,32 +204,33 @@ class GamePresenter(
                 iIGameView.midAnimation(viewMatrix[row][column], background)
             }), 100)
             Handler().postDelayed(({
-                for (i in neighbours) {
-                    viewMatrix[i[0]][i[1]].circleComeIn(color)
-
-                }
+                iterateNeighbours(neighbours, color)
             }), 350)
 
         } else {
-            for (i in neighbours) {
-                viewMatrix[i[0]][i[1]].circleComeIn(color)
+            iterateNeighbours(neighbours, color)
+        }
+    }
+
+    override fun saveLastStep() {
+        /**
+         * Saves last step of the viewMatrix in lastStep
+         */
+
+        lastPlayer = activePlayer.getCurrentPlayer()
+        for (i in 0 until noOfRows) {
+            for (j in 0 until noOfColumns) {
+                lastStep?.get(i)?.get(j)?.setColor(viewMatrix[i][j].getColor())
+                lastStep?.get(i)?.get(j)?.setNumberOfCircles(viewMatrix[i][j].getNumberOfCircles())
             }
         }
     }
 
-    fun idToInt(id: Int): ArrayList<Int> {
-        val indexArray = ArrayList<Int>()
-
-        val i = (id % 10) - 1
-
-        val j = ((id / 10) % 10) - 1
-        indexArray.add(j)
-        indexArray.add(i)
-        return indexArray
-    }
-    
-
     override fun saveState() {
+        /**
+         * Saves current state of viewMatrix into lastState
+         */
+
         for (i in 0 until noOfRows) {
             for (j in 0 until noOfColumns) {
                 lastState?.get(i)?.get(j)?.setColor(viewMatrix[i][j].getColor())
@@ -214,6 +240,10 @@ class GamePresenter(
     }
 
     override fun resetState() {
+        /**
+         * Resets the state of the viewMatrix from the lastState
+         */
+
         for (i in 0 until noOfRows) {
             for (j in 0 until noOfColumns) {
                 lastState?.get(i)?.get(j)?.getColor()?.let { viewMatrix[i][j].setColor(it) }
@@ -222,58 +252,71 @@ class GamePresenter(
         }
     }
 
-    override fun saveLastStep() {
-        lastPlayer = activePlayer.getCurrentPlayer()
-        for (i in 0 until noOfRows) {
-            for (j in 0 until noOfColumns) {
-                lastStep?.get(i)?.get(j)?.setColor(viewMatrix[i][j].getColor());
-                lastStep?.get(i)?.get(j)?.setNumberOfCircles(viewMatrix[i][j].getNumberOfCircles())
-            }
-        }
-    }
-
     override fun setSimulation(simulation: Boolean) {
+        /**
+         * Sets every element of the viewMatrix to simulation mode or not simulation mode
+         */
+
         for (i in 0 until noOfRows) {
             for (j in 0 until noOfColumns) {
-                viewMatrix[i][j]!!.setSimulation(simulation)
+                viewMatrix[i][j].setSimulation(simulation)
             }
         }
     }
 
-    fun undo() {
-        activePlayer.setActivePlayer(lastPlayer)
-        if (lastStep == null) {
-            return
-        }
-        for (i in 0 until noOfRows) {
-            for (j in 0 until noOfColumns) {
-                lastStep?.get(i)?.get(j)?.getColor()?.let { viewMatrix[i][j].setColor(it) }
-                lastStep?.get(i)?.get(j)?.getNumberOfCircles()?.let { viewMatrix[i][j].setNumberOfCircles(it) }
-            }
-        }
+    override fun incExplodeCount() {
+        /**
+         * Increasing the number of explosions
+         */
+
+        this.explodeCount++
     }
 
+    override fun decExplodeCount() {
+        /**
+         * Decreasing the number of explosions
+          */
 
-    override fun printState() {
-        println("STATE:")
-        for (i in 0 until noOfRows) {
-            for (j in 0 until noOfColumns) {
-                print("${lastState!![i][j].getNumberOfCircles()} ")
-            }
-            println()
-        }
+        this.explodeCount--
     }
 
-    override fun printViewMatrix() {
-        for (i in 0 until noOfRows) {
-            for (j in 0 until noOfColumns) {
-                print("${viewMatrix!![i][j].getNumberOfCircles()} ")
-            }
-            println()
+    override fun setZeroExplodeCount() {
+        /**
+         * Sets the explosions counter to 0
+         */
+
+        explodeCount = 0
+    }
+
+    override fun getCount(): Int {
+        /**
+         * Returns the explosion counter
+         */
+
+        return explodeCount
+    }
+
+    override fun putSucceed(succeeded: Boolean) {
+        /**
+         * Sets putSucceeded to true or false based on the success or fail of the player to put a circle in a cell
+         */
+
+        putSucceed = succeeded
+    }
+
+    override fun freezeScreen(explodeCountNewValue: Int) {
+        /**
+         * if the explodeCountNewValue is 1, then freezes the screen, else it defrosts it
+         */
+
+        if (explodeCountNewValue == 1) {
+            activity.window.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+            )
+        }
+        if (explodeCountNewValue == 0) {
+            activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         }
     }
 }
-
-
-//getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-//WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
