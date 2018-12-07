@@ -44,4 +44,13 @@ class ActivePlayer(
         return roundCounter
     }
 
+    fun getWinner(): Int{
+        for (i in 1 until players.size){
+            if (players[i]){
+                return i
+            }
+        }
+        return 0
+    }
+
 }

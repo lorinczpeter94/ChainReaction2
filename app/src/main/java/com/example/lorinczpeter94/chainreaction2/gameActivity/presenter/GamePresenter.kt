@@ -124,13 +124,13 @@ class GamePresenter(
             println()
 
             for (i in 1 until players.size){
-                if (players[i] == 0 && activePlayer.getRoundCounter() >= activePlayer.getPlayerNumber()){
+                if (players[i] == 0 && activePlayer.getRoundCounter() > activePlayer.getPlayerNumber()){
                     activePlayer.setPlayerFalse(i)
                 }
             }
 
             if (playerManager.checkWinner() && activePlayer.getRoundCounter() > 1){
-                Toast.makeText(context, "Player ${activePlayer.getCurrentPlayer()} won!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Player ${activePlayer.getWinner()} won!", Toast.LENGTH_SHORT).show()
             }
 
         }
