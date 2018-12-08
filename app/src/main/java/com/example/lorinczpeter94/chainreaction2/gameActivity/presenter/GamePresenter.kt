@@ -100,6 +100,8 @@ class GamePresenter(
                 )
             )
             freezeScreen(0)
+            println("Defrosting screen. . . ")
+
         }
     }
 
