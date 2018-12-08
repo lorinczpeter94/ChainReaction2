@@ -39,12 +39,24 @@ class GamePresenter(
     private var putSucceed: Boolean = false
 
     private var explodeCount: Int by Delegates.observable(0) { _, oldValue, newValue ->
-        freezeScreen(newValue)
+        println("Explode Count Value: $newValue")
+        freezeScreen(newValue, "called in delegate")
 
         Handler().postDelayed(({
             checkGameState(newValue)
-            checkForNextPlayer(oldValue, newValue)
-
+            if (oldValue == 0 && newValue == 0 && putSucceed) {
+                activePlayer.nextPlayer()
+                val playerCircle = activity.findViewById<ImageView>(R.id.playerCircle)
+                iIGameView.setOnecircleTop(
+                    playerCircle, backgroundSelector.chooseColor(
+                        1,
+                        activePlayer.getCurrentPlayer()
+                    )
+                )
+                if (explodeCount == 0) {
+                    freezeScreen(0, "checkfornext")
+                }
+            }
         }), 400)
     }
 
@@ -84,24 +96,6 @@ class GamePresenter(
             for (j in 0 until noOfColumns) {
                 viewMatrix[i][j].viewPresenter?.customPresenterDelegate = this
             }
-        }
-    }
-
-    private fun checkForNextPlayer(oldValue: Int, newValue: Int){
-        //Checks if it's next player's turn
-
-        if (oldValue == 0 && newValue == 0 && putSucceed) {
-            activePlayer.nextPlayer()
-            val playerCircle = activity.findViewById<ImageView>(R.id.playerCircle)
-            iIGameView.setOnecircleTop(
-                playerCircle, backgroundSelector.chooseColor(
-                    1,
-                    activePlayer.getCurrentPlayer()
-                )
-            )
-            freezeScreen(0)
-            println("Defrosting screen. . . ")
-
         }
     }
 
@@ -306,12 +300,13 @@ class GamePresenter(
         putSucceed = succeeded
     }
 
-    override fun freezeScreen(explodeCountNewValue: Int) {
+    override fun freezeScreen(explodeCountNewValue: Int, called: String) {
         /**
          * if the explodeCountNewValue is 1, then freezes the screen, else it defrosts it
          */
 
         if (explodeCountNewValue == 1) {
+            println("Freezing screen. . .  called by $called")
             activity.window.setFlags(
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
@@ -319,6 +314,9 @@ class GamePresenter(
         }
         if (explodeCountNewValue == 0) {
             activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            println("Defrosting screen. . . called by $called")
         }
     }
 }
+
+//changing

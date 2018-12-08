@@ -16,7 +16,7 @@ interface CustomPresenterDelegate {
     fun setZeroExplodeCount()
     fun getCount(): Int
     fun putSucceed(succeeded: Boolean)
-    fun freezeScreen(explodeCountNewValue: Int)
+    fun freezeScreen(explodeCountNewValue: Int, called: String)
 }
 
 class CustomViewPresenter(
@@ -46,8 +46,8 @@ class CustomViewPresenter(
         //Simulation for explode count
         if (playerPut(id, color, numberOfCircles, activePlayer, true)) {
             customPresenterDelegate!!.putSucceed(true)
-            customPresenterDelegate!!.freezeScreen(1)
-            println("Freezing screen. . . ")
+            customPresenterDelegate!!.freezeScreen(1, "customViewPresenter")
+
         } else {
             customPresenterDelegate!!.putSucceed(false)
         }
@@ -201,7 +201,6 @@ class CustomViewPresenter(
             customPresenterDelegate!!.incExplodeCount()
         } else {
             customPresenterDelegate!!.decExplodeCount()
-            //customPresenterDelegate!!.decExplodeCount()
 
             iCustomImageView.setNoCircle()
             iCustomImageView.zeroNumberOfCircles()
