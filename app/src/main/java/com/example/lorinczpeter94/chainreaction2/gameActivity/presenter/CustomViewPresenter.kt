@@ -47,7 +47,7 @@ class CustomViewPresenter(
         if (playerPut(id, color, numberOfCircles, activePlayer, true)) {
             customPresenterDelegate!!.putSucceed(true)
             customPresenterDelegate!!.freezeScreen(1)
-            println("Freezing screen. . . ")
+
         } else {
             customPresenterDelegate!!.putSucceed(false)
         }
@@ -201,7 +201,6 @@ class CustomViewPresenter(
             customPresenterDelegate!!.incExplodeCount()
         } else {
             customPresenterDelegate!!.decExplodeCount()
-            //customPresenterDelegate!!.decExplodeCount()
 
             iCustomImageView.setNoCircle()
             iCustomImageView.zeroNumberOfCircles()
