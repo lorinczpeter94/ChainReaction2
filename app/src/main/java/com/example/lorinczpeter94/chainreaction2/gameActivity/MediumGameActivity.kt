@@ -7,22 +7,15 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
-import android.view.MotionEvent
-import android.view.View
 import android.view.WindowManager
-import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import android.widget.Toast
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
-import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.BackgroundSelector
-import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.CustomViewPresenter
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.GamePresenter
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.IGamePresenter
-import com.example.lorinczpeter94.chainreaction2.gameActivity.utilities.IDtoInt
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.CustomImageView
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.GameLayout
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.IGameView
@@ -30,8 +23,6 @@ import com.example.lorinczpeter94.chainreaction2.welcome_activity.PLAYERNUM
 
 
 class MediumGameActivity : AppCompatActivity(), IGameView {
-
-
 
     private var iGamePresenter: IGamePresenter? = null
     private var activePlayer = ActivePlayer(1, 2, (Array(9) { true }))
@@ -65,20 +56,16 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
 
     }
 
-
     private fun createLayout() {
         val relativeLayout: RelativeLayout = findViewById(R.id.relativeLayout)
-
-
-
         viewMatrix = Array(GamePresenter.noOfRows) {
             Array(GamePresenter.noOfColumns) {
-                CustomImageView(this as Context, this as Activity, activePlayer) }
+                CustomImageView(this as Context, activePlayer) }
         }
 
 
         viewMatrix?.let {
-            var gameLayout = GameLayout(this, relativeLayout, it)
+            val gameLayout = GameLayout(this, relativeLayout, it)
             gameLayout.createLayout()
         }
     }
@@ -86,12 +73,6 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
     override fun setOneCircle(imageView: ImageView, oneCircle: Drawable) {
         imageView.background = oneCircle
     }
-
-
-
-
-
-
 
     override fun midAnimation(imageView: CustomImageView, color: Drawable) {
         val myLayout: RelativeLayout = findViewById(R.id.relativeLayout)
@@ -125,15 +106,6 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
         animUp.duration = 200
         animDown.duration = 200
 
-        animRight.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationStart(arg0: Animation) {
-            }
-            override fun onAnimationRepeat(arg0: Animation) {}
-            override fun onAnimationEnd(arg0: Animation) {
-
-            }
-        })
-
         animationView1.startAnimation(animRight)
         animationView2.startAnimation(animLeft)
         animationView3.startAnimation(animUp)
@@ -143,7 +115,6 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
         myLayout.removeView(animationView2)
         myLayout.removeView(animationView3)
         myLayout.removeView(animationView4)
-
     }
 
     override fun setOnecircleTop(imageView: ImageView, color: Drawable) {

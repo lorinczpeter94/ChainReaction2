@@ -17,25 +17,6 @@ class PlayerManager(
                 }
             }
         }
-
-
-        //-----------------------
-//        println("Matix:")
-//        for (i in 0 until GamePresenter.noOfRows) {
-//            for (j in 0 until GamePresenter.noOfColumns) {
-//                print("(${viewMatrix[i][j].getColor()}, ${viewMatrix[i][j].getNumberOfCircles()}) ")
-//            }
-//            println()
-//        }
-//
-//
-//        println("players array:")
-//        println()
-//        for (i in players) {
-//            print("$i ")
-//        }
-//        println()
-        //-----------------------
     }
 
     fun getGameState(): Array<Int>{
@@ -48,35 +29,13 @@ class PlayerManager(
         players = Array(playerNumber + 1) { 0 }
 
         calcPlayerFields()
-        var db = 0
+
+        var count = 0
         for (i in 1 until players.size) {
             if (players[i] != 0)
-                db++
+                count++
         }
 
-        for (i in 1 until players.size){
-            if (players[i] == 0){
-            }
-        }
-
-        return db == 1
-
+        return count == 1
     }
-
-
-    fun checkPlayer(currentPlayer: Int): Boolean {
-        //players = Array(playerNumber + 1) { 0 }
-        //calcPlayerFields()
-
-//        println("players array:")
-//        println()
-//        for (i in players) {
-//            print("$i ")
-//        }
-//        println()
-        return (players[currentPlayer] == 0)
-    }
-
-
-
 }

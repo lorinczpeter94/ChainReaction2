@@ -1,42 +1,39 @@
 package com.example.lorinczpeter94.chainreaction2.gameActivity.view
 
-import android.app.Activity
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
-import android.view.animation.TranslateAnimation
 import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.Toast
 import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.presenter.CustomViewPresenter
 import kotlin.properties.Delegates
 
+@SuppressLint("ViewConstructor")
+
 class CustomImageView(
     context: Context,
-    activity: Activity,
     private var activePlayer: ActivePlayer
 ) : ImageView(context), ICustomImageView {
-    var viewPresenter: CustomViewPresenter? = null
+
     private var color: Int = 0
-
     private var numberOfCircles: Int = 0
-
     private var simulation: Boolean = false
-
-    private var circleComeSignal: Int by Delegates.observable(0) { property, oldValue, newValue ->
+    private var circleComeSignal: Int by Delegates.observable(0) { _, _, newValue ->
         explodeCircleCameIn(newValue)
         checkActive()
     }
 
+    var viewPresenter: CustomViewPresenter? = null
+
 
     init {
         background = ContextCompat.getDrawable(context, R.drawable.no_circle)
-        viewPresenter = CustomViewPresenter(this, context, activity)
+        viewPresenter = CustomViewPresenter(this, context)
         this.setOnClickListener {
             viewPresenter?.elementClicked(numberOfCircles, color, id, activePlayer)
         }
@@ -47,7 +44,6 @@ class CustomImageView(
     override fun setColor(color: Int) {
         this.color = color
     }
-
 
     override fun incNumberOfCircles() {
         numberOfCircles++
@@ -102,7 +98,6 @@ class CustomImageView(
         viewPresenter?.checkForActive(id)
     }
 
-
     override fun setActiveGameObject() {
         //"Activates" the game objects by rotating them
         val anim = RotateAnimation(0f, 360f, 75f, 75f)
@@ -116,6 +111,4 @@ class CustomImageView(
         //Stops the rotation of the imageView
         clearAnimation()
     }
-
-
 }

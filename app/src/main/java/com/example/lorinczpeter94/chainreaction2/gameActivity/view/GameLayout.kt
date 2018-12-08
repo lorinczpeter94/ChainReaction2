@@ -11,13 +11,10 @@ import com.example.lorinczpeter94.chainreaction2.gameActivity.utilities.toID
 class GameLayout(
     var context: Context,
     var layout: RelativeLayout,
-    var viewMatrix: Array<Array<CustomImageView>>
+    private var viewMatrix: Array<Array<CustomImageView>>
 ) {
 
     fun createLayout() {
-
-
-
 
         for (i in 0 until 8) {
             for (j in 0 until 6) {
@@ -37,60 +34,60 @@ class GameLayout(
 
     private fun putRightLine() {
         val view = View(context)
-        val lineWidth: Int = 2
+        val lineWidth = 2
         val viewParams = RelativeLayout.LayoutParams(
             lineWidth,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         view.setBackgroundColor(ContextCompat.getColor(context, R.color.gridColor))
-        viewParams.addRule(RelativeLayout.ALIGN_TOP, context.toID(0,2))
-        viewParams.addRule(RelativeLayout.ALIGN_RIGHT, context.toID(0,5))
-        viewParams.addRule(RelativeLayout.ALIGN_BOTTOM, context.toID(7,0))
+        viewParams.addRule(RelativeLayout.ALIGN_TOP, toID(0, 2))
+        viewParams.addRule(RelativeLayout.ALIGN_RIGHT, toID(0, 5))
+        viewParams.addRule(RelativeLayout.ALIGN_BOTTOM, toID(7, 0))
         view.layoutParams = viewParams
         layout.addView(view)
     }
 
     private fun putBottomLine() {
         val view = View(context)
-        val lineWidth: Int = 2
+        val lineWidth = 2
         val viewParams = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             lineWidth
         )
         view.setBackgroundColor(ContextCompat.getColor(context, R.color.gridColor))
-        viewParams.addRule(RelativeLayout.ALIGN_BOTTOM, context.toID(7,2))
-        viewParams.addRule(RelativeLayout.ALIGN_LEFT, context.toID(0,0))
-        viewParams.addRule(RelativeLayout.ALIGN_RIGHT, context.toID(0,5))
+        viewParams.addRule(RelativeLayout.ALIGN_BOTTOM, toID(7, 2))
+        viewParams.addRule(RelativeLayout.ALIGN_LEFT, toID(0, 0))
+        viewParams.addRule(RelativeLayout.ALIGN_RIGHT, toID(0, 5))
         view.layoutParams = viewParams
         layout.addView(view)
     }
 
     private fun putHorizontalGridLine(iPosition: Int) {
         val view = View(context)
-        val lineWidth: Int = 2
+        val lineWidth = 2
         val viewParams = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             lineWidth
         )
         view.setBackgroundColor(ContextCompat.getColor(context, R.color.gridColor))
-        viewParams.addRule(RelativeLayout.ALIGN_TOP, context.toID(iPosition,2))
-        viewParams.addRule(RelativeLayout.ALIGN_LEFT, context.toID(0,0))
-        viewParams.addRule(RelativeLayout.ALIGN_RIGHT, context.toID(0,5))
+        viewParams.addRule(RelativeLayout.ALIGN_TOP, toID(iPosition, 2))
+        viewParams.addRule(RelativeLayout.ALIGN_LEFT, toID(0, 0))
+        viewParams.addRule(RelativeLayout.ALIGN_RIGHT, toID(0, 5))
         view.layoutParams = viewParams
         layout.addView(view)
     }
 
     private fun putVerticalGridLine(iPosition: Int){
         val view = View(context)
-        val lineWidth: Int = 2
+        val lineWidth = 2
         val viewParams = RelativeLayout.LayoutParams(
             lineWidth,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         view.setBackgroundColor(ContextCompat.getColor(context, R.color.gridColor))
-        viewParams.addRule(RelativeLayout.ALIGN_TOP, context.toID(0,2))
-        viewParams.addRule(RelativeLayout.ALIGN_LEFT, context.toID(0,iPosition))
-        viewParams.addRule(RelativeLayout.ALIGN_BOTTOM, context.toID(7,0))
+        viewParams.addRule(RelativeLayout.ALIGN_TOP, toID(0, 2))
+        viewParams.addRule(RelativeLayout.ALIGN_LEFT, toID(0, iPosition))
+        viewParams.addRule(RelativeLayout.ALIGN_BOTTOM, toID(7, 0))
         view.layoutParams = viewParams
         layout.addView(view)
     }
@@ -100,31 +97,27 @@ class GameLayout(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
+
         imageView.layoutParams = layoutParams
-        imageView.id = context.toID(i, j)
+        imageView.id = toID(i, j)
 
         if (i == 0) {
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
-
         }
 
         if (j == 0) {
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-
         }
 
         if (i != 0) {
-            layoutParams.addRule(RelativeLayout.BELOW, context.toID(i - 1, j))
+            layoutParams.addRule(RelativeLayout.BELOW, toID(i - 1, j))
         }
 
         if (j != 0) {
-            layoutParams.addRule(RelativeLayout.RIGHT_OF, context.toID(i, j - 1))
+            layoutParams.addRule(RelativeLayout.RIGHT_OF, toID(i, j - 1))
         }
 
         layout.addView(imageView)
-
-
-
     }
 
 

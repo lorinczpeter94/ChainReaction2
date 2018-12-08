@@ -1,21 +1,14 @@
 package com.example.lorinczpeter94.chainreaction2.gameActivity.presenter
 
-import android.app.Activity
 import android.content.Context
-import android.view.WindowManager
-import android.widget.ImageView
-import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.ICustomImageView
 
 
 interface CustomPresenterDelegate {
     fun onExplode(id: Int, color: Int, simulator: Boolean)
-    fun getCheckPlayer(currentPlayer: Int): Boolean
     fun saveLastStep()
     fun saveState()
-    fun printState()
-    fun printViewMatrix()
     fun resetState()
     fun setSimulation(simulation: Boolean)
     fun incExplodeCount()
@@ -24,45 +17,47 @@ interface CustomPresenterDelegate {
     fun getCount(): Int
     fun putSucceed(succeeded: Boolean)
     fun freezeScreen(explodeCountNewValue: Int)
-
-
 }
 
 class CustomViewPresenter(
     private var iCustomImageView: ICustomImageView,
-    context: Context,
-    private var activity: Activity
+    context: Context
 ) {
 
     private var positionManager = PositionManager(GamePresenter.noOfRows, GamePresenter.noOfColumns)
     private var backgroundSelector = BackgroundSelector(context)
 
+    //Delegate to reach GamePresenter
     var customPresenterDelegate: CustomPresenterDelegate? = null
 
-    fun elementClicked(numberOfCircles: Int, color: Int, id: Int, activePlayer: ActivePlayer) {
-        customPresenterDelegate!!.setZeroExplodeCount()
 
+    fun elementClicked(numberOfCircles: Int, color: Int, id: Int, activePlayer: ActivePlayer) {
+        /**
+         * Called every time a cell is clicked/touched
+         *  - resets the explode counter
+         *  - saves the state
+         *  - runs a simulation to count the number of explodes
+         *  - puts the actual circle and updates UI
+         */
+
+        customPresenterDelegate!!.setZeroExplodeCount()
         customPresenterDelegate!!.saveState()
 
-
-
-        if (playerPut(id, color, numberOfCircles, activePlayer, true)){
+        //Simulation for explode count
+        if (playerPut(id, color, numberOfCircles, activePlayer, true)) {
             customPresenterDelegate!!.putSucceed(true)
             customPresenterDelegate!!.freezeScreen(1)
-        } else
+            println("Freezing screen. . . ")
+        } else {
             customPresenterDelegate!!.putSucceed(false)
+        }
 
-        customPresenterDelegate!!.resetState()
+        customPresenterDelegate!!.resetState()  //Resets state after simulation
 
-
+        //Actual put with UI update and animations
         if (playerPut(id, color, numberOfCircles, activePlayer, false)) {
-
             checkForActive(id) //if circles are active
-            customPresenterDelegate!!.saveLastStep()
-
-
-
-
+            customPresenterDelegate!!.saveLastStep() //saves last step for undo button
         }
 
     }
@@ -74,6 +69,10 @@ class CustomViewPresenter(
         activePlayer: ActivePlayer,
         simulation: Boolean
     ): Boolean {
+        /**
+         * Puts a circle in the cell with the given ID
+         * also checks if it has to explode
+         */
         customPresenterDelegate!!.setSimulation(simulation)
         when (numberOfCircles) {
             0 -> {
@@ -88,40 +87,39 @@ class CustomViewPresenter(
                 return true
             }
             1 -> {
-                if (positionManager.isInCorner(id)) {
-                    if (positionManager.hisCircle(color, activePlayer.getCurrentPlayer())) {
-                        //current Game object is in corner
-                        //TODO: EXPLODE
-                        explode(id, activePlayer.getCurrentPlayer(), simulation)
+                when {
+                    positionManager.isInCorner(id) -> {
+                        if (positionManager.hisCircle(color, activePlayer.getCurrentPlayer())) {
+                            //current Game object is in corner
+                            //TODO: EXPLODE
+                            explode(id, activePlayer.getCurrentPlayer(), simulation)
 
+                            return true
+                        }
+                        return false
+                    }
+                    positionManager.hisCircle(color, activePlayer.getCurrentPlayer()) -> {
+                        iCustomImageView.setColor(activePlayer.getCurrentPlayer())
+                        iCustomImageView.incNumberOfCircles()
+                        iCustomImageView.setOnecircle(
+                            backgroundSelector.chooseColor(
+                                numberOfCircles + 1, activePlayer.getCurrentPlayer()
+                            )
+                        )
                         return true
                     }
-                    return false
-
-
-                } else if (positionManager.hisCircle(color, activePlayer.getCurrentPlayer())) {
-                    iCustomImageView.setColor(activePlayer.getCurrentPlayer())
-                    iCustomImageView.incNumberOfCircles()
-                    iCustomImageView.setOnecircle(
-                        backgroundSelector.chooseColor(
-                            numberOfCircles + 1,
-                            activePlayer.getCurrentPlayer()
-                        )
-                    )
-                    return true
-                } else {
-                    return false
+                    else -> return false
                 }
             }
             2 -> {
                 //current Game object is on side
                 if (positionManager.isOnSide(id)) {
-                    if (positionManager.hisCircle(color, activePlayer.getCurrentPlayer())) {
+                    return if (positionManager.hisCircle(color, activePlayer.getCurrentPlayer())) {
                         //TODO: EXPLODE
                         explode(id, activePlayer.getCurrentPlayer(), simulation)
-                        return true
+                        true
                     } else {
-                        return false
+                        false
                     }
 
                 } else {
@@ -148,11 +146,11 @@ class CustomViewPresenter(
                 }
             }
             3 -> {
-                if (positionManager.hisCircle(color, activePlayer.getCurrentPlayer())) {
+                return if (positionManager.hisCircle(color, activePlayer.getCurrentPlayer())) {
                     explode(id, activePlayer.getCurrentPlayer(), simulation)
-                    return true
+                    true
                 } else {
-                    return false
+                    false
                 }
             }
             else -> {
@@ -162,6 +160,10 @@ class CustomViewPresenter(
     }
 
     fun circleCameIn(color: Int, id: Int, simulation: Boolean) {
+        /**
+         * Triggered when a circle came in into a cell
+         */
+
         if (!simulation) {
             iCustomImageView.incNumberOfCircles()
             iCustomImageView.setColor(color)
@@ -185,29 +187,36 @@ class CustomViewPresenter(
 
     }
 
-    fun explode(id: Int, color: Int, simulation: Boolean) {
-        println("id = $id")
+    private fun explode(id: Int, color: Int, simulation: Boolean) {
+        /**
+         * - current circle explodes
+         * - sets number of circles to zero
+         * - stops rotation animation
+         * - calls onExplode in the GamePresenter
+         * - ui depends on simulation or not
+         */
 
         if (simulation) {
             iCustomImageView.zeroNumberOfCircles()
             customPresenterDelegate!!.incExplodeCount()
-            println("EXPLODECOUNT++: ${customPresenterDelegate!!.getCount()}")
         } else {
             customPresenterDelegate!!.decExplodeCount()
-            println("EXPLODECOUNT--: ${customPresenterDelegate!!.getCount()}")
-        }
+            //customPresenterDelegate!!.decExplodeCount()
 
-
-        if (!simulation) {
             iCustomImageView.setNoCircle()
             iCustomImageView.zeroNumberOfCircles()
             iCustomImageView.stopActiveGameObject()
         }
-        customPresenterDelegate?.onExplode(id, color, simulation)
 
+        customPresenterDelegate?.onExplode(id, color, simulation)
     }
 
     private fun shouldExplode(id: Int): Boolean {
+        /**
+         * returns true if the cell with the given id should explode
+         * else returns false
+         */
+
         return if (positionManager.isInCorner(id) && iCustomImageView.getNumberOfCircles() == 2) {
             true
         } else if (positionManager.isOnSide(id) && iCustomImageView.getNumberOfCircles() == 3) {
@@ -216,6 +225,11 @@ class CustomViewPresenter(
     }
 
     fun checkForActive(id: Int) {
+        /**
+         * checks if the cell with the given id is active
+         * if it's active, it adds the rotation animation to it
+         */
+
         if (positionManager.isInCorner(id) && iCustomImageView.getNumberOfCircles() == 1 ||
             positionManager.isOnSide(id) && iCustomImageView.getNumberOfCircles() == 2 ||
             iCustomImageView.getNumberOfCircles() == 3

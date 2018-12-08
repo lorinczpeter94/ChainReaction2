@@ -4,7 +4,8 @@ import android.content.Context
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.support.v4.content.ContextCompat.getSystemService
+
+@Suppress("DEPRECATION")
 
 class VibrationHandler(
     var context: Context) {
