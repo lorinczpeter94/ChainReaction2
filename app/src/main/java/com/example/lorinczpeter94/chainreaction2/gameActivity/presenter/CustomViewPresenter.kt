@@ -16,7 +16,7 @@ interface CustomPresenterDelegate {
     fun setZeroExplodeCount()
     fun getCount(): Int
     fun putSucceed(succeeded: Boolean)
-    fun freezeScreen(explodeCountNewValue: Int, called: String)
+    fun freezeScreen(explodeCountNewValue: Int)
 }
 
 class CustomViewPresenter(
@@ -46,7 +46,7 @@ class CustomViewPresenter(
         //Simulation for explode count
         if (playerPut(id, color, numberOfCircles, activePlayer, true)) {
             customPresenterDelegate!!.putSucceed(true)
-            customPresenterDelegate!!.freezeScreen(1, "customViewPresenter")
+            customPresenterDelegate!!.freezeScreen(1)
 
         } else {
             customPresenterDelegate!!.putSucceed(false)

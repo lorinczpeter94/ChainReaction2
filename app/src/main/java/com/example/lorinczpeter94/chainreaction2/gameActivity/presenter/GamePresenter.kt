@@ -39,9 +39,7 @@ class GamePresenter(
     private var putSucceed: Boolean = false
 
     private var explodeCount: Int by Delegates.observable(0) { _, oldValue, newValue ->
-        println("Explode Count Value: $newValue")
-        freezeScreen(newValue, "called in delegate")
-
+        freezeScreen(newValue)
         Handler().postDelayed(({
             checkGameState(newValue)
             if (oldValue == 0 && newValue == 0 && putSucceed) {
@@ -54,7 +52,7 @@ class GamePresenter(
                     )
                 )
                 if (explodeCount == 0) {
-                    freezeScreen(0, "checkfornext")
+                    freezeScreen(0)
                 }
             }
         }), 400)
@@ -300,13 +298,12 @@ class GamePresenter(
         putSucceed = succeeded
     }
 
-    override fun freezeScreen(explodeCountNewValue: Int, called: String) {
+    override fun freezeScreen(explodeCountNewValue: Int) {
         /**
          * if the explodeCountNewValue is 1, then freezes the screen, else it defrosts it
          */
 
         if (explodeCountNewValue == 1) {
-            println("Freezing screen. . .  called by $called")
             activity.window.setFlags(
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
@@ -314,9 +311,6 @@ class GamePresenter(
         }
         if (explodeCountNewValue == 0) {
             activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-            println("Defrosting screen. . . called by $called")
         }
     }
 }
-
-//changing
