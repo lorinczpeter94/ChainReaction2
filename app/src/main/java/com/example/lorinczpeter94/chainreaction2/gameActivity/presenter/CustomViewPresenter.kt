@@ -17,6 +17,7 @@ interface CustomPresenterDelegate {
     fun getCount(): Int
     fun putSucceed(succeeded: Boolean)
     fun freezeScreen(explodeCountNewValue: Int)
+    fun startPutSound()
 }
 
 class CustomViewPresenter(
@@ -26,6 +27,7 @@ class CustomViewPresenter(
 
     private var positionManager = PositionManager(GamePresenter.noOfRows, GamePresenter.noOfColumns)
     private var backgroundSelector = BackgroundSelector(context)
+
 
     //Delegate to reach GamePresenter
     var customPresenterDelegate: CustomPresenterDelegate? = null
@@ -40,24 +42,34 @@ class CustomViewPresenter(
          *  - puts the actual circle and updates UI
          */
 
-        customPresenterDelegate!!.setZeroExplodeCount()
-        customPresenterDelegate!!.saveState()
+
+        customPresenterDelegate?.let {
+            it.setZeroExplodeCount()
+            it.saveState()
+        }
+
 
         //Simulation for explode count
         if (playerPut(id, color, numberOfCircles, activePlayer, true)) {
-            customPresenterDelegate!!.putSucceed(true)
-            customPresenterDelegate!!.freezeScreen(1)
+            customPresenterDelegate?.let {
+                it.startPutSound()
+                it.putSucceed(true)
+                it.freezeScreen(1)
+            }
 
         } else {
-            customPresenterDelegate!!.putSucceed(false)
+            customPresenterDelegate?.putSucceed(false)
+
         }
 
-        customPresenterDelegate!!.resetState()  //Resets state after simulation
+        customPresenterDelegate?.resetState() //Resets state after simulation
+
 
         //Actual put with UI update and animations
         if (playerPut(id, color, numberOfCircles, activePlayer, false)) {
             checkForActive(id) //if circles are active
-            customPresenterDelegate!!.saveLastStep() //saves last step for undo button
+            customPresenterDelegate?.saveLastStep() //saves last step for undo button
+
         }
 
     }
@@ -73,7 +85,8 @@ class CustomViewPresenter(
          * Puts a circle in the cell with the given ID
          * also checks if it has to explode
          */
-        customPresenterDelegate!!.setSimulation(simulation)
+
+        customPresenterDelegate?.setSimulation(simulation)
         when (numberOfCircles) {
             0 -> {
                 iCustomImageView.incNumberOfCircles()
@@ -198,9 +211,9 @@ class CustomViewPresenter(
 
         if (simulation) {
             iCustomImageView.zeroNumberOfCircles()
-            customPresenterDelegate!!.incExplodeCount()
+            customPresenterDelegate?.incExplodeCount()
         } else {
-            customPresenterDelegate!!.decExplodeCount()
+            customPresenterDelegate?.decExplodeCount()
 
             iCustomImageView.setNoCircle()
             iCustomImageView.zeroNumberOfCircles()
