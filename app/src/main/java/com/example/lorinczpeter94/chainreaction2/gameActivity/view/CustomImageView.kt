@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
+import android.view.View
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
@@ -100,7 +101,7 @@ class CustomImageView(
 
     override fun setActiveGameObject() {
         //"Activates" the game objects by rotating them
-        val anim = RotateAnimation(0f, 360f, 75f, 75f)
+        val anim = RotateAnimation(0f, 360f, (width / 2).toFloat(), (height/2).toFloat())
         anim.interpolator = LinearInterpolator()
         anim.repeatCount = Animation.INFINITE
         anim.duration = 1000
