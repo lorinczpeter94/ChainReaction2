@@ -91,10 +91,10 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
         setOneCircle(animationView3, color)
         setOneCircle(animationView4, color)
 
-        val animRight = TranslateAnimation(imageView.x, imageView.x + 100f, imageView.y, imageView.y)
-        val animLeft = TranslateAnimation(imageView.x, imageView.x - 100f, imageView.y, imageView.y)
-        val animUp = TranslateAnimation(imageView.x, imageView.x, imageView.y, imageView.y +  100f)
-        val animDown = TranslateAnimation(imageView.x, imageView.x, imageView.y, imageView.y - 100f)
+        val animRight = TranslateAnimation(imageView.x, imageView.x + imageView.width, imageView.y, imageView.y)
+        val animLeft = TranslateAnimation(imageView.x, imageView.x - imageView.width, imageView.y, imageView.y)
+        val animUp = TranslateAnimation(imageView.x, imageView.x, imageView.y, imageView.y + imageView.height)
+        val animDown = TranslateAnimation(imageView.x, imageView.x, imageView.y, imageView.y - imageView.height)
 
         animRight.interpolator = LinearInterpolator()
         animLeft.interpolator = LinearInterpolator()
