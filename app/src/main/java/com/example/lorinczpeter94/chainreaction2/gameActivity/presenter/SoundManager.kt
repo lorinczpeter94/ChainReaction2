@@ -8,9 +8,14 @@ class SoundManager(
     context: Context
 ) {
 
-    private val mediaPlayer = MediaPlayer.create(context, R.raw.explode)
+    private val explodeSound = MediaPlayer.create(context, R.raw.explode)
+    private val putSound = MediaPlayer.create(context, R.raw.put)
 
-    fun startSound(){
-        mediaPlayer.start()
+    fun startExplodeSound(){
+        explodeSound.start()
+    }
+
+    fun startPutSound(){
+        putSound.start()
     }
 }

@@ -189,7 +189,7 @@ class GamePresenter(
         val row = indexes[0]
         val column = indexes[1]
         val neighbours: ArrayList<List<Int>> = neighbourManager.getNeighbours(id)
-        soundManager.startSound()
+        soundManager.startExplodeSound()
 
         if (!simulator) {
             val background = backgroundSelector.chooseColor(1, color)
@@ -317,7 +317,7 @@ class GamePresenter(
         }
     }
 
-    override fun startSound() {
-        soundManager.startSound()
+    override fun startPutSound() {
+        soundManager.startPutSound()
     }
 }
