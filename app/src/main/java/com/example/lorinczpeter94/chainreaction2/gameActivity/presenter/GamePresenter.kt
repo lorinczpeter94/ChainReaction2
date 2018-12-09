@@ -37,6 +37,7 @@ class GamePresenter(
     private var lastState: Array<Array<CustomImageView>>? = null
     private var lastPlayer: Int = 0
     private var putSucceed: Boolean = false
+    private var soundManager = SoundManager(context)
 
     private var explodeCount: Int by Delegates.observable(0) { _, oldValue, newValue ->
         freezeScreen(newValue)
@@ -188,6 +189,8 @@ class GamePresenter(
         val row = indexes[0]
         val column = indexes[1]
         val neighbours: ArrayList<List<Int>> = neighbourManager.getNeighbours(id)
+        soundManager.startSound()
+
         if (!simulator) {
             val background = backgroundSelector.chooseColor(1, color)
 
@@ -312,5 +315,9 @@ class GamePresenter(
         if (explodeCountNewValue == 0) {
             activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         }
+    }
+
+    override fun startSound() {
+        soundManager.startSound()
     }
 }

@@ -2,6 +2,7 @@ package com.example.lorinczpeter94.chainreaction2.welcome_activity
 
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -41,7 +42,6 @@ class WelcomeActivity : AppCompatActivity(), IWelcomeView {
             val spnPlayerNumber:Spinner = findViewById(R.id.spn_playerNumber)
             iWelcomePresenter?.settingsSpinner(spnMapSize.selectedItem.toString(),
                 spnPlayerNumber.selectedItem.toString())
-
         }
 
     }

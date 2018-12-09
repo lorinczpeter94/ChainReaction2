@@ -17,6 +17,7 @@ interface CustomPresenterDelegate {
     fun getCount(): Int
     fun putSucceed(succeeded: Boolean)
     fun freezeScreen(explodeCountNewValue: Int)
+    fun startSound()
 }
 
 class CustomViewPresenter(
@@ -26,6 +27,7 @@ class CustomViewPresenter(
 
     private var positionManager = PositionManager(GamePresenter.noOfRows, GamePresenter.noOfColumns)
     private var backgroundSelector = BackgroundSelector(context)
+
 
     //Delegate to reach GamePresenter
     var customPresenterDelegate: CustomPresenterDelegate? = null
@@ -40,11 +42,14 @@ class CustomViewPresenter(
          *  - puts the actual circle and updates UI
          */
 
+
+
         customPresenterDelegate!!.setZeroExplodeCount()
         customPresenterDelegate!!.saveState()
 
         //Simulation for explode count
         if (playerPut(id, color, numberOfCircles, activePlayer, true)) {
+            customPresenterDelegate!!.startSound()
             customPresenterDelegate!!.putSucceed(true)
             customPresenterDelegate!!.freezeScreen(1)
 

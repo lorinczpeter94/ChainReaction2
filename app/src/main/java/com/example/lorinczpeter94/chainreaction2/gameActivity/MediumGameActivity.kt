@@ -30,6 +30,7 @@ class MediumGameActivity : AppCompatActivity(), IGameView {
     private var optionsMenu: Menu? = null
 
 
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.game_menu, menu)
         optionsMenu = menu
