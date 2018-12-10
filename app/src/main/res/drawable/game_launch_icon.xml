@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:height="26pt" android:width="26pt">
+        <shape android:shape="rectangle">
+            <corners android:radius="11dp"/>
+            <stroke android:width="1px"
+                    android:color="@color/blueCircleLight"/>
+            <gradient android:angle="135"
+                      android:startColor="@color/cyanCircleDark"
+                      android:endColor="@color/blueCircleDark"
+                      android:centerColor="@color/whiteCircleLight"
+                      android:centerX="2"/>
+        </shape>
+    </item>
+
+
+    <item android:top="9pt"
+          android:left="9pt"
+          android:width="15pt"
+          android:height="15pt">
+        <shape android:shape="oval">
+
+            <stroke android:width="0.11mm"/>
+            <gradient android:angle="135"
+                      android:startColor="@color/blueCircleLight"
+                      android:endColor="@color/blueCircleDark"
+                      android:centerX="100" />
+        </shape>
+    </item>
+
+    <item android:left="7pt"
+          android:top="2pt"
+          android:width="15pt"
+          android:height="15pt">
+        <shape android:shape="oval">
+            <stroke android:width="0.11mm"/>
+            <gradient android:angle="135"
+                      android:startColor="@color/greenCircleLight"
+                      android:endColor="@color/greenCircleDark"
+                      android:centerX="100" />
+        </shape>
+    </item>
+
+    <item android:top="7pt"
+          android:left="1pt"
+          android:width="15pt"
+          android:height="15pt">
+        <shape android:shape="oval">
+
+            <stroke android:width="0.11mm"/>
+            <gradient android:angle="135"
+                      android:startColor="@color/redCircleLight"
+                      android:endColor="@color/redCircleDark"
+                      android:centerX="100" />
+        </shape>
+    </item>
+
+
+
+
+
+
+
+</layer-list>
