@@ -36,8 +36,8 @@ class WelcomeActivity : AppCompatActivity(), IWelcomeView {
         val btnPlay: Button = findViewById(R.id.btn_play)
         btnPlay.setOnClickListener {
 
-            val spnMapSize:Spinner = findViewById(R.id.spn_mapSize)
-            val spnPlayerNumber:Spinner = findViewById(R.id.spn_playerNumber)
+            val spnMapSize:Spinner = this.findViewById(R.id.spn_mapSize)
+            val spnPlayerNumber:Spinner = this.findViewById(R.id.spn_playerNumber)
             iWelcomePresenter?.settingsSpinner(spnMapSize.selectedItem.toString(),
                 spnPlayerNumber.selectedItem.toString())
         }
