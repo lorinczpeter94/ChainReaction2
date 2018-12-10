@@ -1,4 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-</selector>
+
+
+    <item android:top="9pt"
+          android:left="9pt"
+          android:width="15pt"
+          android:height="15pt">
+        <shape android:shape="oval">
+
+            <stroke android:width="0.11mm"/>
+            <gradient android:angle="135"
+                      android:startColor="@color/blueCircleLight"
+                      android:endColor="@color/blueCircleDark"
+                      android:centerX="100" />
+        </shape>
+    </item>
+
+    <item android:left="7pt"
+          android:top="2pt"
+          android:width="15pt"
+          android:height="15pt">
+        <shape android:shape="oval">
+            <stroke android:width="0.11mm"/>
+            <gradient android:angle="135"
+                      android:startColor="@color/greenCircleLight"
+                      android:endColor="@color/greenCircleDark"
+                      android:centerX="100" />
+        </shape>
+    </item>
+
+    <item android:top="7pt"
+          android:left="1pt"
+          android:width="15pt"
+          android:height="15pt">
+        <shape android:shape="oval">
+
+            <stroke android:width="0.11mm"/>
+            <gradient android:angle="135"
+                      android:startColor="@color/redCircleLight"
+                      android:endColor="@color/redCircleDark"
+                      android:centerX="100" />
+        </shape>
+    </item>
+
+
+
+    <item android:height="25pt" android:width="25pt">
+        <shape android:shape="rectangle">
+        </shape>
+    </item>
+
+
+
+
+</layer-list>
