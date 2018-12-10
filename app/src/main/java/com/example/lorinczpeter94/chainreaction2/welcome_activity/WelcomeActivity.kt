@@ -17,6 +17,7 @@ import com.example.lorinczpeter94.chainreaction2.R
 import com.example.lorinczpeter94.chainreaction2.gameActivity.LargeGameActivity
 import com.example.lorinczpeter94.chainreaction2.gameActivity.MediumGameActivity
 import com.example.lorinczpeter94.chainreaction2.gameActivity.SmallGameActivity
+import com.example.lorinczpeter94.chainreaction2.login_activity.LoginActivity
 import com.example.lorinczpeter94.chainreaction2.welcome_activity.presenter.IWelcomePresenter
 import com.example.lorinczpeter94.chainreaction2.welcome_activity.presenter.WelcomePresenter
 import com.example.lorinczpeter94.chainreaction2.welcome_activity.view.IWelcomeView
@@ -42,6 +43,13 @@ class WelcomeActivity : AppCompatActivity(), IWelcomeView {
             val spnPlayerNumber:Spinner = findViewById(R.id.spn_playerNumber)
             iWelcomePresenter?.settingsSpinner(spnMapSize.selectedItem.toString(),
                 spnPlayerNumber.selectedItem.toString())
+        }
+
+        val btnMultiplayer: Button = findViewById(R.id.btnMultiplayer)
+        btnMultiplayer.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+
         }
 
     }

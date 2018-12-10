@@ -1,7 +1,8 @@
-package com.example.lorinczpeter94.chainreaction2
+package com.example.lorinczpeter94.chainreaction2.login_activity
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.example.lorinczpeter94.chainreaction2.R
 
 class LoginActivity : AppCompatActivity() {
 
