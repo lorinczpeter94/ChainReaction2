@@ -34,6 +34,8 @@
         </activity>
         <activity android:name=".login_activity.LoginActivity">
         </activity>
+        <activity android:name=".LoggedInActivity">
+        </activity>
     </application>
 
 </manifest>

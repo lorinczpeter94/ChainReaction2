@@ -1,15 +1,8 @@
 package com.example.lorinczpeter94.chainreaction2.welcome_activity
 
-import android.content.Context
 import android.content.Intent
-import android.media.MediaPlayer
-import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.view.MotionEvent
-import android.view.View
+import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
@@ -21,16 +14,20 @@ import com.example.lorinczpeter94.chainreaction2.login_activity.LoginActivity
 import com.example.lorinczpeter94.chainreaction2.welcome_activity.presenter.IWelcomePresenter
 import com.example.lorinczpeter94.chainreaction2.welcome_activity.presenter.WelcomePresenter
 import com.example.lorinczpeter94.chainreaction2.welcome_activity.view.IWelcomeView
+import com.google.firebase.analytics.FirebaseAnalytics
 
 val PLAYERNUM:String ="PLAYER_NUM"
 
 class WelcomeActivity : AppCompatActivity(), IWelcomeView {
 
     private var iWelcomePresenter:IWelcomePresenter? = null
+    private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
         mapSizeSpinnerInitializer()
         playerNumberSpinnerInitializer()
@@ -56,7 +53,7 @@ class WelcomeActivity : AppCompatActivity(), IWelcomeView {
 
     override fun mapSizeSpinnerInitializer() {
         //Adds the elements to spnMapsize spinner from R.values.strings
-        var mapSizeSpn: Spinner = findViewById(R.id.spn_mapSize)
+        val mapSizeSpn: Spinner = findViewById(R.id.spn_mapSize)
         ArrayAdapter.createFromResource(
             this,
             R.array.map_size,
@@ -71,7 +68,7 @@ class WelcomeActivity : AppCompatActivity(), IWelcomeView {
 
     override fun playerNumberSpinnerInitializer() {
         //Adds the elements to spnPlayerNumber spinner from R.values.strings
-        var playerNumberSpn: Spinner = findViewById(R.id.spn_playerNumber)
+        val playerNumberSpn: Spinner = findViewById(R.id.spn_playerNumber)
         ArrayAdapter.createFromResource(
             this,
             R.array.player_number,
