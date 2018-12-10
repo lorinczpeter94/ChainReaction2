@@ -41,13 +41,12 @@ class CustomViewPresenter(
          *  - runs a simulation to count the number of explodes
          *  - puts the actual circle and updates UI
          */
-
+        customPresenterDelegate?.saveLastStep() //saves last step for undo button
 
         customPresenterDelegate?.let {
             it.setZeroExplodeCount()
             it.saveState()
         }
-
 
         //Simulation for explode count
         if (playerPut(id, color, numberOfCircles, activePlayer, true)) {
@@ -56,22 +55,15 @@ class CustomViewPresenter(
                 it.putSucceed(true)
                 it.freezeScreen(1)
             }
-
         } else {
             customPresenterDelegate?.putSucceed(false)
-
         }
-
         customPresenterDelegate?.resetState() //Resets state after simulation
-
 
         //Actual put with UI update and animations
         if (playerPut(id, color, numberOfCircles, activePlayer, false)) {
             checkForActive(id) //if circles are active
-            customPresenterDelegate?.saveLastStep() //saves last step for undo button
-
         }
-
     }
 
     private fun playerPut(
@@ -244,9 +236,11 @@ class CustomViewPresenter(
 
         if (positionManager.isInCorner(id) && iCustomImageView.getNumberOfCircles() == 1 ||
             positionManager.isOnSide(id) && iCustomImageView.getNumberOfCircles() == 2 ||
-            iCustomImageView.getNumberOfCircles() == 3
-        ) {
+            iCustomImageView.getNumberOfCircles() == 3)
+        {
             iCustomImageView.setActiveGameObject()
+        } else{
+            iCustomImageView.stopActiveGameObject()
         }
     }
 

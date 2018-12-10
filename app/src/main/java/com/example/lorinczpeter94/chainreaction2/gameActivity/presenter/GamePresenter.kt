@@ -141,16 +141,33 @@ class GamePresenter(
           */
         //TODO: finish the undo (refresh screen)
 
+        if(activePlayer.getRoundCounter() == 0)
+            return
+
         activePlayer.setActivePlayer(lastPlayer)
         if (lastStep == null) {
             return
         }
+        val playerCircle = activity.findViewById<ImageView>(R.id.playerCircle)
+        iIGameView.setOnecircleTop(
+            playerCircle, backgroundSelector.chooseColor(
+                1,
+                activePlayer.getCurrentPlayer()
+            )
+        )
         for (i in 0 until noOfRows) {
             for (j in 0 until noOfColumns) {
                 lastStep?.get(i)?.get(j)?.getColor()?.let { viewMatrix[i][j].setColor(it) }
                 lastStep?.get(i)?.get(j)?.getNumberOfCircles()?.let { viewMatrix[i][j].setNumberOfCircles(it) }
+                viewMatrix[i][j].viewPresenter?.checkForActive(10 * i + j)
+                if(viewMatrix[i][j].getNumberOfCircles() != 0)
+                    viewMatrix[i][j].setOnecircle(backgroundSelector.chooseColor(viewMatrix[i][j].getNumberOfCircles(),
+                        lastStep!![i][j].getColor()))
+                else
+                    viewMatrix[i][j].setNoCircle()
             }
         }
+
     }
 
     //IGamePresenter functions
@@ -169,7 +186,6 @@ class GamePresenter(
         indexArray.add(i)
         return indexArray
     }
-
 
     //CustomPresenterDelegate functions
 
@@ -213,8 +229,10 @@ class GamePresenter(
         /**
          * Saves last step of the viewMatrix in lastStep
          */
+    println("*****\nLastState\n*****")
 
         lastPlayer = activePlayer.getCurrentPlayer()
+        println(lastPlayer)
         for (i in 0 until noOfRows) {
             for (j in 0 until noOfColumns) {
                 lastStep?.get(i)?.get(j)?.setColor(viewMatrix[i][j].getColor())
