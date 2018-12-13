@@ -7,11 +7,12 @@ class ActivePlayer(
 ) : IActivePlayer {
 
     init {
-       // println("PLAYERNUMBER: $playerNumber")
+        // println("PLAYERNUMBER: $playerNumber")
     }
+
     private var roundCounter: Int = 0
 
-    override fun setActivePlayer(player: Int){
+    override fun setActivePlayer(player: Int) {
         currentPlayer = player
     }
 
@@ -30,23 +31,27 @@ class ActivePlayer(
 
     override fun nextPlayer() {
         currentPlayer = currentPlayer % playerNumber + 1
-        if (!players[currentPlayer]){
+        if (!players[currentPlayer]) {
             nextPlayer()
         }
         roundCounter++
     }
 
-    fun setPlayerFalse(index: Int){
+    fun setPlayerFalse(index: Int) {
         players[index] = false
     }
 
-    fun getRoundCounter(): Int{
+    fun getRoundCounter(): Int {
         return roundCounter
     }
 
-    fun getWinner(): Int{
-        for (i in 1 until players.size){
-            if (players[i]){
+    fun setRoundCounter() {
+        roundCounter++
+    }
+
+    fun getWinner(): Int {
+        for (i in 1 until players.size) {
+            if (players[i]) {
                 return i
             }
         }
