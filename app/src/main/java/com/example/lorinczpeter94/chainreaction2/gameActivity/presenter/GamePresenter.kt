@@ -37,10 +37,14 @@ class GamePresenter(
     private var lastState: Array<Array<CustomImageView>>? = null
     private var lastPlayer: Int = 0
     private var putSucceed: Boolean = false
+    private var noWait: Boolean = true
     private var soundManager = SoundManager(context)
 
     private var explodeCount: Int by Delegates.observable(0) { _, oldValue, newValue ->
         freezeScreen(newValue)
+
+
+
         Handler().postDelayed(({
             checkGameState(newValue)
             if (oldValue == 0 && newValue == 0 && putSucceed) {
@@ -57,6 +61,7 @@ class GamePresenter(
                 }
             }
         }), 400)
+
     }
 
     init {
@@ -87,7 +92,7 @@ class GamePresenter(
         const val noOfColumns: Int = 6
     }
 
-    private fun setDelegate(){
+    private fun setDelegate() {
         /**
          * CustomViewPresenter class with this class through CustomPresenterDelegate
          */
@@ -115,21 +120,22 @@ class GamePresenter(
 
             if (playerManager.checkWinner() && activePlayer.getRoundCounter() > 1) {
                 Toast.makeText(context, "Player ${activePlayer.getWinner()} won!", Toast.LENGTH_SHORT).show()
-                activity.finish()
+                // activity.finish()
             }
 
         }
     }
 
-    private fun iterateNeighbours(neighbours: ArrayList<List<Int>>, color: Int){
+    private fun iterateNeighbours(neighbours: ArrayList<List<Int>>, color: Int) {
         /**
          * Iterates through the neighbours and sends a circle to every one of them
          */
 
         for (i in neighbours) {
             viewMatrix[i[0]][i[1]].circleComeIn(color)
-            if (playerManager.checkWinner()){
-                return
+            if (playerManager.checkWinner()) {
+                println("Beleptem oda ahova nem tudom mi van s miert van ")
+                //return
             }
         }
     }
@@ -138,10 +144,10 @@ class GamePresenter(
         /**
          * Undo to previous step
          * Not finished yet
-          */
+         */
         //TODO: finish the undo (refresh screen)
 
-        if(activePlayer.getRoundCounter() == 0)
+        if (activePlayer.getRoundCounter() == 0)
             return
 
         activePlayer.setActivePlayer(lastPlayer)
@@ -160,9 +166,13 @@ class GamePresenter(
                 lastStep?.get(i)?.get(j)?.getColor()?.let { viewMatrix[i][j].setColor(it) }
                 lastStep?.get(i)?.get(j)?.getNumberOfCircles()?.let { viewMatrix[i][j].setNumberOfCircles(it) }
                 viewMatrix[i][j].viewPresenter?.checkForActive(10 * i + j)
-                if(viewMatrix[i][j].getNumberOfCircles() != 0)
-                    viewMatrix[i][j].setOnecircle(backgroundSelector.chooseColor(viewMatrix[i][j].getNumberOfCircles(),
-                        lastStep!![i][j].getColor()))
+                if (viewMatrix[i][j].getNumberOfCircles() != 0)
+                    viewMatrix[i][j].setOnecircle(
+                        backgroundSelector.chooseColor(
+                            viewMatrix[i][j].getNumberOfCircles(),
+                            lastStep!![i][j].getColor()
+                        )
+                    )
                 else
                     viewMatrix[i][j].setNoCircle()
             }
@@ -229,7 +239,7 @@ class GamePresenter(
         /**
          * Saves last step of the viewMatrix in lastStep
          */
-    println("*****\nLastState\n*****")
+        println("*****\nLastState\n*****")
 
         lastPlayer = activePlayer.getCurrentPlayer()
         println(lastPlayer)
@@ -290,7 +300,7 @@ class GamePresenter(
     override fun decExplodeCount() {
         /**
          * Decreasing the number of explosions
-          */
+         */
 
         this.explodeCount--
     }
@@ -338,4 +348,6 @@ class GamePresenter(
     override fun startPutSound() {
         soundManager.startPutSound()
     }
+
+
 }

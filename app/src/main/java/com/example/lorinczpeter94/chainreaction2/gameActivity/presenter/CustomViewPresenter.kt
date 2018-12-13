@@ -1,8 +1,10 @@
 package com.example.lorinczpeter94.chainreaction2.gameActivity.presenter
 
 import android.content.Context
+import android.widget.Toast
 import com.example.lorinczpeter94.chainreaction2.gameActivity.model.ActivePlayer
 import com.example.lorinczpeter94.chainreaction2.gameActivity.view.ICustomImageView
+import kotlin.contracts.contract
 
 
 interface CustomPresenterDelegate {
@@ -18,11 +20,12 @@ interface CustomPresenterDelegate {
     fun putSucceed(succeeded: Boolean)
     fun freezeScreen(explodeCountNewValue: Int)
     fun startPutSound()
+
 }
 
 class CustomViewPresenter(
     private var iCustomImageView: ICustomImageView,
-    context: Context
+    private var context: Context
 ) {
 
     private var positionManager = PositionManager(GamePresenter.noOfRows, GamePresenter.noOfColumns)
@@ -204,12 +207,23 @@ class CustomViewPresenter(
         if (simulation) {
             iCustomImageView.zeroNumberOfCircles()
             customPresenterDelegate?.incExplodeCount()
+
+            if (customPresenterDelegate?.getCount()!! >= 49 ){
+                //infinite loop
+                return
+            }
+
         } else {
             customPresenterDelegate?.decExplodeCount()
 
             iCustomImageView.setNoCircle()
             iCustomImageView.zeroNumberOfCircles()
             iCustomImageView.stopActiveGameObject()
+
+            //wtf
+            if(customPresenterDelegate?.getCount()!! <= -80){
+                return
+            }
         }
 
         customPresenterDelegate?.onExplode(id, color, simulation)
