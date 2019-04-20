@@ -1,23 +1,15 @@
 package com.example.lorinczpeter94.chainreaction2.welcome_activity
 
-import android.content.Context
 import android.content.Intent
-import android.media.MediaPlayer
-import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.util.Log
-import android.view.MotionEvent
-import android.view.View
+import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import com.example.lorinczpeter94.chainreaction2.R
-import com.example.lorinczpeter94.chainreaction2.gameActivity.LargeGameActivity
-import com.example.lorinczpeter94.chainreaction2.gameActivity.MediumGameActivity
-import com.example.lorinczpeter94.chainreaction2.gameActivity.SmallGameActivity
+import com.example.lorinczpeter94.chainreaction2.gameActivity.view.LargeGameActivity
+import com.example.lorinczpeter94.chainreaction2.gameActivity.view.MediumGameActivity
+import com.example.lorinczpeter94.chainreaction2.gameActivity.view.SmallGameActivity
 import com.example.lorinczpeter94.chainreaction2.welcome_activity.presenter.IWelcomePresenter
 import com.example.lorinczpeter94.chainreaction2.welcome_activity.presenter.WelcomePresenter
 import com.example.lorinczpeter94.chainreaction2.welcome_activity.view.IWelcomeView

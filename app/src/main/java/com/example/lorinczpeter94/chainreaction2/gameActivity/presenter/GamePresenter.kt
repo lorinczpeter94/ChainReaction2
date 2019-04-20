@@ -145,7 +145,6 @@ class GamePresenter(
          * Undo to previous step
          * Not finished yet
          */
-        //TODO: finish the undo (refresh screen)
 
         if (activePlayer.getRoundCounter() == 0)
             return

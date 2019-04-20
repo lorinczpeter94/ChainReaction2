@@ -21,16 +21,16 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".gameActivity.SmallGameActivity"
+        <activity android:name=".gameActivity.view.SmallGameActivity"
                   android:screenOrientation="locked">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
             </intent-filter>
         </activity>
-        <activity android:name=".gameActivity.MediumGameActivity"
+        <activity android:name=".gameActivity.view.MediumGameActivity"
                   android:screenOrientation="locked">
         </activity>
-        <activity android:name=".gameActivity.LargeGameActivity"
+        <activity android:name=".gameActivity.view.LargeGameActivity"
                   android:screenOrientation="locked">
         </activity>
     </application>
